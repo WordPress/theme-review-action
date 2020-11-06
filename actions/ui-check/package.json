@@ -1,0 +1,28 @@
+{
+	"name": "UI-Check",
+	"version": "1.0.0",
+	"description": "Run tests for themes in WP.org directory",
+	"main": "index.js",
+	"scripts": {
+		"install:siteinfo": "curl 'http://localhost:8889/?rest_route=/theme-test-helper/v1/info' > tests/e2e/specs/page/siteinfo.json",
+		"format:js": "wp-scripts format-js",
+		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
+		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
+		"start": "npm install && mkdir -p screenshots && npm run install:siteinfo && npm run test:e2e",
+		"start:full": "TEST_ACCESSIBILITY=false npm run test:e2e"
+	},
+	"author": "The WordPress Contributors",
+	"license": "GPL-2.0-or-later",
+	"dependencies": {
+		"@actions/artifact": "^0.4.0",
+		"@actions/core": "^1.2.5",
+		"@wordpress/e2e-test-utils": "^4.13.0",
+		"@wordpress/jest-puppeteer-axe": "^1.9.0",
+		"@wordpress/scripts": "^12.2.1",
+		"get-pixels": "^3.3.2",
+		"gif-encoder": "^0.7.2",
+		"node-fetch": "^2.6.1",
+		"pixelmatch": "^5.2.1",
+		"puppeteer": "^5.3.0"
+	}
+}

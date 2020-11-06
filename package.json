@@ -1,0 +1,25 @@
+{
+  "name": "WordPress-Theme-Check-Action",
+  "version": "1.0.0",
+  "description": "Run Theme Check test for a WordPress theme",
+  "main": "index.js",
+  "scripts": {
+    "wp-env": "wp-env",
+    "activate-theme": "npm run wp-env run cli theme activate test-theme && npm run wp-env run tests-cli theme activate test-theme",
+    "download:accessibility": "curl -L https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml > config/a11y-theme-unit-test-data.xml",
+    "import:accessibility": "npm run wp-env run tests-cli 'plugin install wordpress-importer --activate' && npm run wp-env run tests-cli 'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'",
+    "install:accessibility": "npm run download:accessibility && npm run import:accessibility",
+    "install:menu": "./bin/menu.sh",
+    "install:environment": "npm install && node index.js && npm run wp-env start && npm run activate-theme && npm run install:accessibility && npm run install:menu",
+    "uninstall": "npm run wp-env destroy",
+    "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
+    "check:structure": "cd ./actions/structure-check && npm run start",
+    "check:ui": "cd ./actions/ui-check && npm run start",
+    "check:env": "./bin/env.sh"
+  },
+  "author": "The WordPress Contributors",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@wordpress/env": "^2.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+	"config": {
+		"WPORGPATH": true,
+		"THEME_CHECK_FOLDER": "theme-check"
+	},
+	"plugins": [
+		"https://downloads.wordpress.org/plugin/theme-check.zip",
+		"./helpers/theme-test-helper-plugin.php"
+	],
+	"themes": ["./test-theme"],
+	"mappings": {
+		"config": "./config",
+		"actions": "./actions",
+		"test-theme": "./test-theme",
+		"helpers": "./helpers"
+	}
+}
