@@ -10,6 +10,10 @@ final class StructureTest extends TestCase
 		return preg_match( '/[ \t\/*#]*Template:/i', $css_contents ) === 1;
 	}
 
+	function isBlockBasedTheme(): bool {
+		return file_exists( self::REL_THEME_LOCATION . '/block-templates/index.html');
+	}
+
 	public function testsThatStyleIsPresent(): void
 	{
 		$this->assertFileExists( self::REL_THEME_LOCATION . '/style.css', '::error:: We require you have a style.css file.' );
@@ -30,5 +34,14 @@ final class StructureTest extends TestCase
 		$hasJPG = file_exists( self::REL_THEME_LOCATION . '/screenshot.jpg' ) || file_exists( self::REL_THEME_LOCATION . '/screenshot.jpeg' );
 
 		$this->assertTrue( $hasPNG || $hasJPG, '::error::We require you have a screenshot.png or screenshot.jpg file.' );
+	}
+
+	public function testsThatFunctionIsPresentForBlockBased(): void
+	{
+		if( ! self::isBlockBasedTheme() )  {
+			$this->markTestSkipped( 'Function.php is not required for a block based theme.' );
+		}
+
+		$this->assertFileExists( self::REL_THEME_LOCATION . '/functions.php', '::error::We require you have an function.php file for a Block Based theme.' );
 	}
 }
