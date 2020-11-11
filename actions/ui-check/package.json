@@ -8,6 +8,7 @@
 		"format:js": "wp-scripts format-js",
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
+		"test:unit": "wp-scripts test-unit-js tests/unit/block.test.js",
 		"start": "npm install && mkdir -p screenshots && npm run install:siteinfo && npm run test:e2e",
 	},
 	"author": "The WordPress Contributors",
@@ -15,6 +16,8 @@
 	"dependencies": {
 		"@actions/artifact": "^0.4.0",
 		"@actions/core": "^1.2.5",
+		"@wordpress/block-serialization-spec-parser": "^3.7.0",
+		"@wordpress/blocks": "^6.24.1",
 		"@wordpress/e2e-test-utils": "^4.13.0",
 		"@wordpress/jest-puppeteer-axe": "^1.9.0",
 		"@wordpress/scripts": "^12.2.1",
