@@ -39,7 +39,7 @@ final class StructureTest extends TestCase
 	public function testsThatFunctionIsPresentForBlockBased(): void
 	{
 		if( ! self::isBlockBasedTheme() )  {
-			$this->markTestSkipped( 'Function.php is not required for a block based theme.' );
+			$this->markTestSkipped( 'Function.php is not required for a non block based theme.' );
 		}
 
 		$this->assertFileExists( self::REL_THEME_LOCATION . '/functions.php', '::error::We require you have an function.php file for a Block Based theme.' );
