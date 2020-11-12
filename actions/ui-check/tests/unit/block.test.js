@@ -65,5 +65,21 @@ describe('Unit: Blocks', () => {
 		} catch (ex) {
 			printMessage('warning', ['[ Block Tests ]', ex.message]);
 		}
+    });
+    
+    it('Should only contain core blocks', async () => {
+		try {
+			for (let i = 0; i < templates.length; i++) {
+				const [block] = parse(templates[i].contents);
+
+				if (block.blockName === null) {
+					throw Error(
+						`There's a problem with ${templates[i].fileName}. \n\n ${templates[i].contents}`
+					);
+				}
+			}
+		} catch (ex) {
+			printMessage('warning', ['[ Block Tests ]', ex.message]);
+		}
 	});
 });
