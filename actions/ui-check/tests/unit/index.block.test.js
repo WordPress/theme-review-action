@@ -7,7 +7,7 @@ import { parse } from '@wordpress/block-serialization-spec-parser';
 /**
  * Internal dependencies
  */
-import { printMessage } from '../e2e/utils';
+import { printMessage } from '../utils';
 
 // Relative path
 const THEME_ROOT_FOLDER = '../../test-theme';
@@ -66,20 +66,4 @@ describe('Unit: Blocks', () => {
 			printMessage('warning', ['[ Block Tests ]', ex.message]);
 		}
     });
-    
-    it('Should only contain core blocks', async () => {
-		try {
-			for (let i = 0; i < templates.length; i++) {
-				const [block] = parse(templates[i].contents);
-
-				if (block.blockName === null) {
-					throw Error(
-						`There's a problem with ${templates[i].fileName}. \n\n ${templates[i].contents}`
-					);
-				}
-			}
-		} catch (ex) {
-			printMessage('warning', ['[ Block Tests ]', ex.message]);
-		}
-	});
 });
