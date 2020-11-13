@@ -64,10 +64,10 @@ const createOverrideConfig = () => {
 			`https://downloads.wordpress.org/plugin/gutenberg.zip`
 		);
 	}
+	const configString = JSON.stringify(configs);
+	fs.writeFileSync('./.wp-env.override.json', configString);
 
-	fs.writeFileSync('./.wp-env.override.json', JSON.stringify(configs));
-
-	console.log('Created a .wp-env.override.json file.');
+	console.log('Created a .wp-env.override.json file.', configString);
 };
 
 createOverrideConfig();
