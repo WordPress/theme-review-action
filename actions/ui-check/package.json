@@ -7,7 +7,7 @@
 		"install:siteinfo": "curl 'http://localhost:8889/?rest_route=/theme-test-helper/v1/info' > tests/e2e/specs/page/siteinfo.json",
 		"format:js": "wp-scripts format-js",
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
+		"test:e2e": "THEME_TYPE=block wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
 		"start": "npm install && mkdir -p screenshots && npm run install:siteinfo && npm run test:e2e",
 	},

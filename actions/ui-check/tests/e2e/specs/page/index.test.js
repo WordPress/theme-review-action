@@ -12,7 +12,7 @@ import {
 	getDefaultUrl,
 	errorWithMessageOnFail,
 	getElementPropertyAsync,
-} from '../../utils';
+} from '../../../utils';
 
 import site_info from './siteinfo.json';
 
