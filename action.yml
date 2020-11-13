@@ -40,9 +40,9 @@ runs:
       shell: bash
 
     # #   ## Run checks using theme-check plugin
-    # - name: Run Theme Check
-    #   run: cd ${{ github.action_path }} && npm run check:theme-check
-    #   shell: bash
+    - name: Run Theme Check
+      run: cd ${{ github.action_path }} && npm run check:theme-check
+      shell: bash
 
       ## Output where the screenshots can be found
     - name: Expose Screenshot location
