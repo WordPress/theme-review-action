@@ -29,7 +29,7 @@ const isBlockBasedTheme = () => {
 	return false;
 };
 
-const getEnvironmentConfig = () => {
+const getWpEnv = () => {
 	try {
 		const jsonContent = fs.readFileSync('./.wp-env.json', READ_OPTIONS);
 		return JSON.parse(jsonContent);
@@ -51,7 +51,7 @@ const createOverrideConfig = () => {
 		return;
 	}
 
-	const configs = getEnvironmentConfig();
+	const configs = getWpEnv();
 
 	if (parentTheme) {
 		configs.themes.push(
