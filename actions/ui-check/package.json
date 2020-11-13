@@ -10,8 +10,7 @@
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
-		"start": "npm run install:environment && npm run test:e2e && npm run test:unit",
-		"start:full": "TEST_ACCESSIBILITY=false npm run test:e2e"
+		"start": "npm run install:environment && npm run test:e2e && npm run test:unit"
 	},
 	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",
