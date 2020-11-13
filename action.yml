@@ -39,7 +39,7 @@ runs:
       run: cd ${{ github.action_path }} && npm run install:environment
       shell: bash
 
-    # #   ## Run checks using theme-check plugin
+    #   ## Run checks using theme-check plugin
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
