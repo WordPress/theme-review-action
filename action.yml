@@ -51,16 +51,12 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
 
-      ## Output where the screenshots can be found
-    - name: Expose Screenshot location
-      id: screenshot
-      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
-      shell: bash
-
       ## Run checks using e2e
     - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} UI_DEBUG=${{ inputs.ui-debug }} npm run check:ui
+      run: cd ${{ github.action_path }} && npm run check:ui
       env:
+        UI_DEBUG: ${{ inputs.ui-debug }}
+        TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
       shell: bash
     

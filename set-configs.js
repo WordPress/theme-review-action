@@ -1,9 +1,6 @@
 const Utils = require('./utils')
 
-/**
- * Set's theme type to be used by downstream actions
- */
-const setThemeType = () => {
+const init = () => {
     if( Utils.getParentTheme() ) {
         console.log('::set-output name=theme-type::child');
 
@@ -12,8 +9,12 @@ const setThemeType = () => {
 
     } else {
         console.log('::set-output name=theme-type::default');
-
     }
 }
 
+const setUIScreenshotPath = () => {
+    console.log(`::set-output name=location::${process.env.GITHUB_ACTION_PATH}/actions/ui-check/screenshots`);
+}
+
 setThemeType();
+setUIScreenshotPath();
