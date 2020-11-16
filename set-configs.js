@@ -5,14 +5,15 @@ const Utils = require('./utils')
  */
 const setThemeType = () => {
     if( Utils.getParentTheme() ) {
-        console.log('::set-output name=theme-type::child')
-    }
+        console.log('::set-output name=theme-type::child');
 
-    if( Utils.isBlockBasedTheme() ) {
-        console.log('::set-output name=theme-type::block')
-    }
+    } else if( Utils.isBlockBasedTheme() ) {
+        console.log('::set-output name=theme-type::block');
 
-    console.log('::set-output name=theme-type::default')
+    } else {
+        console.log('::set-output name=theme-type::default');
+
+    }
 }
 
 setThemeType();

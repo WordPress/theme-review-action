@@ -27,8 +27,6 @@ const SCREENSHOT_FOLDER_PATH = 'screenshots';
 const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
 const SCREENSHOT_TABBING_TEST = `${ SCREENSHOT_FOLDER_PATH }/tabbing-test`;
 
-console.log(process.env);
-
 /**
  * Custom Error type to be throw in tests
  *
