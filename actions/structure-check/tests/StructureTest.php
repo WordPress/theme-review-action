@@ -5,11 +5,11 @@ final class StructureTest extends TestCase
 	const REL_THEME_LOCATION = '../../test-theme';
 
 	function isChildTheme(): bool {
-		return getenv( 'THEME_TYPE' === 'child' );
+		return getenv( 'THEME_TYPE' ) === 'child';
 	}
 
 	function isBlockBasedTheme(): bool {
-		return getenv( 'THEME_TYPE' === 'block' );
+		return getenv( 'THEME_TYPE' ) === 'block';
 	}
 
 	public function testsThatStyleIsPresent(): void
