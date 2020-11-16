@@ -80,14 +80,14 @@ const maybeCreateOverrideConfig = () => {
  */
 const setThemeType = () => {
     if( getParentTheme() ) {
-        console.log('::set-output theme-type=child')
+        console.log('::set-output name=type::child')
     }
 
     if( isBlockBasedTheme() ) {
-        console.log('::set-output theme-type=block')
+        console.log('::set-output name=type::block')
     }
 
-    console.log('::set-output theme-type=default')
+    console.log('::set-output name=type::default')
 }
 
 

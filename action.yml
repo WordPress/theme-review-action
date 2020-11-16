@@ -38,33 +38,33 @@ runs:
         echo ${{ steps.configstep.outputs.theme-type }}
       shell: bash
 
-      ## Run unit tests to test that the correct files exist.
-      ## If these files don't exist, the environment won't start up
-    - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }} && npm run check:structure
-      shell: bash
+    #   ## Run unit tests to test that the correct files exist.
+    #   ## If these files don't exist, the environment won't start up
+    # - name: Run Theme Structure Test
+    #   run: cd ${{ github.action_path }} && npm run check:structure
+    #   shell: bash
 
-      ## The following tests require an environment
-      ## Start the environment
-    - name: Install Environment
-      run: cd ${{ github.action_path }} && npm run install:environment
-      shell: bash
+    #   ## The following tests require an environment
+    #   ## Start the environment
+    # - name: Install Environment
+    #   run: cd ${{ github.action_path }} && npm run install:environment
+    #   shell: bash
 
-    #   ## Run checks using theme-check plugin
-    - name: Run Theme Check
-      run: cd ${{ github.action_path }} && npm run check:theme-check
-      shell: bash
+    # #   ## Run checks using theme-check plugin
+    # - name: Run Theme Check
+    #   run: cd ${{ github.action_path }} && npm run check:theme-check
+    #   shell: bash
 
-      ## Output where the screenshots can be found
-    - name: Expose Screenshot location
-      id: screenshot
-      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
-      shell: bash
+    #   ## Output where the screenshots can be found
+    # - name: Expose Screenshot location
+    #   id: screenshot
+    #   run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
+    #   shell: bash
 
-      ## Run checks using e2e
-    - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} UI_DEBUG=${{ inputs.ui-debug }} npm run check:ui
-      shell: bash
+    #   ## Run checks using e2e
+    # - name: Run Basic JS Checks
+    #   run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} UI_DEBUG=${{ inputs.ui-debug }} npm run check:ui
+    #   shell: bash
     
 
     
