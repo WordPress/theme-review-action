@@ -74,5 +74,21 @@ const maybeCreateOverrideConfig = () => {
 	console.log('Created a .wp-env.override.json file.', configString);
 };
 
-maybeCreateOverrideConfig();
 
+/**
+ * Set's theme type to be used by downstream actions
+ */
+const setThemeType = () => {
+    if( getParentTheme() ) {
+        console.log('::set-output theme-type=child')
+    }
+
+    if( isBlockBasedTheme() ) {
+        console.log('::set-output theme-type=block')
+    }
+}
+
+
+// Init
+maybeCreateOverrideConfig();
+setThemeType();

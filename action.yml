@@ -27,6 +27,15 @@ runs:
         rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
+    - name: Configure some things
+      id: config
+      run: node index.js
+      shell: bash
+
+    - name: Print
+      run: echo ${{ steps.config.outputs.theme-type }}
+      shell: bash
+      
       ## Run unit tests to test that the correct files exist.
       ## If these files don't exist, the environment won't start up
     - name: Run Theme Structure Test
