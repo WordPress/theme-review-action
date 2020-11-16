@@ -53,6 +53,10 @@ const createOverrideConfig = () => {
 
 	const configs = getWpEnv();
 
+	if (!configs) {
+		return;
+	}
+
 	if (parentTheme) {
 		configs.themes.push(
 			`https://downloads.wordpress.org/theme/${parentTheme}.zip`
