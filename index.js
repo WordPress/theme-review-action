@@ -42,7 +42,7 @@ const getWpEnv = () => {
 /**
  * Creates an override config file sometimes
  */
-const createOverrideConfig = () => {
+const maybeCreateOverrideConfig = () => {
 	const parentTheme = getParentTheme();
 	const isBlockBased = isBlockBasedTheme();
 
@@ -74,6 +74,5 @@ const createOverrideConfig = () => {
 	console.log('Created a .wp-env.override.json file.', configString);
 };
 
-createOverrideConfig();
+maybeCreateOverrideConfig();
 
-//
