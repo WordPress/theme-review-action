@@ -1,6 +1,6 @@
 const Utils = require('./utils')
 
-const init = () => {
+const setThemeType = () => {
     if( Utils.getParentTheme() ) {
         console.log('::set-output name=theme-type::child');
 
