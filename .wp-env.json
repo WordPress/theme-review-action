@@ -4,7 +4,7 @@
 		"THEME_CHECK_FOLDER": "theme-check"
 	},
 	"plugins": [
-		"fklein-lu/theme-check#fse-themes",
+		"https://downloads.wordpress.org/plugin/theme-check.zip",
 		"./helpers/theme-test-helper-plugin.php"
 	],
 	"themes": ["./test-theme"],

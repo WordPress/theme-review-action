@@ -27,6 +27,7 @@ runs:
         rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
+      ## Runs some configurations to be used but other actions.
     - name: Pre-Configure environment
       id: pre
       run:  |
