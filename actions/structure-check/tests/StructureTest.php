@@ -21,6 +21,8 @@ final class StructureTest extends TestCase
 
 	public function testsThatIndexIsPresent(): void
 	{
+
+		var_dump( $_ENV );
 		if( self::isChildTheme() ) {
 			$this->markTestSkipped('Index.php is not required for a child theme.');
 		}
