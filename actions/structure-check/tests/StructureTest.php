@@ -5,13 +5,11 @@ final class StructureTest extends TestCase
 	const REL_THEME_LOCATION = '../../test-theme';
 
 	function isChildTheme(): bool {
-		$css_contents = file_get_contents( self::REL_THEME_LOCATION . '/style.css');
-
-		return preg_match( '/[ \t\/*#]*Template:/i', $css_contents ) === 1;
+		return getenv( 'THEME_TYPE' === 'child' );
 	}
 
 	function isBlockBasedTheme(): bool {
-		return file_exists( self::REL_THEME_LOCATION . '/block-templates/index.html');
+		return getenv( 'THEME_TYPE' === 'block' );
 	}
 
 	public function testsThatStyleIsPresent(): void
@@ -22,7 +20,6 @@ final class StructureTest extends TestCase
 	public function testsThatIndexIsPresent(): void
 	{
 
-		var_dump( getenv() );
 		if( self::isChildTheme() ) {
 			$this->markTestSkipped('Index.php is not required for a child theme.');
 		}
