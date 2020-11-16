@@ -20,6 +20,10 @@ import site_info from './siteinfo.json';
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
 
+const removeWWW = ( str ) => {
+	return str.replace( /^(www[.])/, '' );
+};
+
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	it( 'Page should contain body class ' + bodyClass, async () => {
@@ -129,9 +133,11 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			't.co', // in embedded content
 			'', // mailto
 			new URL( page.url() ).hostname,
-			...site_info.theme_urls.map( ( link ) => new URL( link ).hostname ),
-			...site_info.content_urls.map(
-				( link ) => new URL( link ).hostname
+			...site_info.theme_urls.map( ( link ) =>
+				removeWWW( new URL( link ).hostname )
+			),
+			...site_info.content_urls.map( ( link ) =>
+				removeWWW( new URL( link ).hostname )
 			),
 		];
 
@@ -139,7 +145,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
 		hrefs.forEach( ( href ) => {
 			let href_url = new URL( href, page.url() );
-			let hostname = href_url.hostname.replace( /^(www[.])/, '' );
+			let hostname = removeWWW( href_url.hostname );
 			errorWithMessageOnFail(
 				`${ hostname } found on ${ getDefaultUrl(
 					url,
