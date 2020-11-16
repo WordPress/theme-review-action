@@ -14,7 +14,7 @@ inputs:
 outputs:
   screenshots: 
     description: "Path to screenshots"
-    value: ${{ steps.screenshot.outputs.location}}
+    value: ${{ steps.pre.outputs.location}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
