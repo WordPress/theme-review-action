@@ -38,8 +38,6 @@ runs:
       ## If these files don't exist, the environment won't start up
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && npm run check:structure
-      env: 
-
       shell: bash
 
       ## The following tests require an environment
