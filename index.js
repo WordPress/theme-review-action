@@ -86,6 +86,8 @@ const setThemeType = () => {
     if( isBlockBasedTheme() ) {
         console.log('::set-output theme-type=block')
     }
+
+    console.log('::set-output theme-type=default')
 }
 
 

@@ -28,12 +28,14 @@ runs:
       shell: bash
 
     - name: Configure some things
-      id: config
+      id: configstep
       run: cd ${{ github.action_path }} && node index.js
       shell: bash
 
     - name: Print
-      run: echo ${{ steps.config.outputs.theme-type }}
+      run: |
+        echo Here are the outputs
+        echo ${{ steps.configstep.outputs.theme-type }}
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
