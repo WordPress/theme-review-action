@@ -134,6 +134,8 @@ class WPORG_CheckTheme {
 		global $themechecks; // global that exists in the theme-check plugin
 		$is_CI = getenv('CI'); // Set by github
 
+		var_dump( getenv() );
+
 		$error_list = array();
 		$warning_list = array();
 
