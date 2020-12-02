@@ -1,6 +1,6 @@
 {
   "name": "wordpress-theme-check-action",
-  "version": "1.0.1",
+  "version": "1.1.80",
   "description": "Run Theme Check test for a WordPress theme",
   "repository": "git+https://github.com/WordPress/theme-review-action.git",
   "main": "index.js",
@@ -17,9 +17,18 @@
     "check:structure": "cd ./actions/structure-check && npm run start",
     "check:ui": "cd ./actions/ui-check && npm run start"
   },
+  "bin": {
+    "wp-theme-check": "./bin/index.js"
+  },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@wordpress/env": "^2.0.0"
-  }
+    "@wordpress/env": "^2.0.0",
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "execa": "^4.1.0",
+    "fs-extra": "^9.0.1",
+    "ora": "^5.1.0"
+  },
+  "devDependencies": {}
 }

@@ -1,11 +1,7 @@
 /**
- * External dependencies
- */
-import { createURL } from '@wordpress/e2e-test-utils';
-
-/**
  * Internal dependencies
  */
+import { createURL } from '../../utils';
 const fs = require( 'fs' );
 const PNG = require( 'pngjs' ).PNG;
 const pixelmatch = require( 'pixelmatch' );
