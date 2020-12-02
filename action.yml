@@ -41,7 +41,6 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:structure
       env:
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
-        CI: true
       shell: bash
 
       ## The following tests require an environment
@@ -53,6 +52,8 @@ runs:
       ## Run checks using theme-check plugin
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run check:theme-check
+      env:
+        CI: true
       shell: bash
 
       ## Run checks using e2e
