@@ -28,11 +28,14 @@ const appendToLog = ( lines ) => {
  */
 export const printMessage = ( command, lines ) => {
 	// Github actions should automatically set CI
-	// If we are not running in github, create our own log file and write to it.
+    // If we are not running in github, create our own log file and write to it.
+    console.log( process.env.CI)
 	if ( ! process.env.CI ) {
-		appendToLog( lines );
+        appendToLog( lines );
+        console.log(' appending line')
 		return;
 	}
+    console.log(' using core');
 
 	core[ command ]( lines.join( '\n\n' ) );
 };
