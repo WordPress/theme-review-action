@@ -1,12 +1,15 @@
 /**
- * Internal dependencies
+ * External dependencies
  */
-import { createURL } from '../../utils';
 const fs = require( 'fs' );
 const PNG = require( 'pngjs' ).PNG;
 const pixelmatch = require( 'pixelmatch' );
 
+/**
+ * Internal dependencies
+ */
 import {
+	createURL,
 	printMessage,
 	meetsChangeThreshold,
 	getPercentOfOpaqueness,
