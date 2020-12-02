@@ -18,6 +18,10 @@ outputs:
 branding:
   icon: 'clipboard'  
   color: 'blue'
+env:
+  CI: true
+  WP_ENV_PORT: 8888
+  WP_ENV_TESTS_PORT: 8889
 runs:
   using: 'composite'
   steps:
@@ -47,9 +51,6 @@ runs:
       ## Start the environment
     - name: Install Environment
       run: cd ${{ github.action_path }} && npm run install:environment
-      env:
-        WP_ENV_PORT: 8888
-        WP_ENV_TESTS_PORT: 8889
       shell: bash
 
       ## Run checks using theme-check plugin
@@ -66,8 +67,6 @@ runs:
         UI_DEBUG: ${{ inputs.ui-debug }}
         TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
-        WP_ENV_TESTS_PORT: 8889
-        CI: true
       shell: bash
     
 
