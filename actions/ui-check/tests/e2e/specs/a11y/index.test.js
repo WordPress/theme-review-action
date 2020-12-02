@@ -7,7 +7,7 @@ import { createURL } from '@wordpress/e2e-test-utils';
  * Internal dependencies
  */
 import urls from './pages';
-import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../utils';
+import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../../utils';
 
 describe( 'Accessibility', () => {
 	// Potentially skip these tests.

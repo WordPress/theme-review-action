@@ -14,7 +14,7 @@ inputs:
 outputs:
   screenshots: 
     description: "Path to screenshots"
-    value: ${{ steps.screenshot.outputs.location}}
+    value: ${{ steps.pre.outputs.location}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
@@ -27,10 +27,20 @@ runs:
         rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
+      ## Runs some configurations to be used but other actions.
+    - name: Pre-Configure environment
+      id: pre
+      run:  |
+        cd ${{ github.action_path }} && node set-configs.js
+        cd ${{ github.action_path }} && node create-wp-env-override.js
+      shell: bash
+
       ## Run unit tests to test that the correct files exist.
       ## If these files don't exist, the environment won't start up
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && npm run check:structure
+      env:
+        THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
       shell: bash
 
       ## The following tests require an environment
@@ -39,20 +49,18 @@ runs:
       run: cd ${{ github.action_path }} && npm run install:environment
       shell: bash
 
-    #   ## Run checks using theme-check plugin
+      ## Run checks using theme-check plugin
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run check:theme-check
       shell: bash
 
-      ## Output where the screenshots can be found
-    - name: Expose Screenshot location
-      id: screenshot
-      run: echo "::set-output name=location::${{ github.action_path }}/actions/ui-check/screenshots"
-      shell: bash
-
       ## Run checks using e2e
     - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && TEST_ACCESSIBILITY=${{ inputs.accessible-ready }} UI_DEBUG=${{ inputs.ui-debug }} npm run check:ui
+      run: cd ${{ github.action_path }} && npm run check:ui
+      env:
+        UI_DEBUG: ${{ inputs.ui-debug }}
+        TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
+        THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
       shell: bash
     
 

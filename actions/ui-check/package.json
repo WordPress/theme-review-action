@@ -5,16 +5,19 @@
 	"main": "index.js",
 	"scripts": {
 		"install:siteinfo": "curl 'http://localhost:8889/?rest_route=/theme-test-helper/v1/info' > tests/e2e/specs/page/siteinfo.json",
+		"install:environment": "npm install && mkdir -p screenshots && npm run install:siteinfo",
 		"format:js": "wp-scripts format-js",
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"start": "npm install && mkdir -p screenshots && npm run install:siteinfo && npm run test:e2e"
+		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
+		"start": "npm run install:environment && npm run test:e2e && npm run test:unit"
 	},
 	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",
 	"dependencies": {
 		"@actions/artifact": "^0.4.0",
 		"@actions/core": "^1.2.5",
+		"@wordpress/block-serialization-spec-parser": "^3.7.0",
 		"@wordpress/e2e-test-utils": "^4.13.0",
 		"@wordpress/jest-puppeteer-axe": "^1.9.0",
 		"@wordpress/scripts": "^12.2.1",

@@ -21,7 +21,7 @@ import {
 	getElementPropertyAsync,
 	isDebugMode,
 	makeGif,
-} from '../../utils';
+} from '../../../utils';
 
 const SCREENSHOT_FOLDER_PATH = 'screenshots';
 const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
