@@ -39,7 +39,6 @@ describe( 'Accessibility', () => {
 					) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
 					cleanErrorMessage( e.message ),
 				] );
-				throw Error();
 			}
 		}
 	);
