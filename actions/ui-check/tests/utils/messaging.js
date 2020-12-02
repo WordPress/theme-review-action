@@ -1,6 +1,8 @@
 const core = require( '@actions/core' );
 const fs = require( 'fs' );
 
+import { getEnvironmentVariable } from './index';
+
 /**
  * Removes some noise that exists in the testing framework error messages.
  * @param {string} msg Error message thrown by testing framework.
@@ -28,9 +30,8 @@ const appendToLog = ( lines ) => {
  */
 export const printMessage = ( command, lines ) => {
 	// Github actions should automatically set CI
-    // If we are not running in github, create our own log file and write to it.
-    console.log( process.env.CI );
-	if ( ! process.env.CI ) {
+	// If we are not running in github, create our own log file and write to it.
+	if ( ! getEnvironmentVariable( process.env.CI ) ) {
 		appendToLog( lines );
 		return;
 	}

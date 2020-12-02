@@ -7,10 +7,11 @@ import {
 	cleanErrorMessage,
 	getDefaultUrl,
 	printMessage,
+	getEnvironmentVariable,
 } from '../../../utils';
 
 describe( 'Accessibility', () => {
-	const envVar = process.env.TEST_ACCESSIBILITY || false;
+	const envVar = getEnvironmentVariable( process.env.TEST_ACCESSIBILITY );
 	const testAccessibility = envVar === 'true';
 	const accessibilityTest = testAccessibility ? 'wcag2a' : 'best-practice';
 	const noticeType = testAccessibility ? 'setFailed' : 'warning';
