@@ -132,9 +132,7 @@ class WPORG_CheckTheme {
 	 */
 	public function display_results() {
 		global $themechecks; // global that exists in the theme-check plugin
-		$is_CI = getenv('CI'); // Set by github
-
-		var_dump( getenv() );
+		$is_CI = defined( 'CI' );
 
 		$error_list = array();
 		$warning_list = array();
