@@ -41,6 +41,7 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:structure
       env:
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
+        CI: true
       shell: bash
 
       ## The following tests require an environment
@@ -61,6 +62,7 @@ runs:
         UI_DEBUG: ${{ inputs.ui-debug }}
         TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
+        CI: true
       shell: bash
     
 
