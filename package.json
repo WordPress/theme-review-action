@@ -1,7 +1,8 @@
 {
-  "name": "WordPress-Theme-Check-Action",
-  "version": "1.0.0",
+  "name": "wordpress-theme-check-action",
+  "version": "1.0.1",
   "description": "Run Theme Check test for a WordPress theme",
+  "repository": "git+https://github.com/WordPress/theme-review-action.git",
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
@@ -14,8 +15,7 @@
     "uninstall": "npm run wp-env destroy",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
-    "check:ui": "cd ./actions/ui-check && npm run start",
-    "check:env": "./bin/env.sh"
+    "check:ui": "cd ./actions/ui-check && npm run start"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
