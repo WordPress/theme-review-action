@@ -179,6 +179,7 @@ async function run() {
 				env: {
 					TEST_ACCESSIBILITY: program.accessibleReady,
 					WP_ENV_TESTS_PORT: testPort,
+					WP_USING_NPX: true
 				},
 			});
 
