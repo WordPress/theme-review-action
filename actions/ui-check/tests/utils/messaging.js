@@ -15,6 +15,10 @@ export const cleanErrorMessage = ( msg ) => {
 		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
 };
 
+/**
+ * Joins and appends lines to log file
+ * @param {array} lines
+ */
 const appendToLog = ( lines ) => {
 	const path = '../../logs/ui-check.txt';
 
