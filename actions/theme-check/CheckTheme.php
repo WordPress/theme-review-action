@@ -162,7 +162,7 @@ class WPORG_CheckTheme {
 
 		if( count( $error_list ) > 0) {
 			if( $is_CI ) {
-				$this->print_message( 'warning', $error_list );
+				$this->print_message( 'error', $error_list );
 			} else {
 				$this->output_to_log_file( $error_list );
 			}
