@@ -12,6 +12,7 @@
 		"config": "./config",
 		"actions": "./actions",
 		"test-theme": "./test-theme",
-		"helpers": "./helpers"
+		"helpers": "./helpers",
+		"logs": "./logs"
 	}
 }

@@ -1,8 +1,7 @@
 const fs = require('fs');
-const Utils = require( './utils');
+const Utils = require('./utils');
 
 const READ_OPTIONS = { encoding: 'utf8' };
-
 
 const getWpEnv = () => {
 	try {
@@ -20,8 +19,9 @@ const getWpEnv = () => {
 const maybeCreateOverrideConfig = () => {
 	const parentTheme = Utils.getParentTheme();
 	const isBlockBased = Utils.isBlockBasedTheme();
+	const isCIRun = Utils.isCI();
 
-	if (!parentTheme && !isBlockBased) {
+	if (!parentTheme && !isBlockBased && !isCIRun) {
 		console.log('No need for an override.');
 		return;
 	}
@@ -43,6 +43,11 @@ const maybeCreateOverrideConfig = () => {
 			`https://downloads.wordpress.org/plugin/gutenberg.zip`
 		);
 	}
+
+	if (isCIRun) {
+		configs.config.CI = true;
+	}
+
 	const configString = JSON.stringify(configs);
 	fs.writeFileSync('./.wp-env.override.json', configString);
 

@@ -29,7 +29,16 @@ const isBlockBasedTheme = () => {
 	return false;
 };
 
+
+const isCI = () => {
+	try {
+		return process.env.CI || process.envCI === 'true';
+	} catch (e) {}
+	return false;
+};
+
 module.exports = {
     isBlockBasedTheme,
-    getParentTheme
+    getParentTheme,
+    isCI
 }

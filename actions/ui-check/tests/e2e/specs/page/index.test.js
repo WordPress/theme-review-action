@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import { createURL } from '@wordpress/e2e-test-utils';
 import { getPageError } from '@wordpress/e2e-test-utils';
 const fetch = require( 'node-fetch' );
 
@@ -9,6 +8,7 @@ const fetch = require( 'node-fetch' );
  * Internal dependencies
  */
 import {
+	createURL,
 	getDefaultUrl,
 	errorWithMessageOnFail,
 	getElementPropertyAsync,

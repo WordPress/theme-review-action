@@ -30,6 +30,10 @@ runs:
       ## Runs some configurations to be used but other actions.
     - name: Pre-Configure environment
       id: pre
+      env:
+        CI: true
+        WP_ENV_PORT: 8888
+        WP_ENV_TESTS_PORT: 8889
       run:  |
         cd ${{ github.action_path }} && node set-configs.js
         cd ${{ github.action_path }} && node create-wp-env-override.js
@@ -47,11 +51,16 @@ runs:
       ## Start the environment
     - name: Install Environment
       run: cd ${{ github.action_path }} && npm run install:environment
+      env:
+        WP_ENV_PORT: 8888
+        WP_ENV_TESTS_PORT: 8889
       shell: bash
 
       ## Run checks using theme-check plugin
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run check:theme-check
+      env:
+        CI: true
       shell: bash
 
       ## Run checks using e2e
@@ -60,6 +69,7 @@ runs:
       env:
         UI_DEBUG: ${{ inputs.ui-debug }}
         TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
+        WP_ENV_TESTS_PORT: 8889
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
       shell: bash
     

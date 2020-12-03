@@ -1,19 +1,18 @@
 /**
- * External dependencies
- */
-import { createURL } from '@wordpress/e2e-test-utils';
-
-/**
  * Internal dependencies
  */
 import urls from './pages';
-import { cleanErrorMessage, getDefaultUrl, printMessage } from '../../../utils';
+import {
+	createURL,
+	cleanErrorMessage,
+	getDefaultUrl,
+	printMessage,
+	getEnvironmentVariable,
+} from '../../../utils';
 
 describe( 'Accessibility', () => {
-	// Potentially skip these tests.
-	const testAccessibility =
-		process.env.TEST_ACCESSIBILITY !== undefined &&
-		process.env.TEST_ACCESSIBILITY;
+	const envVar = getEnvironmentVariable( process.env.TEST_ACCESSIBILITY );
+	const testAccessibility = envVar === 'true';
 	const accessibilityTest = testAccessibility ? 'wcag2a' : 'best-practice';
 	const noticeType = testAccessibility ? 'setFailed' : 'warning';
 
@@ -41,7 +40,6 @@ describe( 'Accessibility', () => {
 					) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
 					cleanErrorMessage( e.message ),
 				] );
-				throw Error();
 			}
 		}
 	);

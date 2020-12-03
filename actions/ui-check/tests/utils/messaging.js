@@ -1,4 +1,7 @@
 const core = require( '@actions/core' );
+const fs = require( 'fs' );
+
+import { getEnvironmentVariable } from './index';
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -13,14 +16,27 @@ export const cleanErrorMessage = ( msg ) => {
 };
 
 /**
+ * Joins and appends lines to log file
+ * @param {array} lines
+ */
+const appendToLog = ( lines ) => {
+	const path = '../../logs/ui-check.txt';
+
+	fs.appendFileSync( path, [ '\n\n', ...lines ].join( '\n' ), {
+		encoding: 'utf8',
+	} );
+};
+
+/**
  * Prints a message
  * @param {string} command The name of the command that matches the `core` library messaging commands.
  * @param {string[]} lines The content to print.
  */
 export const printMessage = ( command, lines ) => {
 	// Github actions should automatically set CI
-	if ( ! process.env.CI ) {
-		console.log( lines.join( '\n\n' ) );
+	// If we are not running in github, create our own log file and write to it.
+	if ( ! getEnvironmentVariable( process.env.CI ) ) {
+		appendToLog( lines );
 		return;
 	}
 

@@ -79,6 +79,31 @@ class WPORG_CheckTheme {
 	}
 
 	/**
+	 * Appends an array of strings to the log file
+	 */
+	public function save_to_log( $strings )  {
+		$fileName = './logs/theme-check.txt';
+		file_put_contents( $fileName, implode( "\n", $strings ), FILE_APPEND );
+	}
+
+	/**
+	 * Formats array of string errors and saves them to log file
+	 */
+	public function output_to_log_file( $list ) {
+		$eol = PHP_EOL;
+		$strings = [];
+
+		foreach ( $list as $key => $val ) {
+			$implode = implode( $eol . $eol, $val );
+			$str = '[ ' . esc_attr( $key ) . ' ] '. $eol . $implode . $eol . $eol;
+
+			array_push( $strings, $str );
+		}
+
+		$this->save_to_log( $strings );
+	}
+
+	/**
 	 * Determines if the start string matches
 	 */
 	public function starts_with( $haystack, $needle ) {
@@ -107,6 +132,7 @@ class WPORG_CheckTheme {
 	 */
 	public function display_results() {
 		global $themechecks; // global that exists in the theme-check plugin
+		$is_CI = defined( 'CI' );
 
 		$error_list = array();
 		$warning_list = array();
@@ -135,19 +161,22 @@ class WPORG_CheckTheme {
 		}
 
 		if( count( $error_list ) > 0) {
-			$this->print_message( 'error', $error_list );
+			if( $is_CI ) {
+				$this->print_message( 'error', $error_list );
+			} else {
+				$this->output_to_log_file( $error_list );
+			}
 		}
 
 		echo PHP_EOL;
 		echo PHP_EOL;
 
 		if( count( $warning_list ) > 0) {
-			$this->print_message( 'warning', $warning_list );
-		}
-
-		if ( count( $error_list ) > 0 ) {
-			// Turning the exit off for now as we test this.
-			//exit( 1 );
+			if( $is_CI ) {
+				$this->print_message( 'warning', $warning_list );
+			} else {
+				$this->output_to_log_file( $warning_list );
+			}
 		}
 	}
 
