@@ -6,6 +6,7 @@ module.exports = {
 		providesModuleNodeModules: [ '.*' ],
 	},
 	testPathIgnorePatterns: [ '<rootDir>/node_modules/' ],
+	transformIgnorePatterns: [ '<rootDir>/node_modules/' ],
 	modulePathIgnorePatterns: [ '<rootDir>/node_modules/' ],
 	setupFilesAfterEnv: [
 		'<rootDir>/jest.defaults.js',
