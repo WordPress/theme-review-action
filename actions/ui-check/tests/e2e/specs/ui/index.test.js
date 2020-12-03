@@ -388,7 +388,6 @@ describe( 'Accessibility: UI', () => {
 		try {
 			await testSubMenus();
 		} catch ( ex ) {
-			console.log( ex );
 			if ( ex instanceof FailedTestException ) {
 				printMessage( 'warning', ex.messages );
 			} else {
