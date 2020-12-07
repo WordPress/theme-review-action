@@ -35,6 +35,7 @@ runs:
         WP_ENV_PORT: 8888
         WP_ENV_TESTS_PORT: 8889
       run:  |
+        ls
         cd ${{ github.action_path }} && node set-configs.js
         cd ${{ github.action_path }} && node create-wp-env-override.js
       shell: bash
