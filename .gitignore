@@ -1,7 +1,7 @@
 node_modules
 .DS_Store
 .wp-env.override.json
-test-theme/*
+
 actions/ui-check/screenshots
 actions/ui-check/tests/e2e/specs/page/siteinfo.json
 actions/structure-check/.phpunit.result.cache

@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const ora = require('ora');
 const { command } = require('execa');
-const { info, error, success, print } = require('./log');
+const { info, error, success, print, warning } = require('./log');
 const { fancyTimeFormat } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
@@ -17,6 +17,13 @@ const getVersion = () => {
 	const file = fs.readFileSync(packageJsonLocation, UTF_8_ENCODING);
 
 	return JSON.parse(file).version;
+};
+
+/**
+ * Returns true if running on windows.
+ */
+const isWindows = () => {
+	return process.platform === 'win32';
 };
 
 /**
@@ -46,6 +53,12 @@ const getThemeInfo = () => {
  * Determines whether the host system is running a docker instance
  */
 const hasDocker = async () => {
+	// TODO: Improve the docker check to be cross platform.
+	if (isWindows()) {
+		warning('Please ensure docker is running.');
+		return true;
+	}
+
 	try {
 		// TODO: This won't work on windows
 		const res = await command(
@@ -105,7 +118,9 @@ async function run() {
 	let hasWorkingEnvironment = true;
 
 	// This make sure npm is running the correct command (the ones in this repo)
-	const npmPrefix = `npm run --prefix ${rootPath}`;
+    const npmPrefix = `npm run --prefix "${rootPath}"`;
+    
+    console.log('npmPrefix', npmPrefix); 
 
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
@@ -132,7 +147,13 @@ async function run() {
 	try {
 		const destination = path.join(__dirname, `../test-theme`);
 		spinner = ora('Copying theme files into the environment...').start();
-		await fs.copy('.', destination);
+        const res = await fs.copy('.', destination);
+        
+		console.log(res);
+        
+        const l = await command('dir');
+        console.log( l.stdout);
+
 		spinner.succeed();
 	} catch (e) {
 		error(e);
@@ -144,12 +165,18 @@ async function run() {
 		spinner = ora(
 			'Setting up the development environment for testing...'
 		).start();
-		await command(`${npmPrefix} install:environment`, {
+		const res = await command(`${npmPrefix} install:environment `, {
 			env: {
 				WP_ENV_PORT: basePort,
-				WP_ENV_TESTS_PORT: testPort,
+                WP_ENV_TESTS_PORT: testPort,
+                INIT_CWD: rootPath
 			},
+			timeout: 90000,
+			windowHide: false,
 		});
+
+		console.log(res.stdout);
+		console.log(res.stderr);
 
 		spinner.succeed();
 	} catch (e) {
@@ -179,7 +206,7 @@ async function run() {
 				env: {
 					TEST_ACCESSIBILITY: program.accessibleReady,
 					WP_ENV_TESTS_PORT: testPort,
-					WP_USING_NPX: true
+					WP_USING_NPX: true,
 				},
 			});
 
@@ -246,6 +273,7 @@ async function run() {
 				'port to run tests on. Tests require 2 ports. Tests will also occupy <port> +1.',
 				8484
 			)
+			.option('--verbose <port>', 'print debugging information.', 8484)
 			.action(run);
 
 		await program.parseAsync(process.argv);

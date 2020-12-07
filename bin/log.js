@@ -12,6 +12,10 @@ const error = (input) => {
 	console.log(chalk.bold.red(input));
 };
 
+const warning = (input) => {
+	console.log(chalk.bold.yellow(input));
+};
+
 const info = (key, value) => {
 	const color = chalk.bold.blue(key);
 
@@ -32,7 +36,8 @@ module.exports = {
 	code,
 	error,
 	info,
-	success,
+    success,
+    warning,
 	print,
 };
 /* eslint-enable no-console */
