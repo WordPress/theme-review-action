@@ -1,6 +1,6 @@
 # WordPress Theme Check Action
 
-This code actions runs various test suites to help WordPress theme development. 
+This code action runs various test suites to help WordPress theme development. 
 
 ## Requirements
 
