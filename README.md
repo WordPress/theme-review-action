@@ -22,7 +22,6 @@ This code action runs various test suites to help WordPress theme development.
 2. GitHub Actions
 3. Using this project locally
 
-
 ### Running via `NPX`
 You can run this project VIA npx by doing the following:
 
@@ -80,6 +79,9 @@ Read more about [GitHub Actions](https://docs.github.com/en/free-pro-team@latest
 4. Move your theme into the `/test-theme` folder. Ensure that `/test-theme` is the root folder.
 5. With Docker online, run `npm run install:environment`.
 6. Verify that your environment is up and running and your theme installed corretly by visiting [https://localhost:8889](https://localhost:8889).
+
+## Supported Environments
+This project currently only supports macOs and Linux operating systems.
 
 ## Checks
 
