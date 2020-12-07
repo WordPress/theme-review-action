@@ -1,6 +1,6 @@
 # WordPress Theme Check Action
 
-This action runs tests on a WordPress to determine if its ready for submission to WordPress.org's theme directory.
+This code actions runs various test suites to help WordPress theme development. 
 
 ## Requirements
 
@@ -10,18 +10,76 @@ This action runs tests on a WordPress to determine if its ready for submission t
 
 ## Action Inputs
 
-| Input         | Description                          |
-| ------------- | ------------------------------------ |
-| `root-folder` | Location of your theme's root folder |
-| `accessible-ready` | Whether we should run the additional accessibility tests |
+| Input              | Type    | Description                                                            |
+| ------------------ | ------- | ---------------------------------------------------------------------- |
+| `root-folder`      | string  | Location of your theme's root folder                                   |
+| `accessible-ready` | boolean | Whether we should run the additional accessibility tests               |
+| `ui-debug`         | boolean | Setting this to true will save some screenshot artifacts for debugging |
 
-## Development
+## Triggers 
 
-1. Run `npm install` to install dependencies
-2. Add `"config": { "DEV_MODE": true }` as a config to `.wp-env.json`.
-3. Run `npm run install:environment` to start WordPress
+1. NPX
+2. GitHub Actions
+3. Using this project locally
 
-If you want to test a theme locally, add a theme to the `/test-theme`.
+
+### Running via `NPX`
+You can run this project VIA npx by doing the following:
+
+1. Inside of your WordPress theme folder, run `npx wordpress-theme-check-action`.
+
+_Results of the tests will be printed to the console._
+
+### Running via `GitHub Actions`
+You can run this project on GitHub. Here is an example GitHub action workflow file:
+
+```
+name: Test My Theme 
+
+on:
+  push:
+    branches: [ main ] ## Change the branch name to match yours
+  pull_request:
+    branches: [ main ] ## Change the branch name to match yours
+
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    ## We need to keep this around until Gutenberg 9.6 is launched.
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'  
+
+    - name: Theme Test
+      id: test
+      uses: Wordpress/theme-review-action@trunk
+      with:
+        accessible-ready: true 
+        ui-debug: true
+
+    - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: Screenshots
+
+```
+
+The following working should run the tests on commits and pull requests to the `main` branch. Errors will be printed as annotations within the action runs. 
+
+Read more about [GitHub Actions](https://docs.github.com/en/free-pro-team@latest/actions).
+
+### Running this locally
+
+1. Run `git clone git@github.com:WordPress/theme-review-action.git && cd theme-review-action`. 
+2. Run `npm install` to install dependencies
+3. Add `"DEV_MODE": true` to the `config` property in the `.wp-env.json`.
+4. Move your theme into the `/test-theme` folder. Ensure that `/test-theme` is the root folder.
+5. With Docker online, run `npm run install:environment`.
+6. Verify that your environment is up and running and your theme installed corretly by visiting [https://localhost:8889](https://localhost:8889).
 
 ## Checks
 
