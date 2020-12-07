@@ -25,7 +25,11 @@ runs:
     #   run: |
     #     echo Copying theme folder ...
     #     rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
-    #   shell: bash
+    #   shell: bash'
+
+    - name: check things
+      run: ls
+      shell: bash
 
       ## Runs some configurations to be used but other actions.
     - name: Pre-Configure environment
