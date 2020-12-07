@@ -21,11 +21,11 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - name: Copy host folder
-      run: |
-        echo Copying theme folder ...
-        rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
-      shell: bash
+    # - name: Copy host folder
+    #   run: |
+    #     echo Copying theme folder ...
+    #     rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
+    #   shell: bash
 
       ## Runs some configurations to be used but other actions.
     - name: Pre-Configure environment
