@@ -4,7 +4,7 @@
 	"description": "Run tests for themes in WP.org directory",
 	"main": "index.js",
 	"scripts": {
-		"install:siteinfo": "./bin/site-info.sh",
+		"install:siteinfo": "sh bin/site-info.sh",
 		"install:environment": "npm install && mkdir -p screenshots && npm run install:siteinfo",
 		"format:js": "wp-scripts format-js",
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
