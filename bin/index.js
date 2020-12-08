@@ -118,10 +118,8 @@ async function run() {
 	let hasWorkingEnvironment = true;
 
 	// This make sure npm is running the correct command (the ones in this repo)
-    const npmPrefix = `npm run --prefix "${rootPath}"`;
-    
-    console.log('npmPrefix', npmPrefix); 
-
+	const npmPrefix = `npm run --prefix "${rootPath}"`;
+	
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
 		error('This project requires Docker to be installed and running.');
@@ -147,13 +145,8 @@ async function run() {
 	try {
 		const destination = path.join(__dirname, `../test-theme`);
 		spinner = ora('Copying theme files into the environment...').start();
-        const res = await fs.copy('.', destination);
-        
-		console.log(res);
-        
-        const l = await command('dir');
-        console.log( l.stdout);
-
+		await fs.copy('.', destination);
+		
 		spinner.succeed();
 	} catch (e) {
 		error(e);
@@ -168,15 +161,12 @@ async function run() {
 		const res = await command(`${npmPrefix} install:environment `, {
 			env: {
 				WP_ENV_PORT: basePort,
-                WP_ENV_TESTS_PORT: testPort,
-                INIT_CWD: rootPath
+				WP_ENV_TESTS_PORT: testPort,
+				INIT_CWD: rootPath
 			},
 			timeout: 90000,
 			windowHide: false,
 		});
-
-		console.log(res.stdout);
-		console.log(res.stderr);
 
 		spinner.succeed();
 	} catch (e) {
