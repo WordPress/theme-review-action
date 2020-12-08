@@ -21,15 +21,11 @@ branding:
 runs:
   using: 'composite'
   steps:
-    # - name: Copy host folder
-    #   run: |
-    #     echo Copying theme folder ...
-    #     rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
-    #   shell: bash'
-
-    - name: check things
-      run: ls
-      shell: bash
+    - name: Copy host folder
+      run: |
+        echo Copying theme folder ...
+        rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
+      shell: bash'
 
       ## Runs some configurations to be used but other actions.
     - name: Pre-Configure environment
@@ -39,7 +35,6 @@ runs:
         WP_ENV_PORT: 8888
         WP_ENV_TESTS_PORT: 8889
       run:  |
-        ls
         cd ${{ github.action_path }} && node set-configs.js
         cd ${{ github.action_path }} && node create-wp-env-override.js
       shell: bash
