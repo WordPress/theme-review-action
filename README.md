@@ -80,6 +80,10 @@ Read more about [GitHub Actions](https://docs.github.com/en/free-pro-team@latest
 5. With Docker online, run `npm run install:environment`.
 6. Verify that your environment is up and running and your theme installed correctly by visiting [https://localhost:8889](https://localhost:8889).
 
+#### Notes:
+
+- For best results on Windows, run the project using the Bash shell (or other shells that support Linux/Unix commands) as opposed to the Command Prompt.
+
 ## Supported Environments
 This project currently only supports macOs and Linux operating systems.
 
@@ -95,6 +99,6 @@ This check runs the [Theme Check](https://wordpress.org/plugins/theme-check/) pl
 
 ### `npm run check:ui`
 
-This check runs various checks on the theme. 
+This check runs various checks on the theme.
 
-
+*Important*: If running locally, run using `WP_ENV_TESTS_PORT=8889 npm run check:ui`. This environment variable is set when running as a GitHub action or NPX.
