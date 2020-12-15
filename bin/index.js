@@ -158,7 +158,7 @@ async function run() {
 		spinner = ora(
 			'Setting up the development environment for testing...'
 		).start();
-		const res = await command(`${npmPrefix} install:environment `, {
+		await command(`${npmPrefix} install:environment `, {
 			env: {
 				WP_ENV_PORT: basePort,
 				WP_ENV_TESTS_PORT: testPort,
