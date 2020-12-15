@@ -119,7 +119,7 @@ async function run() {
 
 	// This make sure npm is running the correct command (the ones in this repo)
 	const npmPrefix = `npm run --prefix "${rootPath}"`;
-	
+
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
 		error('This project requires Docker to be installed and running.');
@@ -145,8 +145,7 @@ async function run() {
 	try {
 		const destination = path.join(__dirname, `../test-theme`);
 		spinner = ora('Copying theme files into the environment...').start();
-		await fs.copy('.', destination);
-		
+		await fs.copy('.', destination);	
 		spinner.succeed();
 	} catch (e) {
 		error(e);
