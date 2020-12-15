@@ -263,7 +263,6 @@ async function run() {
 				'port to run tests on. Tests require 2 ports. Tests will also occupy <port> +1.',
 				8484
 			)
-			.option('--verbose <port>', 'print debugging information.', 8484)
 			.action(run);
 
 		await program.parseAsync(process.argv);
