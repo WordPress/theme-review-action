@@ -22,6 +22,16 @@ const setUIScreenshotPath = () => {
 	);
 };
 
+/**
+ * Outputs the location for the logs
+ */
+const setLogPath = () => {
+	console.log(
+		`::set-output name=logs::${process.env.GITHUB_ACTION_PATH}/logs`
+	);
+};
+
 //INIT
 setThemeType();
 setUIScreenshotPath();
+setLogPath();

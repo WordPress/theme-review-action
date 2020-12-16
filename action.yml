@@ -15,6 +15,9 @@ outputs:
   screenshots: 
     description: "Path to screenshots"
     value: ${{ steps.pre.outputs.location}}
+  logs:
+    description: "Path to the logs"
+    value: ${{ steps.pre.outputs.logs}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
