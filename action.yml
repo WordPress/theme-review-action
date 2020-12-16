@@ -59,6 +59,10 @@ runs:
         WP_ENV_TESTS_PORT: 8889
       shell: bash
 
+    - name: Modify folder permissions
+      run: docker exec -t $( docker ps -qf "name=tests" ) chmod -R 767 /var/www/html/wp-content
+      shell: bash
+
       ## Run checks using theme-check plugin
     - name: Run Theme Check
       run: cd ${{ github.action_path }} && npm run check:theme-check
