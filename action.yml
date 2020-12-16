@@ -50,6 +50,10 @@ runs:
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
       shell: bash
 
+    - name: Modify folder permissions
+      run: : cd ${{ github.action_path }} && chmod -R 767 ./
+      shell: bash
+
       ## The following tests require an environment
       ## Start the environment
     - name: Install Environment
@@ -59,9 +63,7 @@ runs:
         WP_ENV_TESTS_PORT: 8889
       shell: bash
 
-    - name: Modify folder permissions
-      run: docker exec -t $( docker ps -qf "name=tests" ) chmod -R 767 /var/www/html/wp-content
-      shell: bash
+
 
       ## Run checks using theme-check plugin
     - name: Run Theme Check
