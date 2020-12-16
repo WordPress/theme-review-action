@@ -118,7 +118,7 @@ async function run() {
 	let hasWorkingEnvironment = true;
 
 	// This make sure npm is running the correct command (the ones in this repo)
-	const npmPrefix = `npm run --prefix "${rootPath}"`;
+	const npmPrefix = `npm run --prefix ${rootPath}`;
 
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
