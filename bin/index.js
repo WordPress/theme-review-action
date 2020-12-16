@@ -145,7 +145,7 @@ async function run() {
 	try {
 		const destination = path.join(__dirname, `../test-theme`);
 		spinner = ora('Copying theme files into the environment...').start();
-		await fs.copy('.', destination);	
+		await fs.copy('.', destination);
 		spinner.succeed();
 	} catch (e) {
 		error(e);
