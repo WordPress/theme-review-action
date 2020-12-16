@@ -126,6 +126,11 @@ const testLiSubMenu = async ( listItem ) => {
 		// 	);
 		// }
 
+		// We don't want to test on hidden listItems
+		if ( ! ( await elementIsVisibleAsync( link ) ) ) {
+			return;
+		}
+
 		// Test that hovering works
 		await link.hover();
 

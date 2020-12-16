@@ -35,10 +35,10 @@ const appendToLog = ( lines ) => {
 export const printMessage = ( command, lines ) => {
 	appendToLog( lines );
 
-    // Only use the core library when using github actions.
+	// Only use the core library when using github actions.
 	if ( getEnvironmentVariable( process.env.CI ) ) {
-        core[ command ]( lines.join( '\n\n' ) );
-    }
+		core[ command ]( lines.join( '\n\n' ) );
+	}
 };
 
 /**
