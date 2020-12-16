@@ -68,7 +68,7 @@ class WPORG_CheckTheme {
 	public function print_message( $type, $messages ) {
 		echo '::' . esc_attr( $type ) . '::';
 
-		$eol = ( ! defined( 'DEV_MODE' ) ? '%0A' : PHP_EOL );
+		$eol = ( defined( 'CI' ) ? '%0A' : PHP_EOL );
 
 		foreach ( $messages as $key => $val ) {
 			$implode = implode( $eol, $val );
@@ -132,7 +132,7 @@ class WPORG_CheckTheme {
 	 */
 	public function display_results() {
 		global $themechecks; // global that exists in the theme-check plugin
-		$is_CI = defined( 'CI' );
+
 
 		$error_list = array();
 		$warning_list = array();
@@ -162,10 +162,7 @@ class WPORG_CheckTheme {
 
 		if( count( $error_list ) > 0) {
 			$this->output_to_log_file( $error_list );
-
-			if( $is_CI ) {
-				$this->print_message( 'error', $error_list );
-			}
+			$this->print_message( 'error', $error_list );
 		}
 
 		echo PHP_EOL;
@@ -173,10 +170,7 @@ class WPORG_CheckTheme {
 
 		if( count( $warning_list ) > 0) {
 			$this->output_to_log_file( $warning_list );
-
-			if( $is_CI ) {
-				$this->print_message( 'warning', $warning_list );
-			}
+			$this->print_message( 'warning', $warning_list );
 		}
 	}
 

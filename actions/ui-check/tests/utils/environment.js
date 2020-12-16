@@ -1,5 +1,5 @@
 export const isDebugMode = () => process.env.UI_DEBUG;
-export const testPort = process.env.WP_ENV_TESTS_PORT;
+export const testPort = process.env.WP_ENV_TESTS_PORT || 8889;
 
 export const getEnvironmentVariable = ( variable ) => {
 	return variable || false;
