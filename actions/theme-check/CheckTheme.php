@@ -161,10 +161,10 @@ class WPORG_CheckTheme {
 		}
 
 		if( count( $error_list ) > 0) {
+			$this->output_to_log_file( $error_list );
+
 			if( $is_CI ) {
 				$this->print_message( 'error', $error_list );
-			} else {
-				$this->output_to_log_file( $error_list );
 			}
 		}
 
@@ -172,10 +172,10 @@ class WPORG_CheckTheme {
 		echo PHP_EOL;
 
 		if( count( $warning_list ) > 0) {
+			$this->output_to_log_file( $warning_list );
+
 			if( $is_CI ) {
 				$this->print_message( 'warning', $warning_list );
-			} else {
-				$this->output_to_log_file( $warning_list );
 			}
 		}
 	}
