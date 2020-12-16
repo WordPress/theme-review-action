@@ -4,7 +4,7 @@ const path = require('path');
 const program = require('commander');
 const ora = require('ora');
 const { command } = require('execa');
-const { info, error, success, print } = require('./log');
+const { info, error, success, print, warning } = require('./log');
 const { fancyTimeFormat } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
@@ -17,6 +17,13 @@ const getVersion = () => {
 	const file = fs.readFileSync(packageJsonLocation, UTF_8_ENCODING);
 
 	return JSON.parse(file).version;
+};
+
+/**
+ * Returns true if running on windows.
+ */
+const isWindows = () => {
+	return process.platform === 'win32';
 };
 
 /**
@@ -46,6 +53,12 @@ const getThemeInfo = () => {
  * Determines whether the host system is running a docker instance
  */
 const hasDocker = async () => {
+	// TODO: Improve the docker check to be cross platform.
+	if (isWindows()) {
+		warning('Please ensure docker is running.');
+		return true;
+	}
+
 	try {
 		// TODO: This won't work on windows
 		const res = await command(
@@ -144,11 +157,14 @@ async function run() {
 		spinner = ora(
 			'Setting up the development environment for testing...'
 		).start();
-		await command(`${npmPrefix} install:environment`, {
+		await command(`${npmPrefix} install:environment `, {
 			env: {
 				WP_ENV_PORT: basePort,
 				WP_ENV_TESTS_PORT: testPort,
+				INIT_CWD: rootPath
 			},
+			timeout: 90000,
+			windowHide: false,
 		});
 
 		spinner.succeed();
@@ -179,7 +195,7 @@ async function run() {
 				env: {
 					TEST_ACCESSIBILITY: program.accessibleReady,
 					WP_ENV_TESTS_PORT: testPort,
-					WP_USING_NPX: true
+					WP_USING_NPX: true,
 				},
 			});
 
