@@ -36,8 +36,8 @@ module.exports = {
 	code,
 	error,
 	info,
-    success,
-    warning,
+	success,
+	warning,
 	print,
 };
 /* eslint-enable no-console */
