@@ -40,6 +40,7 @@ runs:
       run:  |
         cd ${{ github.action_path }} && node set-configs.js
         cd ${{ github.action_path }} && node create-wp-env-override.js
+        cd ${{ github.action_path }} && chmod -R 767 ./
       shell: bash
 
       ## Run unit tests to test that the correct files exist.
@@ -48,10 +49,6 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:structure
       env:
         THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
-      shell: bash
-
-    - name: Modify folder permissions
-      run: : cd ${{ github.action_path }} && chmod -R 767 ./
       shell: bash
 
       ## The following tests require an environment
