@@ -1,4 +1,3 @@
-const https = require('https');
 const fs = require('fs');
 const execa = require('execa');
 const ora = require('ora');
@@ -45,41 +44,59 @@ const installMenu = async () => {
 	}
 };
 
+const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
+	return new Promise((resolve, reject) => {
+		spinner = ora(text).start();
+		lib.get(url, (res) => {
+			if (res.statusCode !== 200) {
+				reject('Error downloading file');
+			}
+
+			let rawData = '';
+			res.setEncoding('utf8');
+			res.on('data', (chunk) => {
+				rawData += chunk;
+			}).on('end', () => {
+				try {
+					fs.writeFileSync(saveTo, rawData);
+					spinner.succeed();
+					resolve('done');
+				} catch (e) {
+					spinner.fail();
+					reject(e.message);
+				}
+			});
+		});
+	});
+};
+
 /**
  * Downloads a database export from github
  */
-const downloadTestData = () => {
-	return new Promise((resolve, reject) => {
-		spinner = ora('Downloading test data xml.').start();
-		https.get(
+const downloadTestData = async () => {
+	await downloadAndSaveFile({
+		lib: require('https'),
+		url:
 			'https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml',
-			(res) => {
-				let rawData = '';
-				res.setEncoding('utf8');
-				res.on('data', (chunk) => {
-					rawData += chunk;
-				}).on('end', () => {
-					try {
-						fs.writeFileSync(
-							'config/a11y-theme-unit-test-data.xml',
-							rawData
-						);
-						spinner.succeed();
-						resolve('done');
-					} catch (e) {
-                        spinner.fail();
-						reject(e.message);
-					}
-				});
-			}
-		);
+		text: 'Downloading test data xml.',
+		saveTo: 'config/a11y-theme-unit-test-data.xml',
+	});
+};
+
+/**
+ * Downloads information about the theme
+ */
+const downloadSiteData = async () => {
+	await downloadAndSaveFile({
+		lib: require('http'),
+		url: 'http://localhost:8889/?rest_route=/theme-test-helper/v1/info',
+		text: 'Downloading site data.',
+		saveTo: 'config/siteinfo.json',
 	});
 };
 
 (async () => {
 	try {
-		await downloadTestData();
-
 		await runCommand(
 			'Activating the test theme on main site.',
 			'theme activate test-theme',
@@ -91,6 +108,9 @@ const downloadTestData = () => {
 			'theme activate test-theme'
 		);
 
+
+		await downloadSiteData();
+
 		await runCommand(
 			'Installing & Activating wordpress-importer.',
 			'plugin install wordpress-importer --activate'
@@ -99,10 +119,13 @@ const downloadTestData = () => {
 		await runCommand(
 			'Importing a11y data.',
 			'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
-		);
+        );
 
-		await installMenu();
+        await installMenu();
+
+		await downloadTestData();
 	} catch (e) {
+        spinner.stop();
 		console.log(e);
 	}
 })();

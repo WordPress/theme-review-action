@@ -14,7 +14,7 @@ import {
 	getElementPropertyAsync,
 } from '../../../utils';
 
-import site_info from './siteinfo.json';
+import site_info from '../../../../../../config/siteinfo.json';
 
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
