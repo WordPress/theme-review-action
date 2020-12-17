@@ -13,7 +13,7 @@
     "check:ui": "cd ./actions/ui-check && npm run start"
   },
   "bin": {
-    "wp-theme-check": "./bin/index.js"
+    "wp-theme-check": "./bin/program.js"
   },
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
