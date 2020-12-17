@@ -87,9 +87,11 @@ const downloadTestData = async () => {
  * Downloads information about the theme
  */
 const downloadSiteData = async () => {
+	const port = process.env.WP_ENV_TESTS_PORT || 8889;
+
 	await downloadAndSaveFile({
 		lib: require('http'),
-		url: 'http://localhost:8889/?rest_route=/theme-test-helper/v1/info',
+		url: `http://localhost:${port}/?rest_route=/theme-test-helper/v1/info`,
 		text: 'Downloading site data.',
 		saveTo: 'config/siteinfo.json',
 	});
@@ -108,7 +110,6 @@ const downloadSiteData = async () => {
 			'theme activate test-theme'
 		);
 
-
 		await downloadSiteData();
 
 		await runCommand(
@@ -119,13 +120,13 @@ const downloadSiteData = async () => {
 		await runCommand(
 			'Importing a11y data.',
 			'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
-        );
+		);
 
-        await installMenu();
+		await installMenu();
 
 		await downloadTestData();
 	} catch (e) {
-        spinner.stop();
+		spinner.stop();
 		console.log(e);
 	}
 })();
