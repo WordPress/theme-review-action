@@ -45,11 +45,11 @@ runs:
 
       ## Run unit tests to test that the correct files exist.
       ## If these files don't exist, the environment won't start up
-    - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }} && npm run check:structure
-      env:
-        THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
-      shell: bash
+    # - name: Run Theme Structure Test
+    #   run: cd ${{ github.action_path }} && npm run check:structure
+    #   env:
+    #     THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
+    #   shell: bash
 
       ## The following tests require an environment
       ## Start the environment
