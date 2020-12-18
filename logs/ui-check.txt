@@ -1,0 +1,107 @@
+
+
+
+[ Accessibility - Skip Link Test ]:
+This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbol.
+[ Result ]
+Page: "/"
+Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.
+You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.
+
+
+/ does not contain a body class
+
+
+Page contains incomplete output: ""
+
+
+/ does not contain a body class
+
+
+Page contains incomplete output: ""
+
+
+/ does not contain a body class
+
+
+Page contains incomplete output: ""
+
+
+/ does not contain a body class
+
+
+Page contains incomplete output: ""
+
+
+/ does not contain a body class
+
+
+Page contains incomplete output: ""
+
+
+[ Accessibility - best-practice Tests ]:
+Running tests on Home (/) using: 
+https://github.com/wpaccessibility/a11y-theme-unit-test
+
+
+
+Violations found:
+Rule: "landmark-one-main" (Document must have one main landmark)
+Help: https://dequeuniversity.com/rules/axe/3.5/landmark-one-main?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Document does not have a main landmark.
+
+Rule: "page-has-heading-one" (Page must contain a level-one heading)
+Help: https://dequeuniversity.com/rules/axe/3.5/page-has-heading-one?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Page must have a level-one heading.
+
+
+
+[ Accessibility - best-practice Tests ]:
+Running tests on Post (/?p=1730) using: 
+https://github.com/wpaccessibility/a11y-theme-unit-test
+
+
+
+Violations found:
+Rule: "landmark-one-main" (Document must have one main landmark)
+Help: https://dequeuniversity.com/rules/axe/3.5/landmark-one-main?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Document does not have a main landmark.
+
+Rule: "page-has-heading-one" (Page must contain a level-one heading)
+Help: https://dequeuniversity.com/rules/axe/3.5/page-has-heading-one?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Page must have a level-one heading.
+
+
+
+[ Accessibility - best-practice Tests ]:
+Running tests on Page (/?page_id=701) using: 
+https://github.com/wpaccessibility/a11y-theme-unit-test
+
+
+
+Violations found:
+Rule: "landmark-one-main" (Document must have one main landmark)
+Help: https://dequeuniversity.com/rules/axe/3.5/landmark-one-main?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Document does not have a main landmark.
+
+Rule: "page-has-heading-one" (Page must contain a level-one heading)
+Help: https://dequeuniversity.com/rules/axe/3.5/page-has-heading-one?application=axe-puppeteer
+Affected Nodes:
+  html
+    Fix ALL of the following:
+      - Page must have a level-one heading.

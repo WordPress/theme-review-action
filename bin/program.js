@@ -30,7 +30,7 @@ const isWindows = () => {
  * Loads the theme's style.css to retrieve theme information
  */
 const getThemeInfo = () => {
-	const file = fs.readFileSync('style.css', UTF_8_ENCODING);
+	const file = fs.readFileSync('./test-theme/style.css', UTF_8_ENCODING);
 	let themeName;
 
 	if (file) {
@@ -142,16 +142,16 @@ async function run() {
 
 	info('\nSteps:');
 
-	try {
-		const destination = path.join(__dirname, `../test-theme`);
-		spinner = ora('Copying theme files into the environment...').start();
-		await fs.copy('.', destination);
-		spinner.succeed();
-	} catch (e) {
-		error(e);
-		spinner.fail();
-		return;
-	}
+	// try {
+	// 	const destination = path.join(__dirname, `../test-theme`);
+	// 	spinner = ora('Copying theme files into the environment...').start();
+	// 	await fs.copy('.', destination);
+	// 	spinner.succeed();
+	// } catch (e) {
+	// 	error(e);
+	// 	spinner.fail();
+	// 	return;
+	// }
 
 	try {
 		spinner = ora(

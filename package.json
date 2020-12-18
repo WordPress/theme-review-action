@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "install:environment": "npm install && npm run wp-env start && node bin/configure.js",
+    "install:variables": "node bin/set-configs && node bin/create-wp-env-override.js",
+    "install:environment": "npm install && npm run install:variables && npm run wp-env start && node bin/configure.js",
     "uninstall": "npm run wp-env destroy",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",

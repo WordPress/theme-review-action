@@ -11,74 +11,12 @@ inputs:
   ui-debug:
     description: 'More verbose logging; Creates a GIF'
     default: false
-outputs:
-  screenshots: 
-    description: "Path to screenshots"
-    value: ${{ steps.pre.outputs.location}}
-  logs:
-    description: "Path to the logs"
-    value: ${{ steps.pre.outputs.logs}}
+env:
+  WP_ENV_PORT: 8888
+  WP_ENV_TESTS_PORT: 8889
 branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
-  using: 'composite'
-  steps:
-    - name: Copy host folder
-      run: |
-        echo Copying theme folder ...
-        rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
-      shell: bash
-
-      ## Runs some configurations to be used but other actions.
-    - name: Pre-Configure environment
-      id: pre
-      env:
-        CI: true
-      run:  |
-        cd ${{ github.action_path }} && node set-configs.js
-        cd ${{ github.action_path }} && node create-wp-env-override.js
-        cd ${{ github.action_path }} && chmod -R 767 ./
-      shell: bash
-
-      ## Run unit tests to test that the correct files exist.
-      ## If these files don't exist, the environment won't start up
-    - name: Run Theme Structure Test
-      run: cd ${{ github.action_path }} && npm run check:structure
-      env:
-        CI: true
-        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
-      shell: bash
-
-      ## The following tests require an environment
-      ## Start the environment
-    - name: Install Environment
-      run: cd ${{ github.action_path }} && npm run install:environment
-      env:
-        CI: true
-        WP_ENV_PORT: 8888
-        WP_ENV_TESTS_PORT: 8889
-        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
-      shell: bash
-
-      ## Run checks using theme-check plugin
-    - name: Run Theme Check
-      run: cd ${{ github.action_path }} && npm run check:theme-check
-      env:
-        CI: true
-        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
-      shell: bash
-
-      ## Run checks using e2e
-    - name: Run Basic JS Checks
-      run: cd ${{ github.action_path }} && npm run check:ui
-      env:
-        CI: true
-        WP_ENV_TESTS_PORT: 8889
-        UI_DEBUG: ${{ inputs.ui-debug }}
-        TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
-        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
-      shell: bash
-    
-
-    
+  using: 'node12'
+  main: 'bin/program.js'

@@ -3,7 +3,6 @@ const Utils = require('./utils');
 const IS_CI = Utils.isCI();
 
 const setConfiguration = (key, value) => {
-    console.log( 'IS_CI', IS_CI);
 	if (IS_CI) {
 		console.log(`::set-output name=${key}::${value}`);
 	} else {
