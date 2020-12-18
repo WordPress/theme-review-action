@@ -163,7 +163,6 @@ async function run() {
 				WP_ENV_TESTS_PORT: testPort,
 				INIT_CWD: rootPath
 			},
-			timeout: 90000,
 			windowHide: false,
 		});
 
