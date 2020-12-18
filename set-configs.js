@@ -1,15 +1,25 @@
 const Utils = require('./utils');
 
+const IS_CI = Utils.isCI();
+
+const setConfiguration = (key, value) => {
+	if (IS_CI) {
+		console.log(`::set-output name=${key}::${value}`);
+	} else {
+		process.env[key] = value;
+	}
+};
+
 /**
  * Outputs the type of theme to github based on file structure
  */
 const setThemeType = () => {
 	if (Utils.getParentTheme()) {
-		console.log('::set-output name=theme-type::child');
+		setConfiguration('THEME_TYPE', 'child');
 	} else if (Utils.isBlockBasedTheme()) {
-		console.log('::set-output name=theme-type::block');
+		setConfiguration('THEME_TYPE', 'block');
 	} else {
-		console.log('::set-output name=theme-type::default');
+		setConfiguration('THEME_TYPE', 'default');
 	}
 };
 
@@ -17,8 +27,9 @@ const setThemeType = () => {
  * Outputs the location for the screenshots in the ui-check
  */
 const setUIScreenshotPath = () => {
-	console.log(
-		`::set-output name=location::${process.env.GITHUB_ACTION_PATH}/actions/ui-check/screenshots`
+	setConfiguration(
+		'location',
+		`${process.env.GITHUB_ACTION_PATH}/actions/ui-check/screenshots`
 	);
 };
 
@@ -26,12 +37,15 @@ const setUIScreenshotPath = () => {
  * Outputs the location for the logs
  */
 const setLogPath = () => {
-	console.log(
-		`::set-output name=logs::${process.env.GITHUB_ACTION_PATH}/logs`
-	);
+	setConfiguration('name', `${process.env.GITHUB_ACTION_PATH}/logs`);
 };
 
-//INIT
-setThemeType();
-setUIScreenshotPath();
-setLogPath();
+(() => {
+	if (IS_CI) {
+		setUIScreenshotPath();
+		setLogPath();
+	}
+
+    setThemeType();
+})();
+

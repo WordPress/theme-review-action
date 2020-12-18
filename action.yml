@@ -35,8 +35,6 @@ runs:
       id: pre
       env:
         CI: true
-        WP_ENV_PORT: 8888
-        WP_ENV_TESTS_PORT: 8889
       run:  |
         cd ${{ github.action_path }} && node set-configs.js
         cd ${{ github.action_path }} && node create-wp-env-override.js
@@ -48,7 +46,8 @@ runs:
     - name: Run Theme Structure Test
       run: cd ${{ github.action_path }} && npm run check:structure
       env:
-        THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
+        CI: true
+        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
       shell: bash
 
       ## The following tests require an environment
@@ -56,8 +55,10 @@ runs:
     - name: Install Environment
       run: cd ${{ github.action_path }} && npm run install:environment
       env:
+        CI: true
         WP_ENV_PORT: 8888
         WP_ENV_TESTS_PORT: 8889
+        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
       shell: bash
 
       ## Run checks using theme-check plugin
@@ -65,16 +66,18 @@ runs:
       run: cd ${{ github.action_path }} && npm run check:theme-check
       env:
         CI: true
+        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
       shell: bash
 
       ## Run checks using e2e
     - name: Run Basic JS Checks
       run: cd ${{ github.action_path }} && npm run check:ui
       env:
+        CI: true
+        WP_ENV_TESTS_PORT: 8889
         UI_DEBUG: ${{ inputs.ui-debug }}
         TEST_ACCESSIBILITY: ${{ inputs.accessible-ready }}
-        WP_ENV_TESTS_PORT: 8889
-        THEME_TYPE: ${{ steps.pre.outputs.theme-type }}
+        THEME_TYPE: ${{ steps.pre.outputs.THEME_TYPE}}
       shell: bash
     
 
