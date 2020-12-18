@@ -4,10 +4,11 @@
 	"description": "Run Theme Check test for a WordPress theme",
 	"main": "index.js",
 	"scripts": {
-		"install:composer": "curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer && composer install",
-		"start": "npm run install:composer && vendor/bin/phpunit"
+		"start": "node index.js"
 	},
 	"author": "The WordPress Contributors",
-	"license": "GPL-2.0-or-later"
-  }
-  
+	"license": "GPL-2.0-or-later",
+	"dependencies": {
+		"@actions/core": "^1.2.6"
+	}
+}

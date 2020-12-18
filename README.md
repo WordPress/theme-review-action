@@ -88,7 +88,7 @@ Read more about [GitHub Actions](https://docs.github.com/en/free-pro-team@latest
 
 ### `npm run check:structure`
 
-This check runs `phpunit` unit tests to determine that all the necessary files are included in the theme. 
+This check runs tests to determine that all the necessary files are included in the theme. 
 
 ### `npm run check:theme-check`
 
