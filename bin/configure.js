@@ -35,7 +35,7 @@ const installMenu = async () => {
 
 		await runCommand(
 			`Installing menu '${menuId}' to 'All Pages'.`,
-			`wp menu location assign 'All Pages' ${menuId}`
+			`wp menu location assign "All Pages" ${menuId}`
 		);
 	} catch (e) {
 		spinner.info("Theme doesn't include any registered menus.");
