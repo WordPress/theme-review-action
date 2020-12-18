@@ -6,15 +6,20 @@ const CLI_ARGUMENTS = ['run', 'wp-env', 'run', 'cli'];
 const TEST_CLI_ARGUMENTS = ['run', 'wp-env', 'run', 'tests-cli'];
 let spinner;
 
+const getTimeOutput = (str, startTime) => {
+	return `${str} (${(Date.now() - startTime) / 1000}s)`;
+};
+
 /**
  * Runs a command synchronously
  * @param {string} str Will be output to the console
  * @param {string} args Arguments pass to npm
  */
 const runCommand = async (str, args, defaultArguments = TEST_CLI_ARGUMENTS) => {
+	const startTime = Date.now();
 	spinner = ora(str).start();
 	const res = await execa('npm', [...defaultArguments, args], { cmd: '../' });
-	spinner.succeed();
+	spinner.succeed(getTimeOutput(str, startTime));
 	return res;
 };
 
@@ -44,6 +49,7 @@ const installMenu = async () => {
 
 const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
 	return new Promise((resolve, reject) => {
+		const startTime = Date.now();
 		spinner = ora(text).start();
 		lib.get(url, (res) => {
 			if (res.statusCode !== 200) {
@@ -57,7 +63,7 @@ const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
 			}).on('end', () => {
 				try {
 					fs.writeFileSync(saveTo, rawData);
-					spinner.succeed();
+					spinner.succeed(getTimeOutput(text, startTime));
 					resolve('done');
 				} catch (e) {
 					spinner.fail();
