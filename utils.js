@@ -32,7 +32,7 @@ const isBlockBasedTheme = () => {
 
 const isCI = () => {
 	try {
-		return process.env.CI || process.envCI === 'true';
+		return process.env.CI || process.env.CI === 'true';
 	} catch (e) {}
 	return false;
 };
