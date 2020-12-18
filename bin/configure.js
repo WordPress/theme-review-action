@@ -72,11 +72,11 @@ const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
  * Downloads a database export from github
  */
 const downloadTestData = async () => {
+    const url = 'https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml';
 	await downloadAndSaveFile({
 		lib: require('https'),
-		url:
-			'https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml',
-		text: 'Downloading test data xml.',
+		url,
+		text: `Downloading test data xml from ${url}.`,
 		saveTo: 'config/a11y-theme-unit-test-data.xml',
 	});
 };
@@ -86,11 +86,12 @@ const downloadTestData = async () => {
  */
 const downloadSiteData = async () => {
 	const port = process.env.WP_ENV_TESTS_PORT || 8889;
+    const url = `http://localhost:${port}/?rest_route=/theme-test-helper/v1/info`;
 
 	await downloadAndSaveFile({
 		lib: require('http'),
-		url: `http://localhost:${port}/?rest_route=/theme-test-helper/v1/info`,
-		text: 'Downloading site data.',
+		url,
+		text: `Downloading site data from ${url}.`,
 		saveTo: 'config/siteinfo.json',
 	});
 };
