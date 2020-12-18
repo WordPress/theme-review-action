@@ -6,4 +6,4 @@ logs/*
 actions/ui-check/screenshots
 actions/ui-check/tests/e2e/specs/page/siteinfo.json
 actions/structure-check/.phpunit.result.cache
-
+config/*
