@@ -22,24 +22,22 @@ const runCommand = async (str, args, defaultArguments = TEST_CLI_ARGUMENTS) => {
  * Conditionally installs a menu for testing
  */
 const installMenu = async () => {
-	const menuArgs =
-		'wp menu location list --format=csv | tail -n +2 | head -n 1 | cut -d, -f1';
+	const menuArgs = 'wp menu location list --format=csv';
 
 	const { stdout } = await runCommand(
 		'Checking for a registered nav menu.',
 		menuArgs
 	);
 
-	// Split response to find menu-id
-	const [, menuId] = stdout.split(menuArgs);
+	try {
+		const [, menus] = stdout.split('location,description');
+		const menuId = menus.trim().split('\n')[0].split(',')[0];
 
-	if (menuId && menuId.length) {
-		const cleanedId = menuId.replace(/(\r\n|\n|\r|\")/gm, '');
 		await runCommand(
-			'Installing menu.',
-			`wp menu location assign 'All Pages' ${cleanedId}`
+			`Installing menu '${menuId}' to 'All Pages'.`,
+			`wp menu location assign 'All Pages' ${menuId}`
 		);
-	} else {
+	} catch (e) {
 		spinner.info("Theme doesn't include any registered menus.");
 	}
 };
