@@ -97,6 +97,23 @@ const downloadSiteData = async () => {
 	});
 };
 
+/**
+ * Downloads test data, install importer and imports the test data
+ */
+const importTestData = async () => {
+	await downloadTestData();
+
+	await runCommand(
+		'Installing & Activating wordpress-importer.',
+		'plugin install wordpress-importer --activate'
+	);
+
+	await runCommand(
+		'Importing a11y data.',
+		'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
+	);
+};
+
 (async () => {
 	try {
 		await runCommand(
@@ -110,17 +127,7 @@ const downloadSiteData = async () => {
 			'theme activate test-theme'
 		);
 
-		await downloadTestData();
-
-		await runCommand(
-			'Installing & Activating wordpress-importer.',
-			'plugin install wordpress-importer --activate'
-		);
-
-		await runCommand(
-			'Importing a11y data.',
-			'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
-		);
+		await importTestData();
 
 		await installMenu();
 
