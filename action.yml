@@ -11,6 +11,13 @@ inputs:
   ui-debug:
     description: 'More verbose logging; Creates a GIF'
     default: false
+outputs:
+  screenshots:
+    description: "Path to screenshots"
+    value: ${{ steps.post.outputs.location}}
+  logs:
+    description: "Path to the logs"
+    value: ${{ steps.post.outputs.logs}}
 branding:
   icon: 'clipboard'  
   color: 'blue'
@@ -29,4 +36,5 @@ runs:
       shell: bash
 
     - run: cd ${{ github.action_path }} && node bin/github-post.js
+      id: post
       shell: bash
