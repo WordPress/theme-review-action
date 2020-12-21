@@ -32,7 +32,7 @@ runs:
     - run: cd ${{ github.action_path }} && npm install
       shell: bash
 
-    - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy --githubRun
+    - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy --githubRun --debug
       shell: bash
 
     - run: cd ${{ github.action_path }} && node bin/github-post.js

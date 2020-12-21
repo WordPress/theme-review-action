@@ -204,7 +204,9 @@ const printTestResultBlock = (logFunction, text, logPath) => {
 	try {
 		const contents = fs.readFileSync(logPath, UTF_8_ENCODING);
 		logFunction(`${text}${contents.trim()}`);
-	} catch (e) {}
+	} catch (e) {
+        printTestResults(e)
+    }
 };
 
 const printTestResults = () => {
