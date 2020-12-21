@@ -54,9 +54,28 @@ const fancyTimeFormat = (duration) => {
 	return ret;
 };
 
+/**
+ * Returns true if running on windows.
+ */
+const isWindows = () => {
+	return process.platform === 'win32';
+};
+
+const getThemeType = () => {
+	if (getParentTheme()) {
+		return 'child';
+	} else if (isBlockBasedTheme()) {
+		return 'block';
+	} else {
+		return 'default';
+	}
+};
+
 module.exports = {
 	isBlockBasedTheme,
 	getParentTheme,
 	isCI,
+	isWindows,
 	fancyTimeFormat,
+	getThemeType,
 };

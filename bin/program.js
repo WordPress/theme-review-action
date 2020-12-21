@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+
 const fs = require('fs-extra');
 const path = require('path');
 const program = require('commander');
 const ora = require('ora');
 const { command } = require('execa');
 const { info, error, success, print, warning } = require('./log');
-const { fancyTimeFormat } = require('./utils');
+const { fancyTimeFormat, isWindows, getThemeType } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
 
@@ -20,17 +21,11 @@ const getVersion = () => {
 };
 
 /**
- * Returns true if running on windows.
- */
-const isWindows = () => {
-	return process.platform === 'win32';
-};
-
-/**
  * Loads the theme's style.css to retrieve theme information
  */
 const getThemeInfo = () => {
-	const file = fs.readFileSync('./test-theme/style.css', UTF_8_ENCODING);
+	const destination = path.join(__dirname, `../test-theme`);
+	const file = fs.readFileSync(`${destination}/style.css`, UTF_8_ENCODING);
 	let themeName;
 
 	if (file) {
@@ -41,7 +36,7 @@ const getThemeInfo = () => {
 			throw Error('Not able to locate your style.css');
 		}
 
-		themeName = match[1];
+		themeName = match[1].trim();
 	}
 
 	return {
@@ -83,39 +78,148 @@ const hasDocker = async () => {
  * Prints information about the test run
  * @param {number} elapsedTime
  */
-const printTestRunInfo = ({ elapsedTime }) => {
-	success('\n\nSuccessfully ran test suite.');
+const printTestRunInfo = ({ elapsedTime, themeName }) => {
+	success(`\n\nSuccessfully ran test suite on "${themeName}".`);
 	info(`Elapsed Time: ${fancyTimeFormat(elapsedTime)}s\n`);
 };
 
 /**
  * Prints information about the test environment
  */
-const printTestHeader = ({ themeName, basePort, testPort }) => {
+const printTestHeader = ({ basePort, testPort }) => {
 	try {
 		info('\nTest Version:', getVersion());
 	} catch (e) {
 		error('Could not retrieve package version.');
 	}
 
-	info('Theme:', themeName);
 	info('Testing Ports:', [basePort, testPort].join('/'));
+};
+
+const runThemeCopyAsync = async (pathToCopy) => {
+	let spinner = ora('Copying theme files into the environment...').start();
+
+	try {
+		const destination = path.join(__dirname, `../test-theme`);
+		await fs.copy(pathToCopy, destination);
+		spinner.succeed();
+		return true;
+	} catch (e) {
+		error(e);
+		spinner.fail();
+		return false;
+	}
+};
+
+const runEnvironmentSetupAsync = async (npmPrefix, env) => {
+	let spinner = ora(
+		'Setting up the development environment for testing...'
+	).start();
+
+	try {
+		const res = await command(`${npmPrefix} install:environment `, {
+			env,
+			windowHide: false,
+		});
+
+		spinner.succeed();
+		return res;
+	} catch (e) {
+		error(e);
+		spinner.fail();
+		return false;
+	}
+};
+
+const runThemeCheckAsync = async (npmPrefix) => {
+	let spinner = ora(
+		'Running the theme through theme check plugin...'
+	).start();
+	try {
+		const res = await command(`${npmPrefix} check:theme-check`);
+
+		spinner.succeed();
+		return res;
+	} catch (e) {
+		spinner.fail();
+		return false;
+	}
+};
+
+const runUICheckAsync = async (npmPrefix, env) => {
+	let spinner = ora(
+		'Running some end to end tests on the front end...'
+	).start();
+
+	try {
+		const res = await command(`${npmPrefix} check:ui`, {
+			env,
+		});
+
+		spinner.succeed();
+		return res;
+	} catch (e) {
+		console.log(e);
+		// We succeed here because failed tests will cause an exception. But we'll show the log later.
+		spinner.succeed();
+		return false;
+	}
+};
+
+const runTearDownAsync = async (npmPrefix) => {
+	let spinner = ora('Tearing down the environment...').start();
+	try {
+		const res = await command(`${npmPrefix} wp-env destroy`, {
+			input: 'y',
+		});
+		spinner.succeed();
+		return res;
+	} catch (e) {
+		spinner.fail();
+		error(e);
+		return false;
+	}
+};
+
+const printTestResults = () => {
+	try {
+		success('\nTest Results:');
+
+		const logPath = path.join(__dirname, '../logs');
+		const themeCheckLogPath = `${logPath}/theme-check.txt`;
+		const uiCheckLogPath = `${logPath}/ui-check.txt`;
+
+		const themeCheckLog = fs.readFileSync(
+			themeCheckLogPath,
+			UTF_8_ENCODING
+		);
+
+		info('Theme Check Test Results:\n');
+		print(themeCheckLog.trim());
+
+		const uiCheck = fs.readFileSync(uiCheckLogPath, UTF_8_ENCODING);
+
+		info('\nUser Interface Test Results:\n');
+		print(uiCheck.trim());
+		return true;
+	} catch (e) {
+		error(e);
+		return false;
+	}
 };
 
 /**
  * Executes the program
  */
 async function run() {
-	let spinner, themeInfo;
+	let themeInfo;
 
 	const startTime = Date.now(); // Used to determine test duration
-	const rootPath = path.join(__dirname, `../`);
+	const rootPath = path.join(__dirname, '../');
 
 	// Ports used by wp-env
 	const basePort = Number(program.port);
 	const testPort = basePort + 1;
-
-	let hasWorkingEnvironment = true;
 
 	// This make sure npm is running the correct command (the ones in this repo)
 	const npmPrefix = `npm run --prefix ${rootPath}`;
@@ -126,122 +230,46 @@ async function run() {
 		return;
 	}
 
-	// Get theme information. If we can't load the theme information we should stop the test.
-	try {
-		themeInfo = getThemeInfo();
-	} catch (e) {
-		error(e.message);
-		return;
-	}
-
 	printTestHeader({
-		themeName: themeInfo.themeName,
 		basePort,
 		testPort,
 	});
 
 	info('\nSteps:');
 
-	// try {
-	// 	const destination = path.join(__dirname, `../test-theme`);
-	// 	spinner = ora('Copying theme files into the environment...').start();
-	// 	await fs.copy('.', destination);
-	// 	spinner.succeed();
-	// } catch (e) {
-	// 	error(e);
-	// 	spinner.fail();
-	// 	return;
-	// }
+	await runThemeCopyAsync(program.pathToTheme);
 
-	try {
-		spinner = ora(
-			'Setting up the development environment for testing...'
-		).start();
-		await command(`${npmPrefix} install:environment `, {
-			env: {
-				WP_ENV_PORT: basePort,
-				WP_ENV_TESTS_PORT: testPort,
-				INIT_CWD: rootPath
-			},
-			windowHide: false,
-		});
+	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
+		WP_ENV_PORT: basePort,
+		WP_ENV_TESTS_PORT: testPort,
+		//INIT_CWD: rootPath,
+	});
 
-		spinner.succeed();
-	} catch (e) {
-		error(e);
-		spinner.fail();
-		hasWorkingEnvironment = false;
-	}
-
-	// Only try test if the environment succeeded
+	// Only try tests if the environment succeeded
 	if (hasWorkingEnvironment) {
-		try {
-			spinner = ora(
-				'Running the theme through theme check plugin...'
-			).start();
-			await command(`${npmPrefix} check:theme-check`);
+		await runThemeCheckAsync(npmPrefix);
 
-			spinner.succeed();
-		} catch (e) {
-			spinner.fail();
-		}
-
-		try {
-			spinner = ora(
-				'Running some end to end tests on the front end...'
-			).start();
-			await command(`${npmPrefix} check:ui`, {
-				env: {
-					TEST_ACCESSIBILITY: program.accessibleReady,
-					WP_ENV_TESTS_PORT: testPort,
-					WP_USING_NPX: true,
-				},
-			});
-
-			spinner.succeed();
-		} catch (e) {
-			// We succeed here because failed tests will cause an exception. But we'll show the log later.
-			spinner.succeed();
-		}
-	}
-
-	try {
-		spinner = ora('Tearing down the environment...').start();
-		await command(`${npmPrefix} wp-env destroy`, {
-			input: 'y',
+		await runUICheckAsync(npmPrefix, {
+			TEST_ACCESSIBILITY: program.accessibleReady,
+			WP_ENV_TESTS_PORT: testPort,
+			WP_THEME_TYPE: getThemeType()
 		});
-		spinner.succeed();
-	} catch (e) {
-		spinner.fail();
-		error(e);
-		return;
 	}
+
+	await runTearDownAsync(npmPrefix);
 
 	if (hasWorkingEnvironment) {
+		printTestResults();
+
 		try {
-			success('\nTest Results:');
-
-			const logPath = path.join(__dirname, '../logs');
-			const themeCheckLogPath = `${logPath}/theme-check.txt`;
-			const uiCheckLogPath = `${logPath}/ui-check.txt`;
-
-			const themeCheckLog = fs.readFileSync(
-				themeCheckLogPath,
-				UTF_8_ENCODING
-			);
-
-			info('Theme Check Test Results:\n');
-			print(themeCheckLog.trim());
-
-			const uiCheck = fs.readFileSync(uiCheckLogPath, UTF_8_ENCODING);
-
-			info('\nUser Interface Test Results:\n');
-			print(uiCheck.trim());
+			themeInfo = getThemeInfo();
 		} catch (e) {
-			error(e);
+			error(e.message);
+			return;
 		}
 
 		printTestRunInfo({
+			themeName: themeInfo.themeName,
 			elapsedTime: (Date.now() - startTime) / 1000,
 		});
 	}
@@ -252,15 +280,16 @@ async function run() {
 		program
 			.version(getVersion())
 			.option(
-				'--ar, --accessibleReady',
+				'--accessibleReady',
 				'runs more in-depth accessibility tests.',
 				false
 			)
 			.option(
-				'--p, --port <port>',
+				'--port <port>',
 				'port to run tests on. Tests require 2 ports. Tests will also occupy <port> +1.',
 				8484
 			)
+			.option('--pathToTheme <path>', 'relative path to theme.', '.')
 			.action(run);
 
 		await program.parseAsync(process.argv);

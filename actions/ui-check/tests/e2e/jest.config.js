@@ -11,7 +11,7 @@ let configs = {
 	],
 	testMatch: [
 		// Run theme type specific tests
-		`**/e2e/**/*.${ process.env.THEME_TYPE }.test.[jt]s`,
+		`**/e2e/**/*.${ process.env.WP_THEME_TYPE }.test.[jt]s`,
 
 		// Run the default tests
 		'**/e2e/**/[^.]+.test.[jt]s',
@@ -19,7 +19,7 @@ let configs = {
 };
 
 // When run using NPX there are issues related to running in a `node_modules` folder.
-if ( process.env.WP_USING_NPX ) {
+if ( process.env.INIT_CWD && process.env.INIT_CWD.indexOf('node_modules') >= 0 ) {
 	configs = {
 		...configs,
 		...{
