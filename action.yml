@@ -27,3 +27,6 @@ runs:
 
     - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy
       shell: bash
+
+    - run: cd ${{ github.action_path }} && node bin/github-post.js
+      shell: bash
