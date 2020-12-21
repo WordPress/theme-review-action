@@ -11,13 +11,19 @@ inputs:
   ui-debug:
     description: 'More verbose logging; Creates a GIF'
     default: false
-env:
-  WP_ENV_PORT: 8888
-  WP_ENV_TESTS_PORT: 8889
 branding:
   icon: 'clipboard'  
   color: 'blue'
 runs:
-  using: 'node12'
-  main: 'bin/program.js'
-  post: 'github-post.js'
+  using: 'composite'
+  steps:
+    - run: |
+        echo Copying theme folder ...
+        rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
+      shell: bash
+
+    - run: cd ${{ github.action_path }} && npm run install
+      shell: bash
+
+    - run: cd ${{ github.action_path }} && node bin/program.js --skip-folder-copy
+      shell: bash

@@ -237,7 +237,9 @@ async function run() {
 
 	info('\nSteps:');
 
-	await runThemeCopyAsync(program.pathToTheme);
+	if (!program.skipFolderCopy) {
+		await runThemeCopyAsync(program.pathToTheme);
+	}
 
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
@@ -252,7 +254,7 @@ async function run() {
 		await runUICheckAsync(npmPrefix, {
 			TEST_ACCESSIBILITY: program.accessibleReady,
 			WP_ENV_TESTS_PORT: testPort,
-			WP_THEME_TYPE: getThemeType()
+			WP_THEME_TYPE: getThemeType(),
 		});
 	}
 
@@ -290,6 +292,7 @@ async function run() {
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
+			.option('--skipFolderCopy', 'relative path to theme.', false)
 			.action(run);
 
 		await program.parseAsync(process.argv);
