@@ -128,7 +128,7 @@ const runEnvironmentSetupAsync = async (npmPrefix, env) => {
 		const res = await command(`${npmPrefix} install:environment `, {
 			env,
 			windowHide: false,
-			timeout: program.timeout,
+			timeout: +program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -148,7 +148,7 @@ const runThemeCheckAsync = async (npmPrefix) => {
 	).start();
 	try {
 		const res = await command(`${npmPrefix} check:theme-check`, {
-			timeout: program.timeout,
+			timeout: +program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -170,7 +170,7 @@ const runUICheckAsync = async (npmPrefix, env) => {
 	try {
 		const res = await command(`${npmPrefix} check:ui`, {
 			env,
-			timeout: program.timeout,
+			timeout: +program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -190,7 +190,7 @@ const runTearDownAsync = async (npmPrefix) => {
 	try {
 		const res = await command(`${npmPrefix} wp-env destroy`, {
 			input: 'y',
-			timeout: program.timeout,
+			timeout: +program.timeout,
 		});
 
 		printDebugInfo(res);
