@@ -382,7 +382,7 @@ describe( 'Accessibility: UI', () => {
 			await testSkipLinks();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warning', ex.messages );
+				printMessage( 'warnings', ex.messages );
 			} else {
 				console.log( ex );
 			}
@@ -394,7 +394,7 @@ describe( 'Accessibility: UI', () => {
 			await testSubMenus();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warning', ex.messages );
+				printMessage( 'warnings', ex.messages );
 			} else {
 				console.log( ex );
 			}
@@ -406,7 +406,7 @@ describe( 'Accessibility: UI', () => {
 			await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warning', ex.messages );
+				printMessage( 'warnings', ex.messages );
 			} else {
 				console.log( ex );
 			}
@@ -421,7 +421,7 @@ describe( 'Accessibility: UI', () => {
 				// We will make a gif to help understand what went wrong
 				if ( process.env.UI_DEBUG ) {
 					await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
-					printMessage( 'warning', ex.messages );
+					printMessage( 'warnings', ex.messages );
 				}
 			} else {
 				console.log( ex );
