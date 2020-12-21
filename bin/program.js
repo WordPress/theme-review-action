@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const program = require('commander');
 const ora = require('ora');
+const core = require('@actions/core');
 const { command } = require('execa');
 const { info, error, success, print, warning } = require('./log');
 const { fancyTimeFormat, isWindows, getThemeType } = require('./utils');
@@ -199,26 +200,43 @@ const runTearDownAsync = async (npmPrefix) => {
 	}
 };
 
+const printTestResultBlock = (logFunction, text, logPath) => {
+	try {
+		const contents = fs.readFileSync(logPath, UTF_8_ENCODING);
+		logFunction(`${text}${contents.trim()}`);
+	} catch (e) {}
+};
+
 const printTestResults = () => {
 	try {
-		success('\nTest Results:');
-
 		const logPath = path.join(__dirname, '../logs');
-		const themeCheckLogPath = `${logPath}/theme-check.txt`;
-		const uiCheckLogPath = `${logPath}/ui-check.txt`;
+		const errorFunction = program.githubRun ? core.setFailed : error;
+		const warningFunction = program.githubRun ? core.warning : warning;
 
-		const themeCheckLog = fs.readFileSync(
-			themeCheckLogPath,
-			UTF_8_ENCODING
+		printTestResultBlock(
+			errorFunction,
+			'\nTheme Check Errors:\n\n',
+			`${logPath}/theme-check-errors.txt`
 		);
 
-		info('Theme Check Test Results:\n');
-		print(themeCheckLog.trim());
+		printTestResultBlock(
+			warningFunction,
+			'\nTheme Check Warnings:\n\n',
+			`${logPath}/theme-check-warnings.txt`
+		);
 
-		const uiCheck = fs.readFileSync(uiCheckLogPath, UTF_8_ENCODING);
+		printTestResultBlock(
+			errorFunction,
+			'\nUser Interface Errors:\n\n',
+			`${logPath}/ui-check-errors.txt`
+		);
 
-		info('\nUser Interface Test Results:\n');
-		print(uiCheck.trim());
+		printTestResultBlock(
+			warningFunction,
+			'\nUser Interface Warnings:\n\n',
+			`${logPath}/ui-check-warnings.txt`
+		);
+
 		return true;
 	} catch (e) {
 		error(e);
