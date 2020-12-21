@@ -17,7 +17,7 @@ const setUIScreenshotPath = () => {
  * Outputs the location for the logs
  */
 const setLogPath = () => {
-	setConfiguration('name', `${process.env.GITHUB_ACTION_PATH}/logs`);
+	setConfiguration('logs', `${process.env.GITHUB_ACTION_PATH}/logs`);
 };
 
 (() => {
