@@ -22,7 +22,7 @@ runs:
         rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
-    - run: cd ${{ github.action_path }} && npm run install
+    - run: cd ${{ github.action_path }} && npm install
       shell: bash
 
     - run: cd ${{ github.action_path }} && node bin/program.js --skip-folder-copy
