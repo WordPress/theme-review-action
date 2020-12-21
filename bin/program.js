@@ -7,7 +7,12 @@ const ora = require('ora');
 const core = require('@actions/core');
 const { command } = require('execa');
 const { info, error, success, print, warning } = require('./log');
-const { fancyTimeFormat, isWindows, getThemeType, createLogs} = require('./utils');
+const {
+	fancyTimeFormat,
+	isWindows,
+	getThemeType,
+	createLogs,
+} = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
 
@@ -257,7 +262,7 @@ const printTestResults = () => {
  * Executes the program
  */
 async function run() {
-    let themeInfo;
+	let themeInfo;
 
 	const startTime = Date.now(); // Used to determine test duration
 	const rootPath = path.join(__dirname, '../');
@@ -284,9 +289,9 @@ async function run() {
 
 	if (!program.skipFolderCopy) {
 		await runThemeCopyAsync(program.pathToTheme);
-    }
-    
-    createLogs();
+	}
+
+	createLogs();
 
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
