@@ -20,3 +20,4 @@ branding:
 runs:
   using: 'node12'
   main: 'bin/program.js'
+  post: 'github-post.js'
