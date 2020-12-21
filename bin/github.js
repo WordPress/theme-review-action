@@ -1,3 +1,5 @@
+const fs = require('fs-extra');
+
 const setConfiguration = (key, value) => {
 	console.log(`Setting output for ${key}.`);
 	console.log(`::set-output name=${key}::${value}`);
