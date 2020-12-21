@@ -243,6 +243,7 @@ async function run() {
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
 		WP_ENV_TESTS_PORT: testPort,
+		CI: program.githubRun,
 		//INIT_CWD: rootPath,
 	});
 
@@ -293,7 +294,11 @@ async function run() {
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
 			.option('--skipFolderCopy', 'relative path to theme.', false)
-			.option('--githubRun', 'whether the test is running on github.', false)
+			.option(
+				'--githubRun',
+				'whether the test is running on github.',
+				false
+			)
 			.action(run);
 
 		await program.parseAsync(process.argv);
