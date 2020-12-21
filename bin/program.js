@@ -128,6 +128,7 @@ const runEnvironmentSetupAsync = async (npmPrefix, env) => {
 		const res = await command(`${npmPrefix} install:environment `, {
 			env,
 			windowHide: false,
+			timeout: program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -146,7 +147,9 @@ const runThemeCheckAsync = async (npmPrefix) => {
 		'Running the theme through theme check plugin...'
 	).start();
 	try {
-		const res = await command(`${npmPrefix} check:theme-check`);
+		const res = await command(`${npmPrefix} check:theme-check`, {
+			timeout: program.timeout,
+		});
 
 		printDebugInfo(res);
 
@@ -167,6 +170,7 @@ const runUICheckAsync = async (npmPrefix, env) => {
 	try {
 		const res = await command(`${npmPrefix} check:ui`, {
 			env,
+			timeout: program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -186,6 +190,7 @@ const runTearDownAsync = async (npmPrefix) => {
 	try {
 		const res = await command(`${npmPrefix} wp-env destroy`, {
 			input: 'y',
+			timeout: program.timeout,
 		});
 
 		printDebugInfo(res);
@@ -262,7 +267,7 @@ async function run() {
 	const testPort = basePort + 1;
 
 	// This make sure npm is running the correct command (the ones in this repo)
-	const npmPrefix = `npm run --prefix ${rootPath}`;
+	const npmPrefix = `npm run`;
 
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
@@ -335,6 +340,7 @@ async function run() {
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
+			.option('--timeout <ms>', 'relative path to theme.', 120 * 1000)
 			.option('--skipFolderCopy', 'relative path to theme.', false)
 			.option(
 				'--githubRun',
