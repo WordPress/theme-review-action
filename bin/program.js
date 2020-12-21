@@ -159,7 +159,6 @@ const runUICheckAsync = async (npmPrefix, env) => {
 		spinner.succeed();
 		return res;
 	} catch (e) {
-		console.log(e);
 		// We succeed here because failed tests will cause an exception. But we'll show the log later.
 		spinner.succeed();
 		return false;
