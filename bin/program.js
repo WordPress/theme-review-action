@@ -83,6 +83,13 @@ const printTestRunInfo = ({ elapsedTime, themeName }) => {
 	info(`Elapsed Time: ${fancyTimeFormat(elapsedTime)}s\n`);
 };
 
+const printDebugInfo = (input) => {
+	if (program.debug) {
+		info('\nDebug Info:\n');
+		print(input);
+	}
+};
+
 /**
  * Prints information about the test environment
  */
@@ -122,6 +129,8 @@ const runEnvironmentSetupAsync = async (npmPrefix, env) => {
 			windowHide: false,
 		});
 
+		printDebugInfo(res);
+
 		spinner.succeed();
 		return res;
 	} catch (e) {
@@ -138,9 +147,12 @@ const runThemeCheckAsync = async (npmPrefix) => {
 	try {
 		const res = await command(`${npmPrefix} check:theme-check`);
 
+		printDebugInfo(res);
+
 		spinner.succeed();
 		return res;
 	} catch (e) {
+		printDebugInfo(e);
 		spinner.fail();
 		return false;
 	}
@@ -156,9 +168,12 @@ const runUICheckAsync = async (npmPrefix, env) => {
 			env,
 		});
 
+		printDebugInfo(res);
+
 		spinner.succeed();
 		return res;
 	} catch (e) {
+		printDebugInfo(e);
 		// We succeed here because failed tests will cause an exception. But we'll show the log later.
 		spinner.succeed();
 		return false;
@@ -171,9 +186,13 @@ const runTearDownAsync = async (npmPrefix) => {
 		const res = await command(`${npmPrefix} wp-env destroy`, {
 			input: 'y',
 		});
+
+		printDebugInfo(res);
+
 		spinner.succeed();
 		return res;
 	} catch (e) {
+		printDebugInfo(e);
 		spinner.fail();
 		error(e);
 		return false;
@@ -287,6 +306,7 @@ async function run() {
 				'runs more in-depth accessibility tests.',
 				false
 			)
+			.option('--debug', 'prints more debug information', false)
 			.option(
 				'--port <port>',
 				'port to run tests on. Tests require 2 ports. Tests will also occupy <port> +1.',
