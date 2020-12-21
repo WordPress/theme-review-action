@@ -25,5 +25,5 @@ runs:
     - run: cd ${{ github.action_path }} && npm install
       shell: bash
 
-    - run: cd ${{ github.action_path }} && node bin/program.js --skip-folder-copy
+    - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy
       shell: bash
