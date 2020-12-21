@@ -202,11 +202,13 @@ const runTearDownAsync = async (npmPrefix) => {
 
 const printTestResultBlock = (logFunction, text, logPath) => {
 	try {
-		const contents = fs.readFileSync(logPath, UTF_8_ENCODING);
-		logFunction(`${text}${contents.trim()}`);
+		const contents = fs.readFileSync(logPath, UTF_8_ENCODING).trim();
+		if (contents.length > 0) {
+			logFunction(`${text}${contents}`);
+		}
 	} catch (e) {
-        printTestResults(e)
-    }
+		printTestResults(e);
+	}
 };
 
 const printTestResults = () => {
