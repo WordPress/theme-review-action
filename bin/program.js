@@ -254,6 +254,7 @@ async function run() {
 			TEST_ACCESSIBILITY: program.accessibleReady,
 			WP_ENV_TESTS_PORT: testPort,
 			WP_THEME_TYPE: getThemeType(),
+			CI: program.githubRun,
 		});
 	}
 
@@ -292,6 +293,7 @@ async function run() {
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
 			.option('--skipFolderCopy', 'relative path to theme.', false)
+			.option('--githubRun', 'whether the test is running on github.', false)
 			.action(run);
 
 		await program.parseAsync(process.argv);
