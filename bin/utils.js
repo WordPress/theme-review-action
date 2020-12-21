@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path')
 
 const THEME_PATH_ROOT = './test-theme';
 const READ_OPTIONS = { encoding: 'utf8' };
@@ -28,6 +29,32 @@ const isBlockBasedTheme = () => {
 	} catch (e) {}
 	return false;
 };
+
+const createLogs = () => {
+	try {
+        const directories = fs.readdirSync('./actions', { withFileTypes: true })
+          .filter(dirent => dirent.isDirectory())
+          .map(dirent => dirent.name)
+
+         directories.forEach( (folderName)=> {
+             const errorLogPath = `./logs/${folderName}-errors.txt`
+             const warningLogPath = `./logs/${folderName}-warnings.txt`
+
+            fs.openSync(errorLogPath, 'w');
+            fs.chmod(errorLogPath, 0755, () => {});
+            console.log('Created log:', errorLogPath)
+            
+            fs.openSync(warningLogPath, 'w');
+            fs.chmod(warningLogPath, 0755, () => {});
+            console.log('Created log:', warningLogPath)
+         })
+
+	} catch (e) {
+        console.log( e );
+    }
+	return false;
+};
+
 
 const isCI = () => {
 	try {
@@ -77,5 +104,6 @@ module.exports = {
 	isCI,
 	isWindows,
 	fancyTimeFormat,
-	getThemeType,
+    getThemeType,
+    createLogs
 };
