@@ -30,33 +30,6 @@ const isBlockBasedTheme = () => {
 	return false;
 };
 
-const createLogs = () => {
-	try {
-		const directories = fs
-			.readdirSync('./actions', { withFileTypes: true })
-			.filter((dirent) => dirent.isDirectory())
-			.map((dirent) => dirent.name);
-
-		directories.forEach((folderName) => {
-			const errorLogPath = `./logs/${folderName}-errors.txt`;
-			const warningLogPath = `./logs/${folderName}-warnings.txt`;
-
-			fs.openSync(errorLogPath, 'w');
-			fs.chmod(errorLogPath, 0755, () => {});
-			console.log('Created log:', errorLogPath);
-
-			fs.openSync(warningLogPath, 'w');
-			fs.chmod(warningLogPath, 0755, () => {});
-			console.log('Created log:', warningLogPath);
-		});
-
-		return true;
-	} catch (e) {
-		console.log(e);
-	}
-	return false;
-};
-
 const isCI = () => {
 	try {
 		return process.env.CI || process.env.CI === 'true';
@@ -106,5 +79,4 @@ module.exports = {
 	isWindows,
 	fancyTimeFormat,
 	getThemeType,
-	createLogs,
 };

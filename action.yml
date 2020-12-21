@@ -29,13 +29,13 @@ runs:
         rsync -av --exclude=.git* ${{ inputs.root-folder }}/* ${{ github.action_path }}/test-theme
       shell: bash
 
+    - run: cd ${{ github.action_path }} && node bin/github.js
+      id: post
+      shell: bash
+
     - run: |
         cd ${{ github.action_path }} && npm install
         cd ${{ github.action_path }} && chmod -R 767 ./
-      shell: bash
-
-    - run: cd ${{ github.action_path }} && node bin/github.js
-      id: post
       shell: bash
 
     - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy --githubRun --debug
