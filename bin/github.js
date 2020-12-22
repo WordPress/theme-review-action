@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-
 const setConfiguration = (key, value) => {
 	console.log(`Setting output for ${key}.`);
 	console.log(`::set-output name=${key}::${value}`);
@@ -12,16 +11,20 @@ const createLogs = () => {
 			.filter((dirent) => dirent.isDirectory())
 			.map((dirent) => dirent.name);
 
+		const logPath = './logs';
+
+		if (!fs.existsSync(logPath)) {
+			fs.mkdirSync(logPath);
+		}
+
 		directories.forEach((folderName) => {
 			const errorLogPath = `./logs/${folderName}-errors.txt`;
 			const warningLogPath = `./logs/${folderName}-warnings.txt`;
 
 			fs.openSync(errorLogPath, 'w');
-			fs.chmod(errorLogPath, 0755, () => {});
 			console.log('Created log:', errorLogPath);
 
 			fs.openSync(warningLogPath, 'w');
-			fs.chmod(warningLogPath, 0755, () => {});
 			console.log('Created log:', warningLogPath);
 		});
 
