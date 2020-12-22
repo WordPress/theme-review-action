@@ -340,7 +340,7 @@ async function run() {
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
-			.option('--timeout <ms>', 'relative path to theme.', 120 * 1000)
+			.option('--timeout <ms>', 'relative path to theme.', 240 * 1000)
 			.option('--skipFolderCopy', 'relative path to theme.', false)
 			.option(
 				'--githubRun',
