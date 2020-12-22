@@ -333,15 +333,15 @@ async function run() {
 				'runs more in-depth accessibility tests.',
 				false
 			)
-			.option('--debug', 'prints more debug information', false)
+			.option('--debug', 'prints more debug information.', false)
 			.option(
 				'--port <port>',
 				'port to run tests on. Tests require 2 ports. Tests will also occupy <port> +1.',
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
-			.option('--timeout <ms>', 'relative path to theme.', 240 * 1000)
-			.option('--skipFolderCopy', 'relative path to theme.', false)
+			.option('--timeout <ms>', 'sets timeout for each step.', 240 * 1000)
+			.option('--skipFolderCopy', 'skips folder copy step.', false)
 			.option(
 				'--githubRun',
 				'whether the test is running on github.',
