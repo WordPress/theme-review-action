@@ -63,7 +63,7 @@ describe( 'Unit: Blocks', () => {
 				}
 			}
 		} catch ( ex ) {
-			printMessage( 'warning', [ '[ Block Tests ]', ex.message ] );
+			printMessage( 'warnings', [ '[ Block Tests ]', ex.message ] );
 		}
 	} );
 } );

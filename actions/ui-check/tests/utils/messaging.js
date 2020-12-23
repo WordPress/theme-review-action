@@ -1,7 +1,4 @@
-const core = require( '@actions/core' );
 const fs = require( 'fs' );
-
-import { getEnvironmentVariable } from './index';
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -19,8 +16,8 @@ export const cleanErrorMessage = ( msg ) => {
  * Joins and appends lines to log file
  * @param {array} lines
  */
-const appendToLog = ( lines ) => {
-	const path = '../../logs/ui-check.txt';
+const appendToLog = ( command, lines ) => {
+	const path = `../../logs/ui-check-${command}.txt`;
 
 	fs.appendFileSync( path, [ '\n\n', ...lines ].join( '\n' ), {
 		encoding: 'utf8',
@@ -33,17 +30,12 @@ const appendToLog = ( lines ) => {
  * @param {string[]} lines The content to print.
  */
 export const printMessage = ( command, lines ) => {
-	appendToLog( lines );
-
-	// Only use the core library when using github actions.
-	if ( getEnvironmentVariable( process.env.CI ) ) {
-		core[ command ]( lines.join( '\n\n' ) );
-	}
+	appendToLog( command, lines );
 };
 
 /**
  *
- * @param {string} type @github/core message type. Ie: setFailed, warning, info
+ * @param {string} type Message type. Ie: errors, warnings, info
  * @param {string|string[]} message Messages to display
  * @param {function} testToRun The test that will be executed
  */
@@ -63,7 +55,7 @@ const expectWithMessage = ( type, message, testToRun ) => {
  * @param {function} test Function to run
  */
 export const errorWithMessageOnFail = ( message, test ) => {
-	return expectWithMessage( 'setFailed', message, test );
+	return expectWithMessage( 'errors', message, test );
 };
 
 /**
@@ -72,5 +64,5 @@ export const errorWithMessageOnFail = ( message, test ) => {
  * @param {function} test Function to run
  */
 export const warnWithMessageOnFail = ( message, test ) => {
-	return expectWithMessage( 'warning', message, test );
+	return expectWithMessage( 'warnings', message, test );
 };

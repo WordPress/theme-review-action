@@ -1,6 +1,7 @@
 const fs = require('fs');
 const execa = require('execa');
 const ora = require('ora');
+const Log = require('./log');
 
 const CLI_ARGUMENTS = ['run', 'wp-env', 'run', 'cli'];
 const TEST_CLI_ARGUMENTS = ['run', 'wp-env', 'run', 'tests-cli'];
@@ -138,6 +139,8 @@ const importTestData = async () => {
 		await installMenu();
 
 		await downloadSiteData();
+
+		Log.success('Installation complete.');
 	} catch (e) {
 		spinner.stop();
 		console.log(e);

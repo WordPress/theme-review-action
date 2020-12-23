@@ -15,7 +15,6 @@
 	"license": "GPL-2.0-or-later",
 	"dependencies": {
 		"@actions/artifact": "^0.4.0",
-		"@actions/core": "^1.2.5",
 		"@wordpress/block-serialization-spec-parser": "^3.7.0",
 		"@wordpress/e2e-test-utils": "^4.13.0",
 		"@wordpress/jest-puppeteer-axe": "^1.9.0",
