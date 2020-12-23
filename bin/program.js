@@ -289,8 +289,7 @@ async function run() {
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
 		WP_ENV_TESTS_PORT: testPort,
-		CI: program.githubRun,
-		//INIT_CWD: rootPath,
+		CI: program.githubRun
 	});
 
 	// Only try tests if the environment succeeded
