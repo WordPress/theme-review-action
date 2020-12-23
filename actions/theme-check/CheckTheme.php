@@ -60,36 +60,17 @@ class WPORG_CheckTheme {
 	}
 
 	/**
-	 * Print GitHub actions formatted messages to the console.
-	 *
-	 * @param string $type The message type. Ie "error/warning".
-	 * @param array  $messages The list of messages.
-	 */
-	public function print_message( $type, $messages ) {
-		echo '::' . esc_attr( $type ) . '::';
-
-		$eol = ( defined( 'CI' ) ? '%0A' : PHP_EOL );
-
-		foreach ( $messages as $key => $val ) {
-			$implode = implode( $eol, $val );
-			echo '[ ' . esc_attr( $key ) . ' ] '. $eol . $implode;
-			echo $eol;
-			echo $eol;
-		}
-	}
-
-	/**
 	 * Appends an array of strings to the log file
 	 */
-	public function save_to_log( $strings )  {
-		$fileName = './logs/theme-check.txt';
+	public function save_to_log( $type, $strings )  {
+		$fileName = './logs/theme-check-'. $type .'.txt';
 		file_put_contents( $fileName, implode( "\n", $strings ), FILE_APPEND );
 	}
 
 	/**
 	 * Formats array of string errors and saves them to log file
 	 */
-	public function output_to_log_file( $list ) {
+	public function output_to_log_file( $type, $list ) {
 		$eol = PHP_EOL;
 		$strings = [];
 
@@ -100,7 +81,7 @@ class WPORG_CheckTheme {
 			array_push( $strings, $str );
 		}
 
-		$this->save_to_log( $strings );
+		$this->save_to_log( $type, $strings );
 	}
 
 	/**
@@ -161,16 +142,14 @@ class WPORG_CheckTheme {
 		}
 
 		if( count( $error_list ) > 0) {
-			$this->output_to_log_file( $error_list );
-			$this->print_message( 'error', $error_list );
+			$this->output_to_log_file( 'errors', $error_list );
 		}
 
 		echo PHP_EOL;
 		echo PHP_EOL;
 
 		if( count( $warning_list ) > 0) {
-			$this->output_to_log_file( $warning_list );
-			$this->print_message( 'warning', $warning_list );
+			$this->output_to_log_file( 'warnings', $warning_list );
 		}
 	}
 

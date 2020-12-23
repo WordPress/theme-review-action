@@ -49,7 +49,7 @@ const maybeCreateOverrideConfig = () => {
 	}
 
 	const configString = JSON.stringify(configs);
-	fs.writeFileSync('./.wp-env.override.json', configString);
+	fs.writeFileSync('../.wp-env.override.json', configString);
 
 	console.log('Created a .wp-env.override.json file.', configString);
 };

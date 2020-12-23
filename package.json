@@ -1,12 +1,13 @@
 {
   "name": "wordpress-theme-check-action",
-  "version": "1.3.3",
+  "version": "1.3.15",
   "description": "Run Theme Check test for a WordPress theme",
   "repository": "git+https://github.com/WordPress/theme-review-action.git",
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
-    "install:environment": "npm install && npm run wp-env start && node bin/configure.js",
+    "install:variables": "node bin/create-wp-env-override.js",
+    "install:environment": "npm run install:variables && npm run wp-env start && node bin/configure.js",
     "uninstall": "npm run wp-env destroy",
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
@@ -18,7 +19,8 @@
   "author": "The WordPress Contributors",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@wordpress/env": "^2.0.0",
+    "@actions/core": "^1.2.6",
+    "@wordpress/env": "^3.0.0",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "execa": "^4.1.0",
