@@ -355,7 +355,11 @@ async function run() {
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
-			.option('--timeout <ms>', 'sets timeout for each step.')
+			.option(
+				'--timeout <ms>',
+				'sets timeout for each step.',
+				DEFAULT_TIMEOUT
+			)
 			.option('--skipFolderCopy', 'skips folder copy step.', false)
 			.option(
 				'--githubRun',
