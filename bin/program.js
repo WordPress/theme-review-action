@@ -10,6 +10,7 @@ const { info, error, success, print, warning } = require('./log');
 const { fancyTimeFormat, isWindows, getThemeType } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
+const DEFAULT_TIMEOUT = 240 * 1000;
 
 /**
  * Loads this projects package.json to get the version number
@@ -92,6 +93,20 @@ const printDebugInfo = (input) => {
 };
 
 /**
+ * Returns timeout as a number
+ */
+const getTimeout = () => {
+	const timeout = +program.timeout;
+
+	// wp-env takes more time on windows, increase the timeout if it hasn't been set.
+	if (timeout === DEFAULT_TIMEOUT && isWindows()) {
+		timeout = timeout + 100000;
+	}
+
+	return timeout;
+};
+
+/**
  * Prints information about the test environment
  */
 const printTestHeader = ({ basePort, testPort }) => {
@@ -128,7 +143,7 @@ const runEnvironmentSetupAsync = async (npmPrefix, env) => {
 		const res = await command(`${npmPrefix} install:environment `, {
 			env,
 			windowHide: false,
-			timeout: +program.timeout,
+			timeout: getTimeout(),
 		});
 
 		printDebugInfo(res);
@@ -148,7 +163,7 @@ const runThemeCheckAsync = async (npmPrefix) => {
 	).start();
 	try {
 		const res = await command(`${npmPrefix} check:theme-check`, {
-			timeout: +program.timeout,
+			timeout: getTimeout(),
 		});
 
 		printDebugInfo(res);
@@ -170,7 +185,7 @@ const runUICheckAsync = async (npmPrefix, env) => {
 	try {
 		const res = await command(`${npmPrefix} check:ui`, {
 			env,
-			timeout: +program.timeout,
+			timeout: getTimeout(),
 		});
 
 		printDebugInfo(res);
@@ -190,7 +205,7 @@ const runTearDownAsync = async (npmPrefix) => {
 	try {
 		const res = await command(`${npmPrefix} wp-env destroy`, {
 			input: 'y',
-			timeout: +program.timeout,
+			timeout: getTimeout(),
 		});
 
 		printDebugInfo(res);
@@ -289,7 +304,7 @@ async function run() {
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
 		WP_ENV_TESTS_PORT: testPort,
-		CI: program.githubRun
+		CI: program.githubRun,
 	});
 
 	// Only try tests if the environment succeeded
@@ -339,7 +354,7 @@ async function run() {
 				8484
 			)
 			.option('--pathToTheme <path>', 'relative path to theme.', '.')
-			.option('--timeout <ms>', 'sets timeout for each step.', 240 * 1000)
+			.option('--timeout <ms>', 'sets timeout for each step.')
 			.option('--skipFolderCopy', 'skips folder copy step.', false)
 			.option(
 				'--githubRun',
