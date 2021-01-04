@@ -96,7 +96,7 @@ const printDebugInfo = (input) => {
  * Returns timeout as a number
  */
 const getTimeout = () => {
-	const timeout = +program.timeout;
+	let timeout = +program.timeout;
 
 	// wp-env takes more time on windows, increase the timeout if it hasn't been set.
 	if (timeout === DEFAULT_TIMEOUT && isWindows()) {
