@@ -282,7 +282,8 @@ async function run() {
 	const testPort = basePort + 1;
 
 	// This make sure npm is running the correct command (the ones in this repo)
-	const npmPrefix = `npm run --prefix ${rootPath}`;
+	// Adding a prefix on windows caused it to hang.
+	const npmPrefix = isWindows() ? 'npm run' : `npm run --prefix ${rootPath}`;
 
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
