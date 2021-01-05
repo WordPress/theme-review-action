@@ -36,5 +36,5 @@ runs:
       id: post
       shell: bash
 
-    - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy --githubRun --debug
+    - run: cd ${{ github.action_path }} && node bin/program.js --skipFolderCopy --githubRun --accessibleReady=${{ inputs.accessible-ready }}
       shell: bash
