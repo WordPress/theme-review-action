@@ -72,6 +72,35 @@ const getThemeType = () => {
 	}
 };
 
+/**
+ * Create logs for all folders in /actions
+ */
+const createLogs = ( logPath ) => {
+	try {
+		const directories = fs
+			.readdirSync('./actions', { withFileTypes: true })
+			.filter((d) => d.isDirectory())
+			.map((d) => d.name);
+
+		if (!fs.existsSync(logPath)) {
+			fs.mkdirSync(logPath);
+		}
+
+		directories.forEach((folderName) => {
+			const errorLogPath = `./logs/${folderName}-errors.txt`;
+			const warningLogPath = `./logs/${folderName}-warnings.txt`;
+
+			fs.openSync(errorLogPath, 'w');
+			fs.openSync(warningLogPath, 'w');
+		});
+
+		return true;
+	} catch (e) {
+		console.log(e);
+	}
+	return false;
+};
+
 module.exports = {
 	isBlockBasedTheme,
 	getParentTheme,
@@ -79,4 +108,5 @@ module.exports = {
 	isWindows,
 	fancyTimeFormat,
 	getThemeType,
+	createLogs
 };
