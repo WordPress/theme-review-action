@@ -11,6 +11,7 @@ const { fancyTimeFormat, isWindows, getThemeType } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
 const DEFAULT_TIMEOUT = 240 * 1000;
+const LOG_PATH = path.join(__dirname, '../logs');
 
 /**
  * Loads this projects package.json to get the version number
@@ -233,32 +234,31 @@ const printTestResultBlock = (logFunction, text, logPath) => {
 
 const printTestResults = () => {
 	try {
-		const logPath = path.join(__dirname, '../logs');
 		const errorFunction = program.githubRun ? core.setFailed : error;
 		const warningFunction = program.githubRun ? core.warning : warning;
 
 		printTestResultBlock(
 			errorFunction,
 			'\nTheme Check Errors:\n\n',
-			`${logPath}/theme-check-errors.txt`
+			`${LOG_PATH}/theme-check-errors.txt`
 		);
 
 		printTestResultBlock(
 			warningFunction,
 			'\nTheme Check Warnings:\n\n',
-			`${logPath}/theme-check-warnings.txt`
+			`${LOG_PATH}/theme-check-warnings.txt`
 		);
 
 		printTestResultBlock(
 			errorFunction,
 			'\nUser Interface Errors:\n\n',
-			`${logPath}/ui-check-errors.txt`
+			`${LOG_PATH}/ui-check-errors.txt`
 		);
 
 		printTestResultBlock(
 			warningFunction,
 			'\nUser Interface Warnings:\n\n',
-			`${logPath}/ui-check-warnings.txt`
+			`${LOG_PATH}/ui-check-warnings.txt`
 		);
 
 		return true;
@@ -297,6 +297,10 @@ async function run() {
 	});
 
 	info('\nSteps:');
+
+	if (!program.githubRun) {
+		fs.emptyDirSync(LOG_PATH);
+	}
 
 	if (!program.skipFolderCopy) {
 		await runThemeCopyAsync(program.pathToTheme);
