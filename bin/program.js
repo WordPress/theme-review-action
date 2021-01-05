@@ -344,7 +344,7 @@ async function run() {
 		program
 			.version(getVersion())
 			.option(
-				'--accessibleReady',
+				'--accessibleReady <boolean>',
 				'runs more in-depth accessibility tests.',
 				false
 			)
