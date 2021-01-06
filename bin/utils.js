@@ -75,7 +75,7 @@ const getThemeType = () => {
 /**
  * Create logs for all folders in /actions
  */
-const createLogs = ( logPath ) => {
+const createLogs = (logPath, verbose) => {
 	try {
 		const directories = fs
 			.readdirSync('./actions', { withFileTypes: true })
@@ -92,6 +92,10 @@ const createLogs = ( logPath ) => {
 
 			fs.openSync(errorLogPath, 'w');
 			fs.openSync(warningLogPath, 'w');
+			if (verbose) {
+				console.log('Created log:', errorLogPath);
+				console.log('Created log:', warningLogPath);
+			}
 		});
 
 		return true;
@@ -108,5 +112,5 @@ module.exports = {
 	isWindows,
 	fancyTimeFormat,
 	getThemeType,
-	createLogs
+	createLogs,
 };

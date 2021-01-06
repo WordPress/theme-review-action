@@ -307,7 +307,7 @@ async function run() {
 		fs.emptyDirSync(LOG_PATH);
 	}
 
-	createLogs(LOG_PATH);
+	createLogs(LOG_PATH, program.githubRun);
 
 	if (!program.skipFolderCopy) {
 		await runThemeCopyAsync(program.pathToTheme);
