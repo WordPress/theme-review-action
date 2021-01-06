@@ -86,7 +86,8 @@ const createLogs = (logPath, verbose) => {
 			fs.mkdirSync(logPath);
 		}
 
-		directories.forEach((folderName) => {
+		for (let i = 0; i < directories.length; i++) {
+			const folderName = directories[i];
 			const errorLogPath = `./logs/${folderName}-errors.txt`;
 			const warningLogPath = `./logs/${folderName}-warnings.txt`;
 
@@ -96,7 +97,7 @@ const createLogs = (logPath, verbose) => {
 				console.log('Created log:', errorLogPath);
 				console.log('Created log:', warningLogPath);
 			}
-		});
+		}
 
 		return true;
 	} catch (e) {
