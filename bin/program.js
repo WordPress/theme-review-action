@@ -15,7 +15,7 @@ const {
 } = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
-const DEFAULT_TIMEOUT = 240 * 1000;
+const DEFAULT_TIMEOUT = 300 * 1000;
 const LOG_PATH = path.join(__dirname, '../logs');
 const ACTIONS_PATH = path.join(__dirname, '../actions');
 
