@@ -75,10 +75,10 @@ const getThemeType = () => {
 /**
  * Create logs for all folders in /actions
  */
-const createLogs = (logPath, verbose) => {
+const createLogs = (actionsPath, logPath, verbose) => {
 	try {
 		const directories = fs
-			.readdirSync('./actions', { withFileTypes: true })
+			.readdirSync(actionsPath, { withFileTypes: true })
 			.filter((d) => d.isDirectory())
 			.map((d) => d.name);
 
@@ -88,8 +88,8 @@ const createLogs = (logPath, verbose) => {
 
 		for (let i = 0; i < directories.length; i++) {
 			const folderName = directories[i];
-			const errorLogPath = `./logs/${folderName}-errors.txt`;
-			const warningLogPath = `./logs/${folderName}-warnings.txt`;
+			const errorLogPath = `${logPath}/${folderName}-errors.txt`;
+			const warningLogPath = `${logPath}/${folderName}-warnings.txt`;
 
 			fs.openSync(errorLogPath, 'w');
 			fs.openSync(warningLogPath, 'w');

@@ -17,6 +17,9 @@ const {
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
 const DEFAULT_TIMEOUT = 240 * 1000;
 const LOG_PATH = path.join(__dirname, '../logs');
+const ACTIONS_PATH = path.join(__dirname, '../actions');
+
+
 
 /**
  * Loads this projects package.json to get the version number
@@ -307,7 +310,7 @@ async function run() {
 		fs.emptyDirSync(LOG_PATH);
 	}
 
-	createLogs(LOG_PATH, program.githubRun);
+	createLogs(ACTIONS_PATH, LOG_PATH, program.githubRun);
 
 	if (!program.skipFolderCopy) {
 		await runThemeCopyAsync(program.pathToTheme);
