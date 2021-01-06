@@ -19,8 +19,6 @@ const DEFAULT_TIMEOUT = 240 * 1000;
 const LOG_PATH = path.join(__dirname, '../logs');
 const ACTIONS_PATH = path.join(__dirname, '../actions');
 
-
-
 /**
  * Loads this projects package.json to get the version number
  */
@@ -203,6 +201,11 @@ const runUICheckAsync = async (npmPrefix, env) => {
 		return res;
 	} catch (e) {
 		printDebugInfo(e);
+
+		if (e.timedOut) {
+			spinner.fail('Running some end to end tests on the front end...TIMED OUT');
+		}
+
 		// We succeed here because failed tests will cause an exception. But we'll show the log later.
 		spinner.succeed();
 		return false;

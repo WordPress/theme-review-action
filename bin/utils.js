@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const THEME_PATH_ROOT = './test-theme';
+const THEME_PATH_ROOT = path.join(__dirname, '../test-theme');
 const READ_OPTIONS = { encoding: 'utf8' };
 
 const getParentTheme = () => {
