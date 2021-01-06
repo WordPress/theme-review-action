@@ -64,6 +64,8 @@ class WPORG_CheckTheme {
 	 */
 	public function save_to_log( $type, $strings )  {
 		$fileName = './logs/theme-check-'. $type .'.txt';
+		$files1 = scandir('.');
+		print_r($files1);
 		file_put_contents( $fileName, implode( "\n", $strings ), FILE_APPEND );
 	}
 
