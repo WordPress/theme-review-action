@@ -203,7 +203,9 @@ const runUICheckAsync = async (npmPrefix, env) => {
 		printDebugInfo(e);
 
 		if (e.timedOut) {
-			spinner.fail('Running some end to end tests on the front end...TIMED OUT');
+			spinner.fail(
+				'Running some end to end tests on the front end...TIMED OUT'
+			);
 		}
 
 		// We succeed here because failed tests will cause an exception. But we'll show the log later.
@@ -311,9 +313,8 @@ async function run() {
 
 	if (!program.githubRun) {
 		fs.emptyDirSync(LOG_PATH);
+		createLogs(ACTIONS_PATH, LOG_PATH, false);
 	}
-
-	createLogs(ACTIONS_PATH, LOG_PATH, program.githubRun);
 
 	if (!program.skipFolderCopy) {
 		await runThemeCopyAsync(program.pathToTheme);
