@@ -36,7 +36,7 @@ runs:
       id: post
       shell: bash
 
-    - run: cd ${{ github.action_path }} && npm run start -- --skipFolderCopy --githubRun --accessibleReady=${{ inputs.accessible-ready }}
+    - run: cd ${{ github.action_path }} && npm run start -- --skipFolderCopy --githubRun --accessibleReady=${{ inputs.accessible-ready }} --debug
       env:
         UI_DEBUG: ${{ inputs.ui-debug }}
       shell: bash
