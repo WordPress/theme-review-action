@@ -335,6 +335,7 @@ async function run() {
 			WP_ENV_TESTS_PORT: testPort,
 			WP_THEME_TYPE: getThemeType(),
 			CI: program.githubRun,
+			UI_DEBUG: program.UIDebug,
 		});
 	}
 
@@ -379,6 +380,7 @@ async function run() {
 				DEFAULT_TIMEOUT
 			)
 			.option('--skipFolderCopy', 'skips folder copy step.', false)
+			.option('--UIDebug', 'saves screenshots in ui check (NPX triggered runs are not supported)', false)
 			.option(
 				'--githubRun',
 				'whether the test is running on github.',
