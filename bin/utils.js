@@ -7,12 +7,12 @@ const READ_OPTIONS = { encoding: 'utf8' };
 const getParentTheme = () => {
 	try {
 		const styleLocation = `${THEME_PATH_ROOT}/style.css`;
-		const templateRegex = /Template:(\s?[^\s]+)/gim; // Template: ${parentTheme}
+		const templateRegex = /Template:(\s*[^\s]+)/gim; // Template: ${parentTheme}
 
 		// Load in style.css to check for parent
-		const themeStyle = fs.readFileSync(styleLocation, READ_OPTIONS);
-		const template = themeStyle.match(templateRegex);
-		return template[0].toLowerCase().replace('template:', '').trim();
+        const themeStyle = fs.readFileSync(styleLocation, READ_OPTIONS);
+        const template = themeStyle.match(templateRegex);
+		return template[0].toLowerCase().replace(/template:(\s*)/ig, '').trim();
 	} catch (ex) {}
 
 	return false;
