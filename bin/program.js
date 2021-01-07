@@ -7,11 +7,17 @@ const ora = require('ora');
 const core = require('@actions/core');
 const { command } = require('execa');
 const { info, error, success, print, warning } = require('./log');
-const { fancyTimeFormat, isWindows, getThemeType } = require('./utils');
+const {
+	fancyTimeFormat,
+	isWindows,
+	getThemeType,
+	createLogs,
+} = require('./utils');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
-const DEFAULT_TIMEOUT = 240 * 1000;
+const DEFAULT_TIMEOUT = 300 * 1000;
 const LOG_PATH = path.join(__dirname, '../logs');
+const ACTIONS_PATH = path.join(__dirname, '../actions');
 
 /**
  * Loads this projects package.json to get the version number
@@ -195,6 +201,13 @@ const runUICheckAsync = async (npmPrefix, env) => {
 		return res;
 	} catch (e) {
 		printDebugInfo(e);
+
+		if (e.timedOut) {
+			spinner.fail(
+				'Running some end to end tests on the front end...TIMED OUT'
+			);
+		}
+
 		// We succeed here because failed tests will cause an exception. But we'll show the log later.
 		spinner.succeed();
 		return false;
@@ -300,6 +313,7 @@ async function run() {
 
 	if (!program.githubRun) {
 		fs.emptyDirSync(LOG_PATH);
+		createLogs(ACTIONS_PATH, LOG_PATH, false);
 	}
 
 	if (!program.skipFolderCopy) {
@@ -321,6 +335,7 @@ async function run() {
 			WP_ENV_TESTS_PORT: testPort,
 			WP_THEME_TYPE: getThemeType(),
 			CI: program.githubRun,
+			UI_DEBUG: program.UIDebug,
 		});
 	}
 
@@ -365,6 +380,7 @@ async function run() {
 				DEFAULT_TIMEOUT
 			)
 			.option('--skipFolderCopy', 'skips folder copy step.', false)
+			.option('--UIDebug', 'saves screenshots in ui check (NPX triggered runs are not supported)', false)
 			.option(
 				'--githubRun',
 				'whether the test is running on github.',

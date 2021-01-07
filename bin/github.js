@@ -1,38 +1,13 @@
 const fs = require('fs-extra');
+const Utils = require('./utils');
+const path = require('path');
+
+const LOG_PATH = `${process.env.GITHUB_ACTION_PATH}/logs`;
+const ACTIONS_PATH = `${process.env.GITHUB_ACTION_PATH}/actions`;
+
 const setConfiguration = (key, value) => {
 	console.log(`Setting output for ${key}.`);
 	console.log(`::set-output name=${key}::${value}`);
-};
-
-const createLogs = () => {
-	try {
-		const directories = fs
-			.readdirSync('./actions', { withFileTypes: true })
-			.filter((dirent) => dirent.isDirectory())
-			.map((dirent) => dirent.name);
-
-		const logPath = './logs';
-
-		if (!fs.existsSync(logPath)) {
-			fs.mkdirSync(logPath);
-		}
-
-		directories.forEach((folderName) => {
-			const errorLogPath = `./logs/${folderName}-errors.txt`;
-			const warningLogPath = `./logs/${folderName}-warnings.txt`;
-
-			fs.openSync(errorLogPath, 'w');
-			console.log('Created log:', errorLogPath);
-
-			fs.openSync(warningLogPath, 'w');
-			console.log('Created log:', warningLogPath);
-		});
-
-		return true;
-	} catch (e) {
-		console.log(e);
-	}
-	return false;
 };
 
 /**
@@ -49,12 +24,12 @@ const setUIScreenshotPath = () => {
  * Outputs the location for the logs
  */
 const setLogPath = () => {
-	setConfiguration('logs', `${process.env.GITHUB_ACTION_PATH}/logs`);
+	setConfiguration('logs', LOG_PATH);
 };
 
 (() => {
 	console.log('Setting configurations');
 	setUIScreenshotPath();
 	setLogPath();
-	createLogs();
+	Utils.createLogs(ACTIONS_PATH, LOG_PATH, true);
 })();

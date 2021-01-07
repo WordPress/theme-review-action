@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const THEME_PATH_ROOT = './test-theme';
+const THEME_PATH_ROOT = path.join(__dirname, '../test-theme');
 const READ_OPTIONS = { encoding: 'utf8' };
 
 const getParentTheme = () => {
@@ -72,6 +72,40 @@ const getThemeType = () => {
 	}
 };
 
+/**
+ * Create logs for all folders in /actions
+ */
+const createLogs = (actionsPath, logPath, verbose) => {
+	try {
+		const directories = fs
+			.readdirSync(actionsPath, { withFileTypes: true })
+			.filter((d) => d.isDirectory())
+			.map((d) => d.name);
+
+		if (!fs.existsSync(logPath)) {
+			fs.mkdirSync(logPath);
+		}
+
+		for (let i = 0; i < directories.length; i++) {
+			const folderName = directories[i];
+			const errorLogPath = `${logPath}/${folderName}-errors.txt`;
+			const warningLogPath = `${logPath}/${folderName}-warnings.txt`;
+
+			fs.openSync(errorLogPath, 'w');
+			fs.openSync(warningLogPath, 'w');
+			if (verbose) {
+				console.log('Created log:', errorLogPath);
+				console.log('Created log:', warningLogPath);
+			}
+		}
+
+		return true;
+	} catch (e) {
+		console.log(e);
+	}
+	return false;
+};
+
 module.exports = {
 	isBlockBasedTheme,
 	getParentTheme,
@@ -79,4 +113,5 @@ module.exports = {
 	isWindows,
 	fancyTimeFormat,
 	getThemeType,
+	createLogs,
 };

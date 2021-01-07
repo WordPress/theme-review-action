@@ -1,11 +1,15 @@
 const fs = require('fs');
+const path = require('path');
 const Utils = require('./utils');
 
 const READ_OPTIONS = { encoding: 'utf8' };
 
 const getWpEnv = () => {
 	try {
-		const jsonContent = fs.readFileSync('./.wp-env.json', READ_OPTIONS);
+		const jsonContent = fs.readFileSync(
+			path.join(__dirname, '../.wp-env.json'),
+			READ_OPTIONS
+		);
 		return JSON.parse(jsonContent);
 	} catch (e) {
 		console.log('Problem retrieving .wp-env', e);
@@ -49,7 +53,7 @@ const maybeCreateOverrideConfig = () => {
 	}
 
 	const configString = JSON.stringify(configs);
-	fs.writeFileSync('../.wp-env.override.json', configString);
+	fs.writeFileSync(path.join(__dirname, '../.wp-env.override.json'), configString);
 
 	console.log('Created a .wp-env.override.json file.', configString);
 };
