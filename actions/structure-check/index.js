@@ -2,17 +2,30 @@
  * External dependencies
  */
 const fs = require('fs');
-const core = require('@actions/core');
+const path = require('path');
 
 const READ_OPTIONS = { encoding: 'utf8' };
-const ROOT_PATH = '../../test-theme';
+const ROOT_PATH = path.join(__dirname, '../../');
+const ROOT_PATH_THEME = `${ROOT_PATH}/test-theme`;
 
 const isChildTheme = () => {
-	process.env.THEME_TYPE === 'child';
+	return process.env.WP_THEME_TYPE === 'child';
 };
 
 const isBlockBasedTheme = () => {
-	process.env.THEME_TYPE === 'block';
+	return process.env.WP_THEME_TYPE === 'block';
+};
+
+/**
+ * Adds messaging to log
+ * @param {array} lines
+ */
+const appendToLog = (input) => {
+	const path = `${ROOT_PATH}/logs/structure-check-errors.txt`;
+
+	fs.appendFileSync(path, `${input}\n\n`, {
+		encoding: 'utf8',
+	});
 };
 
 /**
@@ -33,33 +46,45 @@ const fileExists = (filePath) => {
 };
 
 (() => {
-	core.info('Running structure check.');
+	console.log('Running structure check.');
+	let hasErrors = false;
 
 	// Child Themes don't require an index.php
-	if (!isChildTheme() && !fileExists(`${ROOT_PATH}/index.php`)) {
-		core.error('We require you have an index.php file.');
+	if (!isChildTheme() && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
+		appendToLog('We require you have an index.php file.');
+		hasErrors = true;
 	}
 
 	// Block based themes require function.php
-	if (isBlockBasedTheme() && !fileExists(`${ROOT_PATH}/functions.php'`)) {
-		core.error(
+	if (
+		isBlockBasedTheme() &&
+		!fileExists(`${ROOT_PATH_THEME}/functions.php'`)
+	) {
+		appendToLog(
 			'We require you have an function.php file for a Block Based theme.'
 		);
+		hasErrors = true;
 	}
 
-	if (!fileExists(`${ROOT_PATH}/style.css`)) {
-		core.error('We require you have a style.css file.');
+	if (!fileExists(`${ROOT_PATH_THEME}/style.css`)) {
+		appendToLog('We require you have a style.css file.');
+		hasErrors = true;
 	}
 
 	if (
-		!fileExists(`${ROOT_PATH}/screenshot.png`) &&
-		!fileExists(`${ROOT_PATH}/screenshot.jpg`) &&
-		!fileExists(`${ROOT_PATH}/screenshot.jpeg`)
+		!fileExists(`${ROOT_PATH_THEME}/screenshot.png`) &&
+		!fileExists(`${ROOT_PATH_THEME}/screenshot.jpg`) &&
+		!fileExists(`${ROOT_PATH_THEME}/screenshot.jpeg`)
 	) {
-		core.error(
+		appendToLog(
 			'We require you have a screenshot.png or screenshot.jpg file.'
 		);
+		hasErrors = true;
 	}
 
-	core.info('Complete structure check.');
+	if (hasErrors) {
+		throw Error('Failed basic structure.');
+	}
+
+	console.log('Complete structure check.');
 })();

@@ -164,6 +164,25 @@ const runEnvironmentSetupAsync = async (npmPrefix, env) => {
 	}
 };
 
+const runStructureCheckAsync = async (npmPrefix, env) => {
+	let spinner = ora("Checking theme's basic structure").start();
+	try {
+		const res = await command(`${npmPrefix} check:structure`, {
+			env,
+			timeout: getTimeout(),
+		});
+
+		printDebugInfo(res);
+
+		spinner.succeed();
+		return res;
+	} catch (e) {
+		printDebugInfo(e);
+		spinner.fail();
+		return false;
+	}
+};
+
 const runThemeCheckAsync = async (npmPrefix) => {
 	let spinner = ora(
 		'Running the theme through theme check plugin...'
@@ -252,6 +271,18 @@ const printTestResults = () => {
 
 		printTestResultBlock(
 			errorFunction,
+			'\nStructure Check Errors:\n\n',
+			`${LOG_PATH}/structure-check-errors.txt`
+		);
+
+		printTestResultBlock(
+			warningFunction,
+			'\nStructure Check Warnings:\n\n',
+			`${LOG_PATH}/structure-check-warnings.txt`
+		);
+
+		printTestResultBlock(
+			errorFunction,
 			'\nTheme Check Errors:\n\n',
 			`${LOG_PATH}/theme-check-errors.txt`
 		);
@@ -320,6 +351,15 @@ async function run() {
 		await runThemeCopyAsync(program.pathToTheme);
 	}
 
+	const hasBasicStructure = await runStructureCheckAsync(npmPrefix, {
+		WP_THEME_TYPE: getThemeType(),
+	});
+
+	if (!hasBasicStructure) {
+		printTestResults();
+		return;
+	}
+
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
 		WP_ENV_TESTS_PORT: testPort,
@@ -380,7 +420,11 @@ async function run() {
 				DEFAULT_TIMEOUT
 			)
 			.option('--skipFolderCopy', 'skips folder copy step.', false)
-			.option('--UIDebug', 'saves screenshots in ui check (NPX triggered runs are not supported)', false)
+			.option(
+				'--UIDebug',
+				'saves screenshots in ui check (NPX triggered runs are not supported)',
+				false
+			)
 			.option(
 				'--githubRun',
 				'whether the test is running on github.',
