@@ -253,6 +253,26 @@ const runTearDownAsync = async (npmPrefix) => {
 	}
 };
 
+const verifyFilesAsync = async () => {
+	let spinner = ora('Checking for files...').start();
+	try {
+		const testFolderLocation = path.join(__dirname, `../test-theme`);
+		const files = fs.readdirSync(testFolderLocation);
+
+		if (!files.length) {
+			throw Error();
+		}
+		spinner.succeed('Using existing files in ./test-theme');
+		return true;
+	} catch (e) {
+		printDebugInfo(e);
+		spinner.fail(
+			'No files found: Please copy your theme into the "test-theme" folder, or add the relative path to your theme via using the program options. Ie "npm run start -- --pathToTheme=../my-theme"'
+		);
+		return false;
+	}
+};
+
 const printTestResultBlock = (logFunction, text, logPath) => {
 	try {
 		const contents = fs.readFileSync(logPath, UTF_8_ENCODING).trim();
@@ -347,8 +367,11 @@ async function run() {
 		createLogs(ACTIONS_PATH, LOG_PATH, false);
 	}
 
-	if (!program.skipFolderCopy) {
+	// Having a path set takes precedent over skipping the copy which is the local default
+	if (!program.skipFolderCopy || program.pathToTheme !== '.') {
 		await runThemeCopyAsync(program.pathToTheme);
+	} else {
+		await verifyFilesAsync();
 	}
 
 	const hasBasicStructure = await runStructureCheckAsync(npmPrefix, {
