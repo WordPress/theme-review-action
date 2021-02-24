@@ -25,6 +25,8 @@ const maybeCreateOverrideConfig = () => {
 	const isBlockBased = Utils.isBlockBasedTheme();
 	const isCIRun = Utils.isCI();
 
+	console.log('Maybe creating .wp-env override config.');
+
 	if (!parentTheme && !isBlockBased && !isCIRun) {
 		console.log('No need for an override.');
 		return;
@@ -33,6 +35,7 @@ const maybeCreateOverrideConfig = () => {
 	const configs = getWpEnv();
 
 	if (!configs) {
+		console.log('Unable to locate .wp-env');
 		return;
 	}
 
@@ -53,7 +56,10 @@ const maybeCreateOverrideConfig = () => {
 	}
 
 	const configString = JSON.stringify(configs);
-	fs.writeFileSync(path.join(__dirname, '../.wp-env.override.json'), configString);
+	fs.writeFileSync(
+		path.join(__dirname, '../.wp-env.override.json'),
+		configString
+	);
 
 	console.log('Created a .wp-env.override.json file.', configString);
 };
