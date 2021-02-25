@@ -20,6 +20,9 @@ const runCommand = async (str, args, defaultArguments = TEST_CLI_ARGUMENTS) => {
 	const startTime = Date.now();
 	spinner = ora(str).start();
 	const res = await execa('npm', [...defaultArguments, args], { cmd: '../' });
+
+	console.log(res);
+
 	spinner.succeed(getTimeOutput(str, startTime));
 	return res;
 };

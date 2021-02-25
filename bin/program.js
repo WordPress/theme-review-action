@@ -6,7 +6,7 @@ const program = require('commander');
 const ora = require('ora');
 const core = require('@actions/core');
 const { command } = require('execa');
-const { info, error, success, print, warning } = require('./log');
+const { info, error: errorToLog, success, print, warning } = require('./log');
 const {
 	fancyTimeFormat,
 	isWindows,
@@ -120,135 +120,169 @@ const printTestHeader = ({ basePort, testPort }) => {
 	try {
 		info('\nTest Version:', getVersion());
 	} catch (e) {
-		error('Could not retrieve package version.');
+		errorToLog('Could not retrieve package version.');
 	}
 
 	info('Testing Ports:', [basePort, testPort].join('/'));
 };
 
-const runThemeCopyAsync = async (pathToCopy) => {
-	let spinner = ora('Copying theme files into the environment...').start();
+const withSpinner = async (str, fn) => {
+	let spinner = ora(str).start();
+	let time = process.hrtime();
 
 	try {
-		const destination = path.join(__dirname, `../test-theme`);
-		await fs.copy(pathToCopy, destination);
-		spinner.succeed();
-		return true;
-	} catch (e) {
-		error(e);
+		await fn();
+		time = process.hrtime(time);
+
+		spinner.succeed(
+			`${str} (in ${time[0]}s ${(time[1] / 1e6).toFixed(0)}ms)`
+		);
+
+		return {
+			success: true,
+		};
+	} catch (ex) {
 		spinner.fail();
+		return {
+			error: ex,
+		};
+	}
+};
+
+const runThemeCopyAsync = async (pathToCopy) => {
+	const { error } = await withSpinner(
+		'Copying theme files into the environment...',
+		async () => {
+			const destination = path.join(__dirname, `../test-theme`);
+			const res = await fs.copy(pathToCopy, destination);
+			printDebugInfo(res);
+		}
+	);
+
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
 		return false;
 	}
 };
 
 const runEnvironmentSetupAsync = async (npmPrefix, env) => {
-	let spinner = ora(
-		'Setting up the development environment for testing...'
-	).start();
+	const { success, error } = await withSpinner(
+		'Setting up the development environment for testing...',
+		async () => {
+			const res = await command(`${npmPrefix} install:environment `, {
+				env,
+				windowHide: false,
+				timeout: getTimeout(),
+			});
+			printDebugInfo(res);
+		}
+	);
 
-	try {
-		const res = await command(`${npmPrefix} install:environment `, {
-			env,
-			windowHide: false,
-			timeout: getTimeout(),
-		});
+	if (success) {
+		return true;
+	}
 
-		printDebugInfo(res);
-
-		spinner.succeed();
-		return res;
-	} catch (e) {
-		error(e);
-		spinner.fail();
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
 		return false;
 	}
 };
 
 const runStructureCheckAsync = async (npmPrefix, env) => {
-	let spinner = ora("Checking theme's basic structure").start();
-	try {
-		const res = await command(`${npmPrefix} check:structure`, {
-			env,
-			timeout: getTimeout(),
-		});
+	const { success, error } = await withSpinner(
+		"Checking theme's basic structure",
+		async () => {
+			const res = await command(`${npmPrefix} check:structure`, {
+				env,
+				timeout: getTimeout(),
+			});
+			printDebugInfo(res);
+		}
+	);
 
-		printDebugInfo(res);
+	if (success) {
+		return true;
+	}
 
-		spinner.succeed();
-		return res;
-	} catch (e) {
-		printDebugInfo(e);
-		spinner.fail();
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
 		return false;
 	}
 };
 
 const runThemeCheckAsync = async (npmPrefix) => {
-	let spinner = ora(
-		'Running the theme through theme check plugin...'
-	).start();
-	try {
-		const res = await command(`${npmPrefix} check:theme-check`, {
-			timeout: getTimeout(),
-		});
+	const { success, error } = await withSpinner(
+		'Running the theme through theme check plugin...',
+		async () => {
+			const res = await command(`${npmPrefix} check:theme-check`, {
+				timeout: getTimeout(),
+			});
 
-		printDebugInfo(res);
+			printDebugInfo(res);
+		}
+	);
 
-		spinner.succeed();
-		return res;
-	} catch (e) {
-		printDebugInfo(e);
-		spinner.fail();
+	if (success) {
+		return true;
+	}
+
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
 		return false;
 	}
 };
 
 const runUICheckAsync = async (npmPrefix, env) => {
-	let spinner = ora(
-		'Running some end to end tests on the front end...'
-	).start();
+	const { success, error } = await withSpinner(
+		'Running some end to end tests on the front end...',
+		async () => {
+			const res = await command(`${npmPrefix} check:ui`, {
+				env,
+				timeout: getTimeout(),
+			});
 
-	try {
-		const res = await command(`${npmPrefix} check:ui`, {
-			env,
-			timeout: getTimeout(),
-		});
-
-		printDebugInfo(res);
-
-		spinner.succeed();
-		return res;
-	} catch (e) {
-		printDebugInfo(e);
-
-		if (e.timedOut) {
-			spinner.fail(
-				'Running some end to end tests on the front end...TIMED OUT'
-			);
+			printDebugInfo(res);
 		}
+	);
 
-		// We succeed here because failed tests will cause an exception. But we'll show the log later.
-		spinner.succeed();
+	if (success) {
+		return true;
+	}
+
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
+		if (error.timedOut) {
+			errorToLog('TIMED OUT');
+		}
 		return false;
 	}
 };
 
 const runTearDownAsync = async (npmPrefix) => {
-	let spinner = ora('Tearing down the environment...').start();
-	try {
-		const res = await command(`${npmPrefix} wp-env destroy`, {
+    const { success, error } = await withSpinner(
+	'Tearing down the environment...',
+    async () => {
+        const res = await command(`${npmPrefix} wp-env destroy`, {
 			input: 'y',
 			timeout: getTimeout(),
 		});
 
 		printDebugInfo(res);
+    });
 
-		spinner.succeed();
-		return res;
-	} catch (e) {
-		printDebugInfo(e);
-		spinner.fail();
-		error(e);
+	if (success) {
+		return true;
+	}
+
+	if (error) {
+		errorToLog(error);
+		printDebugInfo(error);
+
 		return false;
 	}
 };
@@ -260,7 +294,7 @@ const verifyFilesAsync = async () => {
 		const files = fs.readdirSync(testFolderLocation);
 
 		if (!files.length) {
-			throw Error();
+			throw errorToLog();
 		}
 		spinner.succeed('Using existing files in ./test-theme');
 		return true;
@@ -286,7 +320,7 @@ const printTestResultBlock = (logFunction, text, logPath) => {
 
 const printTestResults = () => {
 	try {
-		const errorFunction = program.githubRun ? core.setFailed : error;
+		const errorFunction = program.githubRun ? core.setFailed : errorToLog;
 		const warningFunction = program.githubRun ? core.warning : warning;
 
 		printTestResultBlock(
@@ -327,7 +361,7 @@ const printTestResults = () => {
 
 		return true;
 	} catch (e) {
-		error(e);
+		errorToLog(e);
 		return false;
 	}
 };
@@ -351,7 +385,7 @@ async function run() {
 
 	// We need docker, if they don't have it return
 	if (!(await hasDocker())) {
-		error('This project requires Docker to be installed and running.');
+		errorToLog('This project requires Docker to be installed and running.');
 		return;
 	}
 
@@ -410,7 +444,7 @@ async function run() {
 		try {
 			themeInfo = getThemeInfo();
 		} catch (e) {
-			error(e.message);
+			errorToLog(e.message);
 			return;
 		}
 
@@ -457,7 +491,7 @@ async function run() {
 
 		await program.parseAsync(process.argv);
 	} catch (e) {
-		error(e);
-		error('We ran into an error with the test framework.');
+		errorToLog(e);
+		errorToLog('We ran into an error with the test framework.');
 	}
 })();
