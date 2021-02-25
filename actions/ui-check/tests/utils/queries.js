@@ -58,13 +58,35 @@ export const getElementPropertyAsync = async ( element, property ) => {
 };
 
 /**
+ * Returns a fairly random sample of links
+ * @param {array} arr Array of elements
+ * @param {number} max Number of items to return
+ * @return {array} List of elements
+ */
+const getRandomList = ( arr, max ) => {
+	const newArr = [];
+
+	if ( arr.length < max ) {
+		return arr;
+	}
+
+	for ( var i = 0; i < max; i++ ) {
+		var rand = arr[ Math.floor( Math.random() * arr.length ) ];
+		newArr.push( rand );
+	}
+	return newArr;
+};
+
+/**
  * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
  * @return {Puppeteer|ElementHandle[]} List of focusable element
  */
 export const getFocusableElementsAsync = async () => {
-	const elements = await queryForFocusableElementsAsync();
+	let elements = await queryForFocusableElementsAsync();
 	const final = [];
 	const pathMap = {};
+
+	elements = getRandomList( elements, 30 );
 
 	for ( let i = 0; i < elements.length; i++ ) {
 		// Check if it disabled
