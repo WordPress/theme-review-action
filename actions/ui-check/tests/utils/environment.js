@@ -9,7 +9,7 @@ export const createURL = ( path, query ) => {
 	let base = `http://localhost:${ testPort }${ path }`;
 
 	if ( query ) {
-		base += `?${ query }`;
+		base += (query[ 0 ] !== '?' ? `?${ query }` : query);
 	}
 
 	return base;

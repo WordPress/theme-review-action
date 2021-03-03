@@ -57,13 +57,12 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 	it( 'Page should have complete output', async () => {
 		// This should catch anything that kills output before the end of the page, or outputs trailing garbage.
-		let response = await page.goto( createURL( url, queryString ) );
+		const fullUrl = createURL( url, queryString );
+		let response = await page.goto( fullUrl );
 		const responseText = await response.text();
 
 		errorWithMessageOnFail(
-			`Page contains incomplete output: ${ JSON.stringify(
-				responseText
-			) }`,
+			`${fullUrl} contains incomplete output. Make sure the page contains valid html.`,
 			() => {
 				expect( responseText ).toMatch( /<\/(html|rss)>\s*$/ );
 			}
