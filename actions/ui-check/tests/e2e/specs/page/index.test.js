@@ -92,9 +92,9 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		await page.goto( createURL( '/' ) );
 
 		errorWithMessageOnFail(
-			`Page should not contain javascript errors. Found ${ JSON.stringify(
+			`Page should not contain javascript errors. Found ${
 				jsError
-			) }`,
+			}`,
 			() => {
 				expect( jsError ).toBeFalsy();
 			}
