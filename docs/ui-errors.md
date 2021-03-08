@@ -1,8 +1,24 @@
 
 
+
+# UI Errors Documentation
+
+## Table of Contents
+
+- [Page should contain body class](#page-should-contain-body-class)
+- [Page should not have PHP errors](#page-should-not-have-php-errors)
+- [Page should return 200 status](#page-should-return-200-status)
+- [Browser console should not contain errors](#browser-console-should-not-contain-errors)
+- [Page should have complete output](#page-should-have-complete-output)
+- [Page should not have unexpected links](#page-should-not-have-unexpected-links)
+- [Should have skip links](#should-have-skip-links)
+- [Should have appropriate submenus](#should-have-appropriate-submenus)
+- [Should have element focus state](#should-have-element-focus-state)
+- [Should have logical tabbing](#should-have-logical-tabbing)
+
 ## Page should contain body class 
 
-Category: `error`
+Type: `error`
 
 This test expects the page's body class to be present on the page.
 
@@ -18,10 +34,9 @@ Make sure all your relevant templates include something like the following:
 
 [Read more](https://developer.wordpress.org/reference/functions/body_class/)
 
-
 ## Page should not have PHP errors
 
-Category: `error`
+Type: `error`
 
 This test expects that the plugin does not output any PHP errors.
 
@@ -41,7 +56,7 @@ Make sure your plugin does not have any unnecessary redirects.
 
 ## Browser console should not contain errors
 
-Category: `error`
+Type: `error`
 
 This test expects that the plugin doesn't not output anything to the browser console.
 
@@ -55,7 +70,7 @@ Open your Browser Developer tools:
 
 ## Page should have complete output
 
-Category: `error`
+Type: `error`
 
 This test expects that pages have proper HTML code.
 
@@ -70,10 +85,9 @@ Verify that pages have both opening and closing tags. Focus on the following ele
 
 You can also use the [Markup Validation Service](https://validator.w3.org/) to help.
 
-
 ## Page should not have unexpected links
 
-Category: `error`
+Type: `error`
 
 This test expects to **not** find links that are not approved.
 
@@ -81,10 +95,9 @@ This test expects to **not** find links that are not approved.
 
 Verify that the theme only includes links in the [hosts List](https://github.com/WordPress/theme-review-action/blob/f97655ebfbd5602686b62491dda36f0de4a60bd7/actions/ui-check/tests/e2e/specs/page/index.test.js#L114).
 
-
 ## Should have skip links
 
-Category: `warning`
+Type: `warning`
 
 This test expects that pages include skip links for accessibility.
 
@@ -98,7 +111,7 @@ Verify that on pages that include content, the first time user types the `Tab` k
 
 ## Should have appropriate submenus
 
-Category: `warning`
+Type: `warning`
 
 This test expects that navigational menus are useable using a keyboard.
 
@@ -110,7 +123,7 @@ Verify that you can use the `Tab` keyboard button to access and enter all items 
 
 ## Should have element focus state
 
-Category: `warning`
+Type: `warning`
 
 This test expects that all focusable element have a visible focus state.
 
@@ -123,7 +136,7 @@ This test expects that all focusable element have a visible focus state.
 
 ## Should have logical tabbing
 
-Category: `warning`
+Type: `warning`
 
 This test expects tabbing to move logically through the page.
 
