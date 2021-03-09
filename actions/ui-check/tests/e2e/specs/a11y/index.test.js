@@ -33,7 +33,6 @@ describe( 'Accessibility', () => {
 				} );
 			} catch ( e ) {
 				printMessage( noticeType, [
-					`[ Accessibility - ${ accessibilityTest } Tests ]:`,
 					`Running tests on ${ name } ${ getDefaultUrl(
 						path,
 						query
