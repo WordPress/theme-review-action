@@ -18,8 +18,6 @@
 
 ## Page should contain body class 
 
-Type: `error`
-
 This test expects the page's body class to be present on the page.
 
 [WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/required/#templates)
@@ -35,8 +33,6 @@ Make sure all your relevant templates include something like the following:
 [Read more](https://developer.wordpress.org/reference/functions/body_class/)
 
 ## Page should not have PHP errors
-
-Type: `error`
 
 This test expects that the plugin does not output any PHP errors.
 
@@ -56,8 +52,6 @@ Make sure your plugin does not have any unnecessary redirects.
 
 ## Browser console should not contain errors
 
-Type: `error`
-
 This test expects that the plugin doesn't not output anything to the browser console.
 
 [WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/required/#code)
@@ -69,8 +63,6 @@ Open your Browser Developer tools:
 - Verify that JavaScript errors are not present
 
 ## Page should have complete output
-
-Type: `error`
 
 This test expects that pages have proper HTML code.
 
@@ -87,8 +79,6 @@ You can also use the [Markup Validation Service](https://validator.w3.org/) to h
 
 ## Page should not have unexpected links
 
-Type: `error`
-
 This test expects to **not** find links that are not approved.
 
 ### Troubleshooting 
@@ -96,8 +86,6 @@ This test expects to **not** find links that are not approved.
 Verify that the theme only includes links in the [hosts List](https://github.com/WordPress/theme-review-action/blob/f97655ebfbd5602686b62491dda36f0de4a60bd7/actions/ui-check/tests/e2e/specs/page/index.test.js#L114).
 
 ## Should have skip links
-
-Type: `warning`
 
 This test expects that pages include skip links for accessibility.
 
@@ -111,8 +99,6 @@ Verify that on pages that include content, the first time user types the `Tab` k
 
 ## Should have appropriate submenus
 
-Type: `warning`
-
 This test expects that navigational menus are useable using a keyboard.
 
 [WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/accessibility/required/#keyboard-navigation)
@@ -122,8 +108,6 @@ This test expects that navigational menus are useable using a keyboard.
 Verify that you can use the `Tab` keyboard button to access and enter all items in the page's menu.
 
 ## Should have element focus state
-
-Type: `warning`
 
 This test expects that all focusable element have a visible focus state.
 
@@ -135,8 +119,6 @@ This test expects that all focusable element have a visible focus state.
 [Read more](https://make.wordpress.org/themes/handbook/review/accessibility/required/#contrasts)
 
 ## Should have logical tabbing
-
-Type: `warning`
 
 This test expects tabbing to move logically through the page.
 
