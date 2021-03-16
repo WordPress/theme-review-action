@@ -10,7 +10,7 @@ const pixelmatch = require( 'pixelmatch' );
  */
 import {
 	createURL,
-	printMessage,
+	warnWithMessageOnFail,
 	meetsChangeThreshold,
 	getPercentOfOpaqueness,
 	getFocusableElementsAsync,
@@ -62,12 +62,7 @@ const testSkipLinks = async () => {
 		).toBeTruthy();
 	} catch ( e ) {
 		throw new FailedTestException( [
-			'[ Accessibility - Skip Link Test ]:',
-			"This tests whether the first 'tabbable' element on the page is a skip link with an '#' symbol.",
-			'[ Result ]',
-			'Page: "/"',
 			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
-			'You can read more about our expectations at https://make.wordpress.org/themes/handbook/review/required/#skip-links.',
 		] );
 	}
 
@@ -78,16 +73,11 @@ const testSkipLinks = async () => {
 		expect( el ).not.toBeNull();
 	} catch ( e ) {
 		throw new FailedTestException( [
-			'[ Accessibility - Required Tests ]:',
-			'Running tests on "/".',
-			"This tests whether the first 'tabbable' element on the page is a skip link that has a matching element to navigate to.",
-			'[ Result ]',
 			"The skip link doesn't have a matching element on the page.",
 			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
 				'#',
 				''
 			) }".`,
-			'See https://make.wordpress.org/themes/handbook/review/required/#skip-links for more information.',
 		] );
 	}
 };
@@ -97,17 +87,6 @@ const testSkipLinks = async () => {
  * @param {Puppeteer|ElementHandle} listItem
  */
 const testLiSubMenu = async ( listItem ) => {
-	const getFailureMessage = ( message ) => [
-		'[ Accessibility - Submenu Test ]:',
-		'This tests whether your navigational menus are accessible and working as expected.',
-		'[ Result ]',
-		'Page: "/"',
-		"Your theme's navigation is not working as expected.",
-		message,
-		'This test assumes your menu structure follows these guidelines: https://www.w3.org/WAI/tutorials/menus/structure.',
-		'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
-	];
-
 	const link = await listItem.$( 'a' );
 	const submenu = await listItem.$( 'ul' );
 
@@ -148,9 +127,7 @@ const testLiSubMenu = async ( listItem ) => {
 
 		if ( ! submenuIsVisible ) {
 			throw new FailedTestException(
-				getFailureMessage(
-					'Submenus should be become visible when :hover is added to the navigational menu.'
-				)
+				'Submenus should be become visible when :hover is added to the navigational menu.'
 			);
 		}
 
@@ -168,9 +145,7 @@ const testLiSubMenu = async ( listItem ) => {
 
 		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
 			throw new FailedTestException(
-				getFailureMessage(
-					'Submenus should become visible when :focus is added to the link through the main navigation.'
-				)
+				'Submenus should become visible when :focus is added to the link through the main navigation.'
 			);
 		}
 	}
@@ -293,16 +268,10 @@ const testElementFocusState = async () => {
 
 			// Break out of the loop forcefully
 			throw new FailedTestException( [
-				'[ Accessibility - Element Focus Test ]:',
-				"This tests that all 'focusable' elements have a visible :focus state.",
-				'[ Result ]',
-				'Page: "/"',
 				`The element "${ truncateElementHTML(
 					domElement,
 					300
 				) }" does not have enough visible difference when focused. `,
-				'Download the screenshots to see the offending element.',
-				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
 	}
@@ -361,13 +330,9 @@ const testForLogicalTabbing = async () => {
 			);
 
 			throw new FailedTestException( [
-				'[ Accessibility - Tabbing Test ]:',
-				"This tests that all 'focusable' elements on the page are tabbable in the expected order.",
-				'[ Result ]',
-				'Page: "/"',
+				'Tabbing is not working as expected',
 				`Expected: ${ truncateElementHTML( expectedElement, 300 ) }`,
 				`Current: ${ truncateElementHTML( currentFocus, 300 ) }`,
-				'See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation for more information.',
 			] );
 		}
 
@@ -377,12 +342,18 @@ const testForLogicalTabbing = async () => {
 };
 
 describe( 'Accessibility: UI', () => {
-	it( 'Should have skip links:', async () => {
+	it( 'Should have skip links', async () => {
 		try {
 			await testSkipLinks();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warnings', ex.messages );
+				warnWithMessageOnFail(
+					ex.messages,
+					'should-have-skip-links',
+					() => {
+						expect( false ).toEqual( true );
+					}
+				);
 			} else {
 				console.log( ex );
 			}
@@ -394,7 +365,14 @@ describe( 'Accessibility: UI', () => {
 			await testSubMenus();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warnings', ex.messages );
+				warnWithMessageOnFail(
+					ex.messages,
+					'should-have-appropriate-submenus',
+
+					() => {
+						expect( false ).toEqual( true );
+					}
+				);
 			} else {
 				console.log( ex );
 			}
@@ -406,7 +384,13 @@ describe( 'Accessibility: UI', () => {
 			await testElementFocusState();
 		} catch ( ex ) {
 			if ( ex instanceof FailedTestException ) {
-				printMessage( 'warnings', ex.messages );
+				warnWithMessageOnFail(
+					ex.messages,
+					'should-have-element-focus-state',
+					() => {
+						expect( false ).toEqual( true );
+					}
+				);
 			} else {
 				console.log( ex );
 			}
@@ -421,7 +405,13 @@ describe( 'Accessibility: UI', () => {
 				// We will make a gif to help understand what went wrong
 				if ( process.env.UI_DEBUG ) {
 					await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
-					printMessage( 'warnings', ex.messages );
+					warnWithMessageOnFail(
+						ex.messages,
+						'should-have-logical-tabbing',
+						() => {
+							expect( false ).toEqual( true );
+						}
+					);
 				}
 			} else {
 				console.log( ex );

@@ -1,4 +1,5 @@
 const fs = require( 'fs' );
+import { ERROR_DOCS_URL } from './index';
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -17,7 +18,7 @@ export const cleanErrorMessage = ( msg ) => {
  * @param {array} lines
  */
 const appendToLog = ( command, lines ) => {
-	const path = `../../logs/ui-check-${command}.txt`;
+	const path = `../../logs/ui-check-${ command }.txt`;
 
 	fs.appendFileSync( path, [ '\n\n', ...lines ].join( '\n' ), {
 		encoding: 'utf8',
@@ -39,8 +40,13 @@ export const printMessage = ( command, lines ) => {
  * @param {string|string[]} message Messages to display
  * @param {function} testToRun The test that will be executed
  */
-const expectWithMessage = ( type, message, testToRun ) => {
+const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
+
+	if ( testId ) {
+		// Append information about the error.
+		output.push( `See: ${ ERROR_DOCS_URL }#${ testId }` );
+	}
 
 	try {
 		testToRun();
@@ -54,8 +60,8 @@ const expectWithMessage = ( type, message, testToRun ) => {
  * @param {string|string[]} message Messages to output
  * @param {function} test Function to run
  */
-export const errorWithMessageOnFail = ( message, test ) => {
-	return expectWithMessage( 'errors', message, test );
+export const errorWithMessageOnFail = ( message, testId = false, test ) => {
+	return expectWithMessage( 'errors', message, testId, test );
 };
 
 /**
@@ -63,6 +69,6 @@ export const errorWithMessageOnFail = ( message, test ) => {
  * @param {string|string[]} message Messages to output
  * @param {function} test Function to run
  */
-export const warnWithMessageOnFail = ( message, test ) => {
-	return expectWithMessage( 'warnings', message, test );
+export const warnWithMessageOnFail = ( message, testId = false, test ) => {
+	return expectWithMessage( 'warnings', message, testId, test );
 };

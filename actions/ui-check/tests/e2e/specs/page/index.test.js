@@ -37,6 +37,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 		errorWithMessageOnFail(
 			`${ url } does not contain a body class`,
+			'page-should-contain-body-class',
 			() => {
 				expect( bodyClassName.split( ' ' ) ).toContain( bodyClass );
 			}
@@ -48,7 +49,8 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		const pageError = await getPageError();
 
 		errorWithMessageOnFail(
-			`Page contains PHP errors: ${ JSON.stringify( pageError ) }`,
+			`Page contains PHP errors: ${ pageError }`,
+			'page-should-not-have-php-errors',
 			() => {
 				expect( pageError ).toBe( null );
 			}
@@ -63,6 +65,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 		errorWithMessageOnFail(
 			`${fullUrl} contains incomplete output. Make sure the page contains valid html.`,
+			'page-should-have-complete-output',
 			() => {
 				expect( responseText ).toMatch( /<\/(html|rss)>\s*$/ );
 			}
@@ -75,6 +78,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 		errorWithMessageOnFail(
 			`Expected to received a 200 status for ${ url }. Received ${ status }.`,
+			'page-should-return-200-status',
 			() => {
 				expect( status ).toBe( 200 );
 			}
@@ -95,6 +99,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 			`Page should not contain javascript errors. Found ${
 				jsError
 			}`,
+			'browser-console-should-not-contain-errors',
 			() => {
 				expect( jsError ).toBeFalsy();
 			}
@@ -150,6 +155,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 					url,
 					queryString.replace( '?', '' )
 				) } is not an approved link.`,
+			    'page-should-not-have-unexpected-links',
 				() => {
 					expect( allowed_hosts ).toContain( hostname );
 				}
