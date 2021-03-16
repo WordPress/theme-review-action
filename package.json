@@ -21,7 +21,7 @@
   "license": "GPL-2.0-or-later",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@wordpress/env": "^3.0.0",
+    "@wordpress/env": "https://gitpkg.now.sh/WordPress/gutenberg/packages/env?trunk",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "execa": "^4.1.0",
