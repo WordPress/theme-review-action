@@ -496,6 +496,6 @@ async function run() {
 	} catch (e) {
 		errorToLog(e);
 		errorToLog('We ran into an error with the test framework.');
-        process.exit();
+        core.setFailed(e);
 	}
 })();
