@@ -264,16 +264,17 @@ const runUICheckAsync = async (npmPrefix, env) => {
 };
 
 const runTearDownAsync = async (npmPrefix) => {
-    const { success, error } = await withSpinner(
-	'Tearing down the environment...',
-    async () => {
-        const res = await command(`${npmPrefix} wp-env destroy`, {
-			input: 'y',
-			timeout: getTimeout(),
-		});
+	const { success, error } = await withSpinner(
+		'Tearing down the environment...',
+		async () => {
+			const res = await command(`${npmPrefix} wp-env destroy`, {
+				input: 'y',
+				timeout: getTimeout(),
+			});
 
-		printDebugInfo(res);
-    });
+			printDebugInfo(res);
+		}
+	);
 
 	if (success) {
 		return true;
@@ -452,6 +453,8 @@ async function run() {
 			themeName: themeInfo.themeName,
 			elapsedTime: (Date.now() - startTime) / 1000,
 		});
+	} else {
+		throw Error('Unable to start environment.');
 	}
 }
 
