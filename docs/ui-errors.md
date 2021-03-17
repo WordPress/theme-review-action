@@ -79,7 +79,9 @@ You can also use the [Markup Validation Service](https://validator.w3.org/) to h
 
 ## Page should not have unexpected links
 
-This test expects to **not** find links that are not approved.
+Verify that pages do not include promotional links or unexpected links to third-party web sites. Footer credit links to the theme or author site are permitted.
+
+[WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links)
 
 ### Troubleshooting 
 
