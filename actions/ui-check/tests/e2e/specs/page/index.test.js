@@ -90,7 +90,8 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		let jsError;
 
 		page.on( 'pageerror', ( error ) => {
-			jsError = error.toString();
+			// Replace too many extra spaces, replace new line characters
+			jsError = error.toString().replace(/ +(?= )/g,'').replace(/\n/g, " ");
 		} );
 
 		await page.goto( createURL( '/' ) );
