@@ -1,5 +1,5 @@
 const fs = require( 'fs' );
-import { ERROR_DOCS_URL } from './index';
+import { ERROR_DOCS_URL, WARNING_DOCS_URL } from './index';
 
 /**
  * Removes some noise that exists in the testing framework error messages.
@@ -44,8 +44,9 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
 
 	if ( testId ) {
+        let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL ;
 		// Append information about the error.
-		output.push( `See: ${ ERROR_DOCS_URL }#${ testId }` );
+		output.push( `See: ${ docsURL }#${ testId }` );
 	}
 
 	try {
