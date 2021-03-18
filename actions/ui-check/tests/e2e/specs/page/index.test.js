@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import { getPageError } from '@wordpress/e2e-test-utils';
 const fetch = require( 'node-fetch' );
 
 /**
@@ -9,158 +8,67 @@ const fetch = require( 'node-fetch' );
  */
 import {
 	createURL,
-	getDefaultUrl,
-	errorWithMessageOnFail,
-	getElementPropertyAsync,
 } from '../../../utils';
 
 import site_info from '../../../../../../config/siteinfo.json';
+
+import bodyClassTest from './body-class';
+import phpErrorsTest from './php-errors';
+import completeOutputTest from './complete-output';
+import pageStatusTest from './page-status';
+import jsErrorTest from './js-errors';
+import unexpectedLinksTest from './unexpected-links';
 
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
 
-const removeWWW = ( str ) => {
-	return str.replace( /^(www[.])/, '' );
-};
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	it( 'Page should contain body class ' + bodyClass, async () => {
 		// Make sure the page content appears to be appropriate for the URL.
-		await page.goto( createURL( url, queryString ) );
-		const body = await page.$( 'body' );
-		const bodyClassName = await getElementPropertyAsync(
-			body,
-			'className'
-		);
+		const fullUrl = createURL( url, queryString );
+		await page.goto( fullUrl );
 
-		errorWithMessageOnFail(
-			`${ url } does not contain a body class`,
-			'page-should-contain-body-class',
-			() => {
-				expect( bodyClassName.split( ' ' ) ).toContain( bodyClass );
-			}
-		);
+		await bodyClassTest( fullUrl, bodyClass );
 	} );
 
 	it( 'Page should not have PHP errors', async () => {
 		await page.goto( createURL( url, queryString ) );
-		const pageError = await getPageError();
 
-		errorWithMessageOnFail(
-			`Page contains PHP errors: ${ pageError }`,
-			'page-should-not-have-php-errors',
-			() => {
-				expect( pageError ).toBe( null );
-			}
-		);
+		await phpErrorsTest();
 	} );
 
 	it( 'Page should have complete output', async () => {
 		// This should catch anything that kills output before the end of the page, or outputs trailing garbage.
 		const fullUrl = createURL( url, queryString );
-		let response = await page.goto( fullUrl );
-		const responseText = await response.text();
+		const response = await page.goto( fullUrl );
+		const text = await response.text();
 
-		errorWithMessageOnFail(
-			`${fullUrl} contains incomplete output. Make sure the page contains valid html.`,
-			'page-should-have-complete-output',
-			() => {
-				expect( responseText ).toMatch( /<\/(html|rss)>\s*$/ );
-			}
-		);
+		await completeOutputTest( fullUrl, text );
 	} );
 
 	it( 'Page should return 200 status', async () => {
-		let response = await page.goto( createURL( url, queryString ) );
+		const fullUrl = createURL( url, queryString );
+		let response = await page.goto( fullUrl );
 		const status = await response.status();
 
-		errorWithMessageOnFail(
-			`Expected to received a 200 status for ${ url }. Received ${ status }.`,
-			'page-should-return-200-status',
-			() => {
-				expect( status ).toBe( 200 );
-			}
-		);
+		await pageStatusTest( fullUrl, status );
 	} );
 
 	it( 'Browser console should not contain errors', async () => {
-		// Haven't confirmed this works
-		let jsError;
+        const fullUrl = createURL( '/' );
 
-		page.on( 'pageerror', ( error ) => {
-			// Replace too many extra spaces, replace new line characters
-			jsError = error.toString().replace(/ +(?= )/g,'').replace(/\n/g, " ");
-		} );
-
-		await page.goto( createURL( '/' ) );
-
-		errorWithMessageOnFail(
-			`Page should not contain javascript errors. Found ${
-				jsError
-			}`,
-			'browser-console-should-not-contain-errors',
-			() => {
-				expect( jsError ).toBeFalsy();
-			}
-		);
+		await page.goto( fullUrl );
+        await jsErrorTest( fullUrl )
 	} );
 
 	it( 'Page should not have unexpected links', async () => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
+        const fullUrl = createURL( url, queryString );
+		await page.goto( fullUrl );
 
-		await page.goto( createURL( url, queryString ) );
-
-		const hrefs = await page.$$eval( 'a', ( anchors ) =>
-			[].map.call( anchors, ( a ) => a.href )
-		);
-
-		const allowed_hosts = [
-			'wordpress.org',
-			'gravatar.com',
-			'en.support.wordpress.com',
-			'example.com',
-			'example.org',
-			'example.net',
-			'wpthemetestdata.wordpress.com',
-			'wpthemetestdata.files.wordpress.com',
-			'tellyworth.wordpress.com', // in the theme test data as a comment
-			'codex.wordpress.org',
-			'gnu.org', // In the test data
-			'youtube.com', // In the test data
-			'brainyquote.com', // In the test data
-			'facebook.com',
-			'twitter.com',
-			'pinterest.com',
-			'linkedin.com',
-			'google.com',
-			't.co', // in embedded content
-			'', // mailto
-			new URL( page.url() ).hostname,
-			...site_info.theme_urls.map( ( link ) =>
-				removeWWW( new URL( link ).hostname )
-			),
-			...site_info.content_urls.map( ( link ) =>
-				removeWWW( new URL( link ).hostname )
-			),
-		];
-
-		// TODO: improve this so that instead of including a blanket exception for facebook.com and the theme/author hostnames,
-		// we have a separate whitelist containing URLs like https://facebook.com/sharing.php etc.
-		hrefs.forEach( ( href ) => {
-			let href_url = new URL( href, page.url() );
-			let hostname = removeWWW( href_url.hostname );
-			errorWithMessageOnFail(
-				`${ hostname } found on ${ getDefaultUrl(
-					url,
-					queryString.replace( '?', '' )
-				) } is not an approved link.`,
-			    'page-should-not-have-unexpected-links',
-				() => {
-					expect( allowed_hosts ).toContain( hostname );
-				}
-			);
-		} );
+        await unexpectedLinksTest( fullUrl, queryString );
 	} );
 } );

@@ -51,8 +51,10 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 
 	try {
 		testToRun();
+        return true;
 	} catch ( e ) {
 		printMessage( type, output );
+        return false;
 	}
 };
 

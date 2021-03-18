@@ -15,7 +15,11 @@ let configs = {
 
 		// Run the default tests
 		'**/e2e/**/[^.]+.test.[jt]s',
+
+        // Exclude any sanity tests
+        '!**/e2e/**/sanity/**',
 	],
+
 };
 
 // When run using NPX there are issues related to running in a `node_modules` folder.
