@@ -7,16 +7,14 @@ import site_info from '../../../../../../../config/siteinfo.json';
  * Internal dependencies
  */
 import { errorWithMessageOnFail } from '../../../../utils';
-import {
-	getDefaultUrl,
-} from '../../../../utils';
+import { getDefaultUrl } from '../../../../utils';
 
 const removeWWW = ( str ) => {
 	return str.replace( /^(www[.])/, '' );
 };
 
 export default async ( url, queryString ) => {
-    let passed = true;
+	let passed = true;
 
 	const hrefs = await page.$$eval( 'a', ( anchors ) =>
 		[].map.call( anchors, ( a ) => a.href )
@@ -65,11 +63,11 @@ export default async ( url, queryString ) => {
 				expect( allowed_hosts ).toContain( hostname );
 			}
 		);
-        
-        if( ! result ) {
-            passed = false;
-        }
+
+		if ( ! result ) {
+			passed = false;
+		}
 	} );
 
-    return passed;
+	return passed;
 };

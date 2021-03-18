@@ -12,8 +12,8 @@ export const interceptRequest = ( content, url ) => {
 					body: content,
 				} );
 			} else {
-                request.continue();
-            }
+				request.continue();
+			}
 		} );
 	}
 };

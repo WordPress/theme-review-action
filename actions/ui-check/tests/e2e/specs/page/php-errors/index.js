@@ -1,5 +1,5 @@
-/** 
- * External dependencies 
+/**
+ * External dependencies
  * */
 
 import { getPageError } from '@wordpress/e2e-test-utils';
@@ -7,9 +7,7 @@ import { getPageError } from '@wordpress/e2e-test-utils';
 /**
  * Internal dependencies
  */
-import {
-	errorWithMessageOnFail,
-} from '../../../../utils';
+import { errorWithMessageOnFail } from '../../../../utils';
 
 export default async () => {
 	const pageError = await getPageError();

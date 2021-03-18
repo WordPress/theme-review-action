@@ -16,14 +16,16 @@ let configs = {
 		// Run the default tests
 		'**/e2e/**/[^.]+.test.[jt]s',
 
-        // Exclude any sanity tests
-        '!**/e2e/**/sanity/**',
+		// Exclude any sanity tests
+		'!**/e2e/**/sanity/**',
 	],
-
 };
 
 // When run using NPX there are issues related to running in a `node_modules` folder.
-if ( process.env.INIT_CWD && process.env.INIT_CWD.indexOf('node_modules') >= 0 ) {
+if (
+	process.env.INIT_CWD &&
+	process.env.INIT_CWD.indexOf( 'node_modules' ) >= 0
+) {
 	configs = {
 		...configs,
 		...{

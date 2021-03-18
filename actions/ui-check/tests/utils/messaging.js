@@ -44,17 +44,17 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
 
 	if ( testId ) {
-        let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL ;
+		let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
 		// Append information about the error.
 		output.push( `See: ${ docsURL }#${ testId }` );
 	}
 
 	try {
 		testToRun();
-        return true;
+		return true;
 	} catch ( e ) {
 		printMessage( type, output );
-        return false;
+		return false;
 	}
 };
 

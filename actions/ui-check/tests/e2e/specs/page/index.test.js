@@ -6,9 +6,7 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import {
-	createURL,
-} from '../../../utils';
+import { createURL } from '../../../utils';
 
 import site_info from '../../../../../../config/siteinfo.json';
 
@@ -22,7 +20,6 @@ import unexpectedLinksTest from './unexpected-links';
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
-
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
@@ -58,17 +55,17 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	} );
 
 	it( 'Browser console should not contain errors', async () => {
-        const fullUrl = createURL( '/' );
+		const fullUrl = createURL( '/' );
 
 		await page.goto( fullUrl );
-        await jsErrorTest( fullUrl )
+		await jsErrorTest( fullUrl );
 	} );
 
 	it( 'Page should not have unexpected links', async () => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
-        const fullUrl = createURL( url, queryString );
+		const fullUrl = createURL( url, queryString );
 		await page.goto( fullUrl );
 
-        await unexpectedLinksTest( fullUrl, queryString );
+		await unexpectedLinksTest( fullUrl, queryString );
 	} );
 } );
