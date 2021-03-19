@@ -21,3 +21,12 @@ export const createURL = ( path, query ) => {
 export const getTestUrls = () => {
 	return [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
 };
+
+/**
+ * Custom Error type to be throw in tests
+ *
+ * @param {string[]} messages
+ */
+export function FailedTestException( messages ) {
+	this.messages = messages;
+}

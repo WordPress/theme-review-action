@@ -15,7 +15,6 @@ import {
 	getPercentOfOpaqueness,
 	getFocusableElementsAsync,
 	truncateElementHTML,
-	elementIsVisibleAsync,
 	getTabbableElementsAsync,
 	getElementPropertyAsync,
 	isDebugMode,
@@ -26,157 +25,8 @@ const SCREENSHOT_FOLDER_PATH = 'screenshots';
 const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
 const SCREENSHOT_TABBING_TEST = `${ SCREENSHOT_FOLDER_PATH }/tabbing-test`;
 
-/**
- * Custom Error type to be throw in tests
- *
- * @param {string[]} messages
- */
-function FailedTestException( messages ) {
-	this.messages = messages;
-}
-
-/**
- * Tests whether the theme has legitimate skip links
- *
- * See https://make.wordpress.org/themes/handbook/review/required/#skip-links
- */
-const testSkipLinks = async () => {
-	await page.goto( createURL( '/' ) );
-	await page.keyboard.press( 'Tab' );
-
-	const activeElement = await page.evaluate( () => {
-		const el = document.activeElement;
-
-		return {
-			tag: el.tagName,
-			text: el.innerText,
-			hash: el.hash,
-			isVisible: el.offsetHeight > 0 && el.offsetWidth > 0,
-		};
-	} );
-
-	try {
-		expect( activeElement.tag.toLowerCase() ).toEqual( 'a' );
-		expect(
-			activeElement.hash.toLowerCase().indexOf( '#' ) >= 0
-		).toBeTruthy();
-	} catch ( e ) {
-		throw new FailedTestException( [
-			'Unable to find a legitimate skip link. Make sure your theme includes skip links where necessary.',
-		] );
-	}
-
-	try {
-		// Expect the anchor tag to have a matching element
-		const el = await page.$( activeElement.hash );
-
-		expect( el ).not.toBeNull();
-	} catch ( e ) {
-		throw new FailedTestException( [
-			"The skip link doesn't have a matching element on the page.",
-			`Expecting to find an element with an id matching: "${ activeElement.hash.replace(
-				'#',
-				''
-			) }".`,
-		] );
-	}
-};
-
-/**
- * Checks the <li> for a <ul> and runs tests on it
- * @param {Puppeteer|ElementHandle} listItem
- */
-const testLiSubMenu = async ( listItem ) => {
-	const link = await listItem.$( 'a' );
-	const submenu = await listItem.$( 'ul' );
-
-	if ( link !== null && submenu !== null ) {
-		// This is commented out for the moment since this rules has not been enforced recently. We may want to turn it back on in the future
-		// var usesDisplayNone = await page.evaluate(
-		// 	( e ) => getComputedStyle( e ).display.toLowerCase() === 'none',
-		// 	submenu
-		// );
-
-		// if ( usesDisplayNone ) {
-		// 	throw new FailedTestException(
-		// 		getFailureMessage(
-		// 			'Submenus should not be hidden using `display: none`. Use `position: absolute` instead.'
-		// 		)
-		// 	);
-		// }
-
-		// We don't want to test on hidden listItems
-		if ( ! ( await elementIsVisibleAsync( link ) ) ) {
-			return;
-		}
-
-		// Test that hovering works
-		await link.hover();
-
-		// Give the hover some time to apply and show up in case of animation
-		await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
-
-		let submenuIsVisible = await elementIsVisibleAsync( submenu );
-
-		// If it didn't work on the link, try it with the li
-		if ( ! submenuIsVisible ) {
-			await listItem.hover();
-
-			submenuIsVisible = await elementIsVisibleAsync( submenu );
-		}
-
-		if ( ! submenuIsVisible ) {
-			throw new FailedTestException(
-				'Submenus should be become visible when :hover is added to the navigational menu.'
-			);
-		}
-
-		// Remove the hover to make the menu disappear
-		await page.mouse.move( 0, 0 );
-
-		// Allow some time for the menu to disappear
-		await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
-
-		// Test that focus works
-		await link.focus();
-
-		// Give the focus some time to apply and show up in case of animation
-		await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
-
-		if ( ! ( await elementIsVisibleAsync( submenu ) ) ) {
-			throw new FailedTestException(
-				'Submenus should become visible when :focus is added to the link through the main navigation.'
-			);
-		}
-	}
-};
-
-/**
- * Tests whether the theme has an acceptable navigation
- *
- * See https://make.wordpress.org/themes/handbook/review/required/#keyboard-navigation
- */
-const testSubMenus = async () => {
-	await page.goto( createURL( '/' ) );
-
-	// Get the all the lists, looking for navigations
-	const ulElements = await page.$$( 'ul' );
-	for ( let i = 0; i < ulElements.length; i++ ) {
-		// We are only interested in sub navs
-		const hasSubNavs = ( await ulElements[ i ].$( 'ul' ) ) !== null;
-
-		// We don't have any sub menus, try another ul
-		if ( ! hasSubNavs ) {
-			continue;
-		}
-
-		const listItems = await ulElements[ i ].$$( 'li' );
-
-		for ( let j = 0; j < listItems.length; j++ ) {
-			await testLiSubMenu( listItems[ j ] );
-		}
-	}
-};
+import skipLinksTest from './skip-links';
+import subMenuTest from './sub-menu';
 
 /**
  * Determines whether the element has an acceptable focus state
@@ -343,43 +193,16 @@ const testForLogicalTabbing = async () => {
 
 describe( 'Accessibility: UI', () => {
 	it( 'Should have skip links', async () => {
-		try {
-			await testSkipLinks();
-		} catch ( ex ) {
-			if ( ex instanceof FailedTestException ) {
-				warnWithMessageOnFail(
-					ex.messages,
-					'should-have-skip-links',
-					() => {
-						expect( false ).toEqual( true );
-					}
-				);
-			} else {
-				console.log( ex );
-			}
-		}
+		await page.goto( createURL( '/' ) );
+		await skipLinksTest();
 	} );
 
 	it( 'Should have appropriate submenus', async () => {
-		try {
-			await testSubMenus();
-		} catch ( ex ) {
-			if ( ex instanceof FailedTestException ) {
-				warnWithMessageOnFail(
-					ex.messages,
-					'should-have-appropriate-submenus',
-
-					() => {
-						expect( false ).toEqual( true );
-					}
-				);
-			} else {
-				console.log( ex );
-			}
-		}
+		await page.goto( createURL( '/' ) );
+		await subMenuTest();
 	} );
 
-	it( 'Should have element focus state', async () => {
+	it.skip( 'Should have element focus state', async () => {
 		try {
 			await testElementFocusState();
 		} catch ( ex ) {
@@ -397,7 +220,7 @@ describe( 'Accessibility: UI', () => {
 		}
 	} );
 
-	it( 'Should have logical tabbing', async () => {
+	it.skip( 'Should have logical tabbing', async () => {
 		try {
 			await testForLogicalTabbing();
 		} catch ( ex ) {

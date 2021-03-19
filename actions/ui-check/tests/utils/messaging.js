@@ -53,7 +53,15 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 		testToRun();
 		return true;
 	} catch ( e ) {
-		printMessage( type, output );
+		if ( process.env.SANITY_CHECK ) {
+			// If it's not in debug don't do anything
+			if ( process.env.DEBUG ) {
+				console.log( output );
+			}
+		} else {
+			printMessage( type, output );
+		}
+
 		return false;
 	}
 };
