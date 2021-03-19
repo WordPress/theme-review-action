@@ -1,0 +1,9 @@
+.link {
+	display: inline-block;
+	background: DodgerBlue;
+	padding: 16px;
+}
+
+.no-focus:focus {
+	outline: none;
+}

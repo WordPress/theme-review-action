@@ -17,11 +17,11 @@ describe( 'Sanity: Sub Menu', () => {
 		expect( await test() ).toBeTruthy();
 	} );
 
-	// it( 'Page should PASS', async () => {
-	// 	await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
+	it( 'Page should PASS', async () => {
+		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-	// 	expect( await test() ).toBeTruthy();
-	// } );
+		expect( await test() ).toBeTruthy();
+	} );
 
 	it( 'Page should FAIL when no menu opens', async () => {
 		await page.goto(

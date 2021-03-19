@@ -6,7 +6,6 @@ import {
 	elementIsVisibleAsync,
 	elementIsInViewportAsync,
 	FailedTestException,
-	getElementPropertyAsync,
 } from '../../../../utils';
 
 const isVisible = async ( el ) => {
@@ -100,7 +99,6 @@ export default async () => {
 	try {
 		return await test();
 	} catch ( ex ) {
-		console.log( ex );
 		if ( ex instanceof FailedTestException ) {
 			warnWithMessageOnFail(
 				ex.messages,
@@ -110,6 +108,8 @@ export default async () => {
 					expect( false ).toEqual( true );
 				}
 			);
+		} else {
+			console.log( ex );
 		}
 
 		return false;

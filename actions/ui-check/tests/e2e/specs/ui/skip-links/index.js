@@ -58,7 +58,7 @@ export default async () => {
 		if ( ex instanceof FailedTestException ) {
 			return warnWithMessageOnFail(
 				ex.messages,
-				'should-have-appropriate-submenus',
+				'should-have-skip-links',
 				() => {
 					expect( false ).toEqual( true );
 				}
