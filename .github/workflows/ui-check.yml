@@ -11,4 +11,4 @@ jobs:
 
     steps:
     - name: Run sanity checks on tests
-      run: npm run --prefix actions/ui-check test:e2e:sanity
+      run: npm run --prefix ./actions/ui-check test:e2e:sanity
