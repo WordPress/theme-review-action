@@ -1,5 +1,3 @@
-import site_info from '../../../../config/siteinfo.json';
-
 export const isDebugMode = () =>
 	process.env.UI_DEBUG || process.env.UI_DEBUG === 'true';
 export const testPort = process.env.WP_ENV_TESTS_PORT || 8889;
@@ -18,8 +16,27 @@ export const createURL = ( path, query ) => {
 	return base;
 };
 
+export const getSiteInfo = () => {
+	let siteInfo = {
+		content_urls: [],
+		site_urls: [],
+		theme_urls: [],
+	};
+
+	try {
+		siteInfo = {
+			...siteInfo,
+			...require( '../../../../config/siteinfo.json' ),
+		};
+	} catch ( e ) {}
+
+	return siteInfo;
+};
+
 export const getTestUrls = () => {
-	return [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
+	const siteInfo = getSiteInfo();
+
+	return [ [ '/', '?feed=rss2', '' ], ...siteInfo.site_urls ];
 };
 
 /**

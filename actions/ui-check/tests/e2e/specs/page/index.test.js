@@ -6,9 +6,8 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { createURL } from '../../../utils';
+import { createURL, getTestUrls } from '../../../utils';
 
-import site_info from '../../../../../../config/siteinfo.json';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -19,7 +18,7 @@ import unexpectedLinksTest from './unexpected-links';
 
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
-let urls = [ [ '/', '?feed=rss2', '' ], ...site_info.site_urls ];
+let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {

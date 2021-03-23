@@ -1,13 +1,10 @@
 /**
- * External dependencies
- * */
-import site_info from '../../../../../../../config/siteinfo.json';
-
-/**
  * Internal dependencies
  */
-import { errorWithMessageOnFail } from '../../../../utils';
+import { errorWithMessageOnFail, getSiteInfo } from '../../../../utils';
 import { getDefaultUrl } from '../../../../utils';
+
+const siteInfo = getSiteInfo();
 
 const removeWWW = ( str ) => {
 	return str.replace( /^(www[.])/, '' );
@@ -42,10 +39,10 @@ export default async ( url, queryString ) => {
 		't.co', // in embedded content
 		'', // mailto
 		new URL( page.url() ).hostname,
-		...site_info.theme_urls.map( ( link ) =>
+		...siteInfo.theme_urls.map( ( link ) =>
 			removeWWW( new URL( link ).hostname )
 		),
-		...site_info.content_urls.map( ( link ) =>
+		...siteInfo.content_urls.map( ( link ) =>
 			removeWWW( new URL( link ).hostname )
 		),
 	];
