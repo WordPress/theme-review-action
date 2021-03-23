@@ -11,7 +11,5 @@ jobs:
 
     steps:
     - name: Run sanity checks on tests
-      run: |
-        ls -al
-        npm run test:e2e:sanity
+      run: npm run check:ui:test
       working-directory: actions/ui-check

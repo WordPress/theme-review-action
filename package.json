@@ -12,6 +12,7 @@
     "check:theme-check": "npm run wp-env run cli eval-file ./actions/theme-check/CheckTheme.php",
     "check:structure": "cd ./actions/structure-check && npm run start",
     "check:ui": "cd ./actions/ui-check && npm run start",
+    "check:ui:test": "cd ./actions/ui-check && npm run test:e2e:sanity",
     "start": "node bin/program.js"
   },
   "bin": {
