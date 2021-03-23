@@ -1,0 +1,12 @@
+
+name: UI Check Workflows
+
+on: pull_request
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run sanity checks on tests
+      run: cd ./actions/ui-check && npm run test:e2e:sanity
