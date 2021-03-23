@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+    
     - name: Run sanity checks on tests
-      run: npm run check:ui:test
+      run: npm run test:e2e:sanity
       working-directory: actions/ui-check
