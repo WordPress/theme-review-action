@@ -1,8 +1,7 @@
 {
 	"config": {
 		"WPORGPATH": true,
-		"THEME_CHECK_FOLDER": "theme-check",
-		"WP_DEBUG": true
+		"THEME_CHECK_FOLDER": "theme-check"
 	},
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/theme-check.zip",
