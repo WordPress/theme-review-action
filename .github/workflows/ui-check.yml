@@ -12,6 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Run sanity checks on tests
+    - name: Run sanity checks on ui tests
       run: npm run test:e2e:sanity
       working-directory: actions/ui-check
