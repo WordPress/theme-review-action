@@ -3,7 +3,7 @@ name: UI Check Workflows
 
 on: 
   pull_request:
-    paths: 'actions/ui-check'
+    paths: 'actions/ui-check/**'
 
 defaults:
   run:
