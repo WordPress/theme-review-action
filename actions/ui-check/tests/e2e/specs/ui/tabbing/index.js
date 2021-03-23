@@ -50,8 +50,6 @@ const test = async () => {
 			tabElements[ i ]
 		);
 
-		await new Promise( ( res, rej ) => setTimeout( res, 4000 ) );
-
 		// This can really slow down the tests, let's only run it in debug
 		if ( isDebugMode() ) {
 			await page.screenshot( {
