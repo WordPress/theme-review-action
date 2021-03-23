@@ -7,14 +7,16 @@ export const goTo = async ( url, queryString = '' ) => {
 	let response = await page.goto( createURL( url, queryString ) );
 	let content = await response.text();
 
-	let path = [
-		OUTPUT_HTML_FOLDER_PATH,
-		url.replace( '/', 'home' ) + queryString
-	];
+	try {
+		let path = [
+			OUTPUT_HTML_FOLDER_PATH,
+			url.replace( '/', 'home' ) + queryString,
+		];
 
-
-
-	fs.writeFileSync( `${ path.join( '/' ) }.html`, content );
+		fs.writeFileSync( `${ path.join( '/' ) }.html`, content );
+	} catch ( ex ) {
+		console.log( ex );
+	}
 
 	return response;
 };
