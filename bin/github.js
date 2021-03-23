@@ -13,10 +13,10 @@ const setConfiguration = (key, value) => {
 /**
  * Outputs the location for the screenshots in the ui-check
  */
-const setUIScreenshotPath = () => {
+const setUIOutputPath = () => {
 	setConfiguration(
 		'location',
-		`${process.env.GITHUB_ACTION_PATH}/actions/ui-check/screenshots`
+		`${process.env.GITHUB_ACTION_PATH}/actions/ui-check/output`
 	);
 };
 
@@ -29,7 +29,7 @@ const setLogPath = () => {
 
 (() => {
 	console.log('Setting configurations');
-	setUIScreenshotPath();
+	setUIOutputPath();
 	setLogPath();
 	Utils.createLogs(ACTIONS_PATH, LOG_PATH, true);
 })();

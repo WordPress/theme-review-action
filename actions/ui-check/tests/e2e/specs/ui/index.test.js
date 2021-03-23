@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { createURL } from '../../../utils';
+import { goTo } from '../../../utils';
 
 import skipLinksTest from './skip-links';
 import subMenuTest from './sub-menu';
@@ -10,7 +10,7 @@ import tabbingTest from './tabbing';
 
 describe( 'Accessibility: UI', () => {
 	beforeAll( async () => {
-		await page.goto( createURL( '/' ) );
+		await goTo( '/' );
 	} );
 
 	it( 'Should have skip links', async () => {

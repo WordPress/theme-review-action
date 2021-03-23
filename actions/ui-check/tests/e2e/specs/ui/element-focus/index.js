@@ -16,9 +16,9 @@ import {
 	getElementPropertyAsync,
 	getPercentOfOpaqueness,
 	truncateElementHTML,
+    SCREENSHOT_FOLDER_PATH
 } from '../../../../utils';
 
-const SCREENSHOT_FOLDER_PATH = 'screenshots';
 const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
 
 /**

@@ -6,7 +6,7 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { createURL, getTestUrls } from '../../../utils';
+import { createURL, getTestUrls, goTo } from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -25,7 +25,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 	beforeAll( async () => {
 		fullUrl = createURL( url, queryString );
-		pageResponse = await page.goto( fullUrl );
+		pageResponse = await goTo( url, queryString );
 	} );
 
 	it( 'Page should contain body class ' + bodyClass, async () => {
