@@ -34,7 +34,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	} );
 
 	it( 'Page should not have PHP errors', async () => {
-		await phpErrorsTest();
+		await phpErrorsTest( fullUrl );
 	} );
 
 	it( 'Page should have complete output', async () => {

@@ -15,8 +15,16 @@ describe( 'Sanity: PHP Errors', () => {
 		expect( await test() ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when there is a php present', async () => {
+	it( 'Page should FAIL when there is a php error present', async () => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
+
+		expect( await test() ).toBeFalsy();
+	} );
+
+	it( 'Page should FAIL when there is a php present on multiple lines', async () => {
+		await page.goto(
+			`file:${ path.join( __dirname, 'html/fail-multiline.html' ) }`
+		);
 
 		expect( await test() ).toBeFalsy();
 	} );
