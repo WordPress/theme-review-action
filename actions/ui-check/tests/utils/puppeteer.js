@@ -8,7 +8,9 @@ const cleanQueryStringForFileSystem = ( queryString ) => {
 };
 
 export const goTo = async ( url, queryString = '' ) => {
-	let response = await page.goto( createURL( url, queryString ) );
+	let response = await page.goto( createURL( url, queryString ), {
+		waitUntil: 'networkidle2',
+	} );
 	let content = await response.text();
 
 	try {
