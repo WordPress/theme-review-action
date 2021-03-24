@@ -1,6 +1,6 @@
 {
   "name": "wordpress-theme-check-action",
-  "version": "1.4.5",
+  "version": "1.4.10",
   "description": "Run Theme Check test for a WordPress theme",
   "repository": "git+https://github.com/WordPress/theme-review-action.git",
   "main": "index.js",
