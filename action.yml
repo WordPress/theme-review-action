@@ -12,9 +12,9 @@ inputs:
     description: 'More verbose logging; Creates a GIF'
     default: false
 outputs:
-  screenshots:
-    description: "Path to screenshots"
-    value: ${{ steps.post.outputs.location}}
+  ui-check-output:
+    description: "Debug output from ui check"
+    value: ${{ steps.post.outputs.ui-check-output}}
   logs:
     description: "Path to the logs"
     value: ${{ steps.post.outputs.logs}}

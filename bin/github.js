@@ -14,9 +14,8 @@ const setConfiguration = (key, value) => {
  * Outputs the location for the screenshots in the ui-check
  */
 const setUIOutputPath = () => {
-    console.log(`${process.env.GITHUB_ACTION_PATH}/actions/ui-check/output`);
 	setConfiguration(
-		'location',
+		'ui-check-output',
 		`${process.env.GITHUB_ACTION_PATH}/actions/ui-check/output`
 	);
 };
