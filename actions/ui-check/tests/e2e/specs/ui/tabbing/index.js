@@ -14,7 +14,7 @@ import {
 	makeGif,
 	FailedTestException,
 	truncateElementHTML,
-    SCREENSHOT_FOLDER_PATH
+	SCREENSHOT_FOLDER_PATH,
 } from '../../../../utils';
 
 const SCREENSHOT_TABBING_TEST = `${ SCREENSHOT_FOLDER_PATH }/tabbing-test`;
