@@ -11,7 +11,7 @@
 		"test:e2e:sanity": "SANITY_CHECK=true wp-scripts test-e2e --config tests/e2e/jest.sanity.js",
 		"test:e2e:sanity:debug": "UI_DEBUG=true DEBUG=true npm run test:e2e:sanity",
 		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
-		"start": "npm run install:environment && npm run test:e2e && npm run test:unit"
+		"start": "npm run install:environment && npm run test:e2e && npm run test:unit && ls -al"
 	},
 	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",
