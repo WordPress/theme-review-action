@@ -44,15 +44,25 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
 
 	if ( testId ) {
-        let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL ;
+		let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
 		// Append information about the error.
 		output.push( `See: ${ docsURL }#${ testId }` );
 	}
 
 	try {
 		testToRun();
+		return true;
 	} catch ( e ) {
-		printMessage( type, output );
+		if ( process.env.SANITY_CHECK ) {
+			// If it's not in debug don't do anything
+			if ( process.env.DEBUG ) {
+				console.log( output );
+			}
+		} else {
+			printMessage( type, output );
+		}
+
+		return false;
 	}
 };
 

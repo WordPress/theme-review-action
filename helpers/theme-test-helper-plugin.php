@@ -64,10 +64,11 @@ function tw_get_test_info() {
 
 			foreach( array_slice( $provider->get_url_list( 1, $subtype ), 0, $num_urls_per_template ) as $url ) {
 				$parts = wp_parse_url( $url['loc'] );
+
 				$urls[] = [ 
 					$parts['path'],
-					$parts['query'] ? '?' . $parts['query'] : '',
-					$parts['query'] ? tw_body_class_for_subtype( $subtype ) : 'home'
+					isset( $parts['query'] ) ? '?' . $parts['query'] : '',
+					isset( $parts['query'] ) ? tw_body_class_for_subtype( $subtype ) : 'home'
 				];
 			}
 		}

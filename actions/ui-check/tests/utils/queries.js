@@ -48,6 +48,14 @@ export const elementIsVisibleAsync = async ( element ) => {
 	return ! hasHiddenParent;
 };
 
+export const elementIsInViewportAsync = async ( element ) => {
+	const position = await page.evaluate( ( el ) => {
+		return getComputedStyle( el ).left;
+	}, element );
+
+	return parseInt( position ) >= 0;
+};
+
 /**
  * Return property for element
  * @param {Puppeteer|ElementHandle} element

@@ -1,0 +1,25 @@
+.skip-link {
+	position: absolute;
+	margin: -1px;
+	padding: 0;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect( 0 0 0 0 );
+	border: 0;
+	word-wrap: normal !important;
+}
+.skip-link:focus {
+	background: #fff;
+	clip: auto !important;
+	-webkit-clip-path: inherit;
+	clip-path: inherit;
+	color: #21759b;
+	display: block;
+	height: auto;
+	left: 5px;
+	line-height: normal;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+}

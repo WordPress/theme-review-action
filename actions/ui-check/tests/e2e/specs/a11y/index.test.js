@@ -17,7 +17,7 @@ describe( 'Accessibility', () => {
 	const noticeType = testAccessibility ? 'errors' : 'warnings';
 
 	test.each( urls )(
-		`Should pass ${accessibilityTest} Axe tests on %s`,
+		`Should pass ${ accessibilityTest } Axe tests on %s`,
 		async ( name, path, query ) => {
 			await page.goto( createURL( path, query ) );
 

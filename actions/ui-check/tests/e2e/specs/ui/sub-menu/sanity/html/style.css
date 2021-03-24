@@ -1,0 +1,44 @@
+body {
+	margin: 0;
+	padding: 100px;
+}
+.menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #ff9800;
+	position: relative;
+}
+
+.menu li {
+	list-style: none;
+}
+
+.menu li ul {
+	margin: 0;
+	position: absolute;
+	left: -9999em;
+	background: DodgerBlue;
+}
+
+.menu li a {
+	display: block;
+	padding: 16px;
+}
+
+.menu li ul li ul {
+	background: aqua;
+}
+
+.with-focus li a:focus + ul,
+.with-focus li:focus-within > ul {
+	left: 0;
+}
+
+.with-hover li:hover > ul{
+	left: 0;
+}
+
+.show-menu {
+	left: 0 !important;
+}
