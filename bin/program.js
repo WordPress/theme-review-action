@@ -421,7 +421,6 @@ async function run() {
 	let hasWorkingEnvironment = await runEnvironmentSetupAsync(npmPrefix, {
 		WP_ENV_PORT: basePort,
 		WP_ENV_TESTS_PORT: testPort,
-		CI: program.githubRun,
 	});
 
 	// Only try tests if the environment succeeded
@@ -432,7 +431,6 @@ async function run() {
 			TEST_ACCESSIBILITY: program.accessibleReady,
 			WP_ENV_TESTS_PORT: testPort,
 			WP_THEME_TYPE: getThemeType(),
-			CI: program.githubRun,
 			UI_DEBUG: program.UIDebug,
 		});
 	}

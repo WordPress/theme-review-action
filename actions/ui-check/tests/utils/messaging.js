@@ -52,6 +52,7 @@ const getDocInformation = ( type, testId ) => {
  * @param {string} type Message type. Ie: errors, warnings, info
  * @param {string|string[]} message Messages to display
  * @param {function} testToRun The test that will be executed
+ * @returns {bool} Whether the test has passed(true) or not(false).
  */
 const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
@@ -65,13 +66,10 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 		testToRun();
 		return true;
 	} catch ( e ) {
-		if ( process.env.SANITY_CHECK ) {
-			// If it's not in debug don't do anything
-			if ( process.env.DEBUG ) {
-				console.log( output );
-			}
-		} else {
+		if ( ! process.env.DEV_MODE ) {
 			printMessage( type, output );
+		} else {
+			throw new Error( e );
 		}
 
 		return false;
