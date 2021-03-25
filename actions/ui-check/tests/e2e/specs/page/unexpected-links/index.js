@@ -2,7 +2,6 @@
  * Internal dependencies
  */
 import { errorWithMessageOnFail, getSiteInfo } from '../../../../utils';
-import { getDefaultUrl } from '../../../../utils';
 
 const siteInfo = getSiteInfo();
 
@@ -51,10 +50,7 @@ export default async ( url, queryString ) => {
 		let href_url = new URL( href, page.url() );
 		let hostname = removeWWW( href_url.hostname );
 		const result = errorWithMessageOnFail(
-			`${ hostname } found on ${ getDefaultUrl(
-				url,
-				queryString.replace( '?', '' )
-			) } is not an approved link.`,
+			`${ hostname } found on ${ url } is not an approved link.`,
 			'page-should-not-have-unexpected-links',
 			() => {
 				expect( allowed_hosts ).toContain( hostname );

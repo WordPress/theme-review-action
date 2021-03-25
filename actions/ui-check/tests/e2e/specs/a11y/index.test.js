@@ -5,7 +5,6 @@ import urls from './pages';
 import {
 	createURL,
 	cleanErrorMessage,
-	getDefaultUrl,
 	printMessage,
 	getEnvironmentVariable,
 } from '../../../utils';
@@ -33,10 +32,7 @@ describe( 'Accessibility', () => {
 				} );
 			} catch ( e ) {
 				printMessage( noticeType, [
-					`Running tests on ${ name } ${ getDefaultUrl(
-						path,
-						query
-					) } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
+					`Running tests on ${ name } ${ path }${ query } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
 					cleanErrorMessage( e.message ),
 				] );
 			}

@@ -7,13 +7,7 @@ export const getEnvironmentVariable = ( variable ) => {
 };
 
 export const createURL = ( path, query ) => {
-	let base = `http://localhost:${ testPort }${ path }`;
-
-	if ( query ) {
-		base += query[ 0 ] !== '?' ? `?${ query }` : query;
-	}
-
-	return base;
+	return `http://localhost:${ testPort }${ path }${ query }`;
 };
 
 export const getSiteInfo = () => {

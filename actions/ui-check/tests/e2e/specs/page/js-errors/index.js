@@ -14,7 +14,7 @@ page.on( 'pageerror', ( error ) => {
 
 export default async ( url ) => {
 	return errorWithMessageOnFail(
-		`Page should not contain javascript errors. Found ${ jsError }`,
+		`${ url } should not contain javascript errors. Found ${ jsError }`,
 		'browser-console-should-not-contain-errors',
 		() => {
 			expect( jsError ).toBeFalsy();
