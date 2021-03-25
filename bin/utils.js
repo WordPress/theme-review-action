@@ -102,7 +102,6 @@ const createLogs = (actionsPath, logPath, verbose) => {
 module.exports = {
 	isBlockBasedTheme,
 	getParentTheme,
-	isCI,
 	isWindows,
 	fancyTimeFormat,
 	getThemeType,
