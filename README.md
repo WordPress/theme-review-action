@@ -53,12 +53,6 @@ jobs:
       with:
         accessible-ready: true
         ui-debug: true
-
-    - uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: Screenshots
-
 ```
 
 ### Github Action Inputs
