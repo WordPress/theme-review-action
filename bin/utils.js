@@ -30,13 +30,6 @@ const isBlockBasedTheme = () => {
 	return false;
 };
 
-const isCI = () => {
-	try {
-		return process.env.CI || process.env.CI === 'true';
-	} catch (e) {}
-	return false;
-};
-
 // Thanks: https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
 const fancyTimeFormat = (duration) => {
 	var hrs = ~~(duration / 3600);

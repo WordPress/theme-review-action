@@ -23,11 +23,10 @@ const getWpEnv = () => {
 const maybeCreateOverrideConfig = () => {
 	const parentTheme = Utils.getParentTheme();
 	const isBlockBased = Utils.isBlockBasedTheme();
-	const isCIRun = Utils.isCI();
 
 	console.log('Maybe creating .wp-env override config.');
 
-	if (!parentTheme && !isBlockBased && !isCIRun) {
+	if (!parentTheme && !isBlockBased) {
 		console.log('No need for an override.');
 		return;
 	}
@@ -49,10 +48,6 @@ const maybeCreateOverrideConfig = () => {
 		configs.plugins.push(
 			`https://downloads.wordpress.org/plugin/gutenberg.zip`
 		);
-	}
-
-	if (isCIRun) {
-		configs.config.CI = true;
 	}
 
 	const configString = JSON.stringify(configs);
