@@ -35,6 +35,19 @@ export const printMessage = ( command, lines ) => {
 };
 
 /**
+ * Returns a message that suggest documentation for help.
+ *
+ * @param {string} type Errors or Warnings
+ * @param {*} testId The id of the test that matches the documentation
+ * @returns {string}
+ */
+const getDocInformation = ( type, testId ) => {
+	let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
+
+	return `See: ${ docsURL }#${ testId }`;
+};
+
+/**
  *
  * @param {string} type Message type. Ie: errors, warnings, info
  * @param {string|string[]} message Messages to display
@@ -44,9 +57,8 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
 	const output = Array.isArray( message ) ? message : [ message ];
 
 	if ( testId ) {
-		let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
 		// Append information about the error.
-		output.push( `See: ${ docsURL }#${ testId }` );
+		output.push( getDocInformation( type, testId ) );
 	}
 
 	try {
