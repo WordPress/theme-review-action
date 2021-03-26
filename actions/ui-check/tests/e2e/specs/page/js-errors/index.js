@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { errorWithMessageOnFail } from '../../../../utils';
+import { errorWithMessageOnFail, removeLocalPathRefs } from '../../../../utils';
 
 let jsError;
 page.on( 'pageerror', ( error ) => {
@@ -13,6 +13,10 @@ page.on( 'pageerror', ( error ) => {
 } );
 
 export default async ( url ) => {
+	console.log( jsError );
+
+	console.log( removeLocalPathRefs( jsError ) );
+
 	return errorWithMessageOnFail(
 		`${ url } should not contain javascript errors. Found ${ jsError }`,
 		'browser-console-should-not-contain-errors',
