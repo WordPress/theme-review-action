@@ -19,6 +19,10 @@ export default async ( url, queryString ) => {
 	const allowed_hosts = [
 		'wordpress.org',
 		'gravatar.com',
+		'0.gravatar.com',
+		'1.gravatar.com',
+		'2.gravatar.com',
+		'secure.gravatar.com',
 		'en.support.wordpress.com',
 		'example.com',
 		'example.org',
