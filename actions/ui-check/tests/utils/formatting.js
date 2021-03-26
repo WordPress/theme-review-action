@@ -23,11 +23,11 @@ export const removeLocalPathRefs = ( str ) => {
 	}
 
 	const urlRegEx = new RegExp(
-		`https?://localhost:?.*?/wp-content/themes/.*?/`,
+		`https?:\/\/localhost:?.*?\/wp-content\/themes\/.*?\/`,
 		'ig'
 	);
 	const pathRegEx = new RegExp(
-		`/var/www/html/wp-content/themes/.*?/`,
+		`\/var\/www\/\html\/wp-content\/themes\/.*?\/`,
 		'ig'
 	);
 
