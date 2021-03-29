@@ -6,5 +6,8 @@ module.exports = {
 
 		// Run the default tests
 		'**/unit/**/[^.]+.test.[jt]s',
+
+		// Don't run sanity tests
+		'!**/unit/**/sanity/**',
 	],
 };
