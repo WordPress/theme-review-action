@@ -1,7 +1,9 @@
 
 name: UI Check Workflows
 
-on: 
+on:
+  push:
+    paths: 'actions/ui-check/**'
   pull_request:
     paths: 'actions/ui-check/**'
 
