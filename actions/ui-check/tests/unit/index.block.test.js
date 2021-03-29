@@ -25,7 +25,10 @@ const getFileContents = ( location ) => {
 		} );
 
 		arr.push( {
-			fileName: file,
+			fileName: `${ location }/${ file }`.replace(
+				THEME_ROOT_FOLDER,
+				''
+			),
 			contents: contents,
 		} );
 	} );
