@@ -2,12 +2,11 @@
  * External dependencies
  */
 const fs = require( 'fs' );
-import { parse } from '@wordpress/block-serialization-spec-parser';
 
 /**
  * Internal dependencies
  */
-import { printMessage } from '../utils';
+import testTemplates from './block-templates/index';
 
 // Relative path
 const THEME_ROOT_FOLDER = '../../test-theme';
@@ -26,7 +25,10 @@ const getFileContents = ( location ) => {
 		} );
 
 		arr.push( {
-			fileName: file,
+			fileName: `${ location }/${ file }`.replace(
+				THEME_ROOT_FOLDER,
+				''
+			),
 			contents: contents,
 		} );
 	} );
@@ -52,18 +54,6 @@ describe( 'Unit: Blocks', () => {
 	let templates = getTemplates();
 
 	it( 'Should have properly formed gutenberg block comments in templates', async () => {
-		try {
-			for ( let i = 0; i < templates.length; i++ ) {
-				const [ block ] = parse( templates[ i ].contents );
-
-				if ( block.blockName === null ) {
-					throw Error(
-						`There's a problem with ${ templates[ i ].fileName }. \n\n ${ templates[ i ].contents }`
-					);
-				}
-			}
-		} catch ( ex ) {
-			printMessage( 'warnings', [ '[ Block Tests ]', ex.message ] );
-		}
+		testTemplates( templates );
 	} );
 } );

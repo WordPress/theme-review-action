@@ -9,9 +9,11 @@
 		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
 		"test:e2e:dev": "DEV_MODE=true wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"test:e2e:sanity": "DEV_MODE=true wp-scripts test-e2e --config tests/e2e/jest.sanity.js",
+		"test:e2e:sanity": "SANITY_MODE=true DEV_MODE=true wp-scripts test-e2e --config tests/e2e/jest.sanity.js",
 		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
-		"start": "npm run install:environment && npm run test:e2e && npm run test:unit"
+		"test:unit:dev": "DEV_MODE=true wp-scripts test-unit-js --config tests/unit/jest.config.js",
+		"test:unit:sanity": "SANITY_MODE=true DEV_MODE=true wp-scripts test-e2e --config tests/unit/jest.sanity.js",
+		"start": "npm run install:environment && npm run test:unit && npm run test:e2e"
 	},
 	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",

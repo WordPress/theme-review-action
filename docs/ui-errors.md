@@ -11,6 +11,8 @@
 - [Browser console should not contain errors](#browser-console-should-not-contain-errors)
 - [Page should have complete output](#page-should-have-complete-output)
 - [Page should not have unexpected links](#page-should-not-have-unexpected-links)
+- [Block templates should be complete](#should-have-complete-templates)
+
 ## Page should contain body class 
 
 This test expects the page's body class to be present on the page.
@@ -79,3 +81,14 @@ This test expects to **not** find links that are not approved.
 ### Troubleshooting 
 
 Verify that the theme only includes links in the [hosts List](https://github.com/WordPress/theme-review-action/blob/f97655ebfbd5602686b62491dda36f0de4a60bd7/actions/ui-check/tests/e2e/specs/page/index.test.js#L114).
+
+
+## Block templates should be complete
+
+This tests parse block templates and block templates parts to make sure all tags have applicable closing tags and are properly formed.
+
+### Troubleshooting
+
+Open your template file:
+- Verify that all opening tags have closing tags (if applicable).
+- Verify that all tags have proper syntax.

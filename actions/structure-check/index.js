@@ -58,7 +58,7 @@ const fileExists = (filePath) => {
 	// Block based themes require function.php
 	if (
 		isBlockBasedTheme() &&
-		!fileExists(`${ROOT_PATH_THEME}/functions.php'`)
+		!fileExists(`${ROOT_PATH_THEME}/functions.php`)
 	) {
 		appendToLog(
 			'We require you have an function.php file for a Block Based theme.'
