@@ -55,19 +55,22 @@ const getDocInformation = ( type, testId ) => {
  * @returns {bool} Whether the test has passed(true) or not(false).
  */
 const expectWithMessage = ( type, message, testId, testToRun ) => {
-	const output = Array.isArray( message ) ? message : [ message ];
-
-	if ( testId ) {
-		// Append information about the error.
-		output.push( getDocInformation( type, testId ) );
-	}
-
 	try {
 		testToRun();
 		return true;
 	} catch ( e ) {
+		const output = Array.isArray( message ) ? message : [ message ];
+
+		if ( testId ) {
+			// Append information about the error.
+			output.push( getDocInformation( type, testId ) );
+		}
+
 		if ( ! process.env.DEV_MODE ) {
 			printMessage( type, output );
+		} else if ( process.env.SANITY_MODE ) {
+			// No need to do anything
+			// We expect tests to fail and don't want that to appear as test failures.
 		} else {
 			throw new Error( e );
 		}
