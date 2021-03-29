@@ -16,4 +16,5 @@ jobs:
       run: |
         npm install
         npm run test:e2e:sanity
+        npm run test:unit:sanity
       working-directory: actions/ui-check
