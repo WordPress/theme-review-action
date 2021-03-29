@@ -6,7 +6,7 @@ import { parse } from '@wordpress/block-serialization-spec-parser';
 /**
  * Internal dependencies
  */
-import { warnWithMessageOnFail } from '../../utils';
+import { errorWithMessageOnFail } from '../../utils';
 
 /**
  * Returns whether an empty space has been parsed as a block.
@@ -44,7 +44,7 @@ export default ( templates ) => {
 		}
 	}
 
-	return warnWithMessageOnFail(
+	return errorWithMessageOnFail(
 		failures,
 		'should-have-complete-templates',
 		() => {
