@@ -6,7 +6,7 @@ const fs = require( 'fs' );
 /**
  * Internal dependencies
  */
-import TemplateTest from './block-templates/index';
+import testTemplates from './block-templates/index';
 
 // Relative path
 const THEME_ROOT_FOLDER = '../../test-theme';
@@ -51,6 +51,6 @@ describe( 'Unit: Blocks', () => {
 	let templates = getTemplates();
 
 	it( 'Should have properly formed gutenberg block comments in templates', async () => {
-		TemplateTest( templates );
+		testTemplates( templates );
 	} );
 } );

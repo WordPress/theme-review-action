@@ -7,7 +7,7 @@ const path = require( 'path' );
 /**
  * Internal dependencies
  */
-import TemplateTest from '../index.js';
+import testTemplates from '../index.js';
 
 const loadFileContents = ( localPath ) => {
 	return fs.readFileSync( path.resolve( __dirname, localPath ), {
@@ -19,7 +19,7 @@ describe( 'Sanity: Block Templates', () => {
 	it( 'Page should PASS when the template is parsed properly', async () => {
 		const contents = loadFileContents( 'html/pass.html' );
 		expect(
-			TemplateTest( [
+			testTemplates( [
 				{
 					fileName: 'pass.html',
 					contents: contents,
@@ -33,7 +33,7 @@ describe( 'Sanity: Block Templates', () => {
 			'html/fail-malformed-unclosed.html'
 		);
 		expect(
-			TemplateTest( [
+			testTemplates( [
 				{
 					fileName: 'fail-malformed-unclosed.html',
 					contents: contents,
@@ -47,7 +47,7 @@ describe( 'Sanity: Block Templates', () => {
 			'html/fail-missing-closing-tag.html'
 		);
 		expect(
-			TemplateTest( [
+			testTemplates( [
 				{
 					fileName: 'fail-missing-closing-tag.html',
 					contents: contents,
