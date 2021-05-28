@@ -51,23 +51,23 @@ const fileExists = (filePath) => {
 
 	// Child Themes don't require an index.php
 	if (!isChildTheme() && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
-		appendToLog('We require you have an index.php file.');
+		appendToLog('The theme is required to have an index.php file.');
 		hasErrors = true;
 	}
 
-	// Block based themes require function.php
+	// Block themes require theme.json
 	if (
 		isBlockBasedTheme() &&
-		!fileExists(`${ROOT_PATH_THEME}/functions.php`)
+		!fileExists(`${ROOT_PATH_THEME}/theme.json`)
 	) {
 		appendToLog(
-			'We require you have an function.php file for a Block Based theme.'
+			'Block themes are quired to have a theme.json file.'
 		);
 		hasErrors = true;
 	}
 
 	if (!fileExists(`${ROOT_PATH_THEME}/style.css`)) {
-		appendToLog('We require you have a style.css file.');
+		appendToLog('The theme is required to have a style.css file.');
 		hasErrors = true;
 	}
 
@@ -77,7 +77,7 @@ const fileExists = (filePath) => {
 		!fileExists(`${ROOT_PATH_THEME}/screenshot.jpeg`)
 	) {
 		appendToLog(
-			'We require you have a screenshot.png or screenshot.jpg file.'
+			'The theme is required to have a screenshot.png or screenshot.jpg file.'
 		);
 		hasErrors = true;
 	}
