@@ -31,7 +31,7 @@ Make sure all your relevant templates include something like the following:
 
 ## Page should not have PHP errors
 
-This test expects that the plugin does not output any PHP errors.
+This test expects that the theme does not output any PHP errors.
 
 [WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/required/#code)
 
@@ -45,11 +45,11 @@ This test expects that pages return a `200` http status code when visiting in th
 
 ### Troubleshooting 
 
-Make sure your plugin does not have any unnecessary redirects.
+Make sure your theme does not have any unnecessary redirects.
 
 ## Browser console should not contain errors
 
-This test expects that the plugin doesn't not output anything to the browser console.
+This test expects that the theme does not output anything to the browser console.
 
 [WordPress.org rule definition.](https://make.wordpress.org/themes/handbook/review/required/#code)
 
