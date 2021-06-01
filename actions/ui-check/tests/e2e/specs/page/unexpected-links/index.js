@@ -16,7 +16,7 @@ export default async ( url, queryString ) => {
 		[].map.call( anchors, ( a ) => a.href )
 	);
 
-	const allowed_hosts = [
+	let allowed_hosts = [
 		'wordpress.org',
 		'gravatar.com',
 		'0.gravatar.com',
