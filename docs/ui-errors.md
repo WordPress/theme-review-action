@@ -80,7 +80,7 @@ This test expects to **not** find links that are not approved.
 
 ### Troubleshooting 
 
-Verify that the theme only includes links in the [hosts List](https://github.com/WordPress/theme-review-action/blob/f97655ebfbd5602686b62491dda36f0de4a60bd7/actions/ui-check/tests/e2e/specs/page/index.test.js#L114).
+Verify that the theme only includes links in the [hosts list](https://github.com/WordPress/theme-review-action/blob/trunk/actions/ui-check/tests/e2e/specs/page/unexpected-links/index.js).
 
 
 ## Block templates should be complete
