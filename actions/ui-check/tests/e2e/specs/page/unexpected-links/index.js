@@ -50,6 +50,9 @@ export default async ( url, queryString ) => {
 		),
 	];
 
+	// Remove duplicates
+	allowed_hosts = [ ...new Set( allowed_hosts ) ];
+
 	hrefs.forEach( ( href ) => {
 		let href_url = new URL( href, page.url() );
 		let hostname = removeWWW( href_url.hostname );
