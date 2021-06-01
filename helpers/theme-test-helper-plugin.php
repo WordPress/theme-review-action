@@ -93,3 +93,10 @@ function tw_get_test_info() {
 
 	return $out;
 }
+
+function print_template_to_debug() {
+	global $template;
+	print_r( "<input type='hidden' id='template' value='$template' />" );
+}
+
+add_action( 'wp_footer', 'print_template_to_debug' );

@@ -6,7 +6,7 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { createURL, getTestUrls, goTo } from '../../../utils';
+import { getFileNameFromPath, getTestUrls, goTo } from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -19,13 +19,25 @@ import unexpectedLinksTest from './unexpected-links';
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
 
+
+const getUrlPathWithTemplate = async (urlPath) => {
+    const template = await page.$eval( '#template', ( el ) => el.value );
+    return `${ urlPath } (via: ${ getFileNameFromPath(
+        template
+    ) })`
+}
+
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	let pageResponse, urlPath;
 
 	beforeAll( async () => {
-		urlPath = `${ url }${ queryString }`;
+		urlPath = `"${ url }${ queryString }"`;
 		pageResponse = await goTo( url, queryString );
+
+		try {
+			urlPath = await getUrlPathWithTemplate(urlPath);
+		} catch ( ex ) {}
 	} );
 
 	it( 'Page should contain body class ' + bodyClass, async () => {
@@ -55,6 +67,6 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 
 	it( 'Page should not have unexpected links', async () => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
-		await unexpectedLinksTest( urlPath, queryString );
+		await unexpectedLinksTest( urlPath );
 	} );
 } );
