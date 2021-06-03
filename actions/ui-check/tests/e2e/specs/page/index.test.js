@@ -19,13 +19,10 @@ import unexpectedLinksTest from './unexpected-links';
 // TODO: should we test those separately? Not all of these tests are appropriate.
 let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
 
-
-const getUrlPathWithTemplate = async (urlPath) => {
-    const template = await page.$eval( '#template', ( el ) => el.value );
-    return `${ urlPath } (via: ${ getFileNameFromPath(
-        template
-    ) })`
-}
+const getUrlPathWithTemplate = async ( urlPath ) => {
+	const template = await page.$eval( '#template', ( el ) => el.value );
+	return `${ urlPath } (via: ${ getFileNameFromPath( template ) })`;
+};
 
 // Some basic tests that apply to every page
 describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
@@ -36,7 +33,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		pageResponse = await goTo( url, queryString );
 
 		try {
-			urlPath = await getUrlPathWithTemplate(urlPath);
+			urlPath = await getUrlPathWithTemplate( urlPath );
 		} catch ( ex ) {}
 	} );
 

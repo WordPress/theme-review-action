@@ -36,10 +36,10 @@ export default ( templates ) => {
 				! emptyInnerContentFeature( block.innerContent )
 			) {
 				failures.push(
-					`There's a problem with templates in: ${ templates[ i ].fileName }.`,
+					`There's a problem with templates in: ${ templates[ i ].fileName }.`
 				); // spacer
 
-                break;
+				break;
 			}
 		}
 	}

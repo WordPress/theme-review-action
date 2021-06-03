@@ -26,14 +26,11 @@ export const removeLocalPathRefs = ( str ) => {
 		`https?:\/\/localhost:?.*?\/.*?\/themes\/.*?\/`,
 		'ig'
 	);
-	const pathRegEx = new RegExp(
-		`\/var\/www\/html\/.*?`,
-		'ig'
-	);
+	const pathRegEx = new RegExp( `\/var\/www\/html\/.*?`, 'ig' );
 
 	return str.replace( urlRegEx, '' ).replace( pathRegEx, '' );
 };
 
 export const getFileNameFromPath = ( str ) => {
-    return /[^/]*$/.exec(str)[0];
-}
+	return /[^/]*$/.exec( str )[ 0 ];
+};
