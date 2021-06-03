@@ -33,3 +33,7 @@ export const removeLocalPathRefs = ( str ) => {
 
 	return str.replace( urlRegEx, '' ).replace( pathRegEx, '' );
 };
+
+export const getFileNameFromPath = ( str ) => {
+    return /[^/]*$/.exec(str)[0];
+}

@@ -9,7 +9,7 @@ const removeWWW = ( str ) => {
 	return str.replace( /^(www[.])/, '' );
 };
 
-export default async ( url, queryString ) => {
+export default async ( url ) => {
 	let passed = true;
 
 	const hrefs = await page.$$eval( 'a', ( anchors ) =>
@@ -57,7 +57,7 @@ export default async ( url, queryString ) => {
 		let href_url = new URL( href, page.url() );
 		let hostname = removeWWW( href_url.hostname );
 		const result = errorWithMessageOnFail(
-			`${ hostname } found on ${ url } is not an approved link.`,
+			`"${ hostname }" found when viewing ${ url } is not an approved link.`,
 			'page-should-not-have-unexpected-links',
 			() => {
 				expect( allowed_hosts ).toContain( hostname );
