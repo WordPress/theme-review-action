@@ -41,6 +41,10 @@ export default async ( url ) => {
 		'google.com',
 		't.co', // in embedded content
 		'', // mailto
+		'instagram.com',
+		'whatsapp.com',
+		'vimeo.com',
+		'telegram.me',
 		new URL( page.url() ).hostname,
 		...siteInfo.theme_urls.map( ( link ) =>
 			removeWWW( new URL( link ).hostname )
