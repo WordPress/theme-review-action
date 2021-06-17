@@ -7,24 +7,23 @@ class WPORG_CheckTheme {
 	/**
 	 * Sends a theme through Theme Check.
 	 *
-	 * @param array $files All theme files to check.
 	 * @return bool Whether the theme passed the checks.
 	 */
-	public function check_theme( $files ) {
+	public function check_theme() {
 
-		if( ! defined( 'THEME_CHECK_FOLDER' ) ) {
+		if ( ! defined( 'THEME_CHECK_FOLDER' ) ) {
 			exit( 'Missing "THEME_CHECK_FOLDER" from config.' );
 		}
 
 		// Load the theme checking code.
-		if ( ! function_exists( 'run_themechecks' ) ) {
+		if ( ! function_exists( 'run_themechecks_against_theme' ) ) {
 			include_once WP_PLUGIN_DIR . '/' . THEME_CHECK_FOLDER . '/checkbase.php';
 		}
 
-		list( $php_files, $css_files, $other_files ) = $this->themeHelper->separate_files( $files );
-
 		// Run the checks.
-		$result = run_themechecks( $php_files, $css_files, $other_files );
+		$slug   = 'test-theme';
+		$theme  = new WP_Theme( $slug, __DIR__ );
+		$result = run_themechecks_against_theme( $theme, $slug );
 
 		return $result;
 	}
@@ -167,8 +166,7 @@ class WPORG_CheckTheme {
 	 * Run prepare theme and run theme-check
 	 */
 	public function run_check() {
-		$theme_files = $this->themeHelper->get_all_files( './test-theme/' );
-		$passes = $this->check_theme( $theme_files );
+		$this->check_theme();
 
 		$this->display_results();
 	}
