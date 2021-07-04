@@ -39,6 +39,12 @@ This test expects that the theme does not output any PHP errors.
 
 Verify that the page does not display any PHP errors.
 
+To replicate errors you can install the Theme Test Data https://github.com/WPTT/theme-test-data.
+Enable WP_DEBUG and use the default permalink setting, then visit the url listed in the report.
+
+For example, if the error says `"/?p=1241" (via: single.php) contains PHP errors."`,
+you can copy and paste this link `"/?p=1241"` to your test site to view the error: `http://localhost:8888/?p=1241`
+
 ## Page should return 200 status
 
 This test expects that pages return a `200` http status code when visiting in the browser.
