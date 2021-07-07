@@ -14,6 +14,8 @@ import completeOutputTest from './complete-output';
 import pageStatusTest from './page-status';
 import jsErrorTest from './js-errors';
 import unexpectedLinksTest from './unexpected-links';
+import frontpageTest from './frontpage';
+import frontpageTemplateTest from './frontpage-template';
 
 // Some URLs like feeds aren't included in the site map.
 // TODO: should we test those separately? Not all of these tests are appropriate.
@@ -66,4 +68,30 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
 		await unexpectedLinksTest( urlPath );
 	} );
+
+} );
+
+// Some basic tests that apply only to the frontpage
+let homeurl = [ [ '/', '', 'home' ] ];
+
+describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
+	let pageResponse, urlPath;
+
+	beforeAll( async () => {
+		urlPath = `"${ url }${ queryString }"`;
+		pageResponse = await goTo( url, queryString );
+
+		try {
+			urlPath = await getUrlPathWithTemplate( urlPath );
+		} catch ( ex ) {}
+	} );
+
+	it( 'Frontpage should show the correct content', async () => {
+		await frontpageTest( urlPath );
+	} );
+
+	it( 'Frontpage template should not be page.php', async () => {
+		await frontpageTemplateTest( urlPath );
+	} );
+
 } );
