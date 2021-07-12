@@ -72,16 +72,18 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 const siteInfo = getSiteInfo();
 let theme_urls = [...siteInfo.theme_urls];
 
-describe.each( theme_urls )('Test URL %s%s', ( url ) => {
-	let pageResponse;
+if ( theme_urls !== null ) {
+	describe.each( theme_urls )('Test URL %s%s', ( url ) => {
+		let pageResponse;
 
-	beforeAll(async () => {
-		pageResponse = await page.goto( url );
+		beforeAll(async () => {
+			pageResponse = await page.goto( url );
+		});
+
+		it( 'Page should return 200 status', async () => {
+			const status = await pageResponse.status();
+			await pageStatusTest( url, status );
+		});
+
 	});
-
-	it( 'Page should return 200 status', async () => {
-		const status = await pageResponse.status();
-		await pageStatusTest( url, status );
-	});
-
-});
+}
