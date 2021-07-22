@@ -72,7 +72,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 const siteInfo = getSiteInfo();
 let theme_urls = [...siteInfo.theme_urls];
 
-if ( theme_urls !== null ) {
+if ( theme_urls[0] ) {
 	describe.each( theme_urls )('Test URL %s%s', ( url ) => {
 		let pageResponse;
 
