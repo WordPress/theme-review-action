@@ -73,7 +73,7 @@ const siteInfo = getSiteInfo();
 let theme_urls = [...siteInfo.theme_urls];
 
 if ( theme_urls[0] ) {
-	describe.each( theme_urls )('Test URL %s%s', ( url ) => {
+	describe.each( theme_urls )('Test URL %s', ( url ) => {
 		let pageResponse;
 
 		beforeAll(async () => {
