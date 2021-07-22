@@ -6,7 +6,7 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { getFileNameFromPath, getTestUrls, goTo } from '../../../utils';
+import { getFileNameFromPath, getTestUrls, goTo, getSiteInfo } from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -95,3 +95,23 @@ describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
 	} );
 
 } );
+
+// Test if theme and author URI have a valid responses
+const siteInfo = getSiteInfo();
+let theme_urls = [...siteInfo.theme_urls];
+
+if ( theme_urls[0] ) {
+	describe.each( theme_urls )('Test URL %s', ( url ) => {
+		let pageResponse;
+
+		beforeAll(async () => {
+			pageResponse = await page.goto( url );
+		});
+
+		it( 'Page should return 200 status', async () => {
+			const status = await pageResponse.status();
+			await pageStatusTest( url, status );
+		});
+
+	});
+}
