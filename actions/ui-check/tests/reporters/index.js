@@ -18,7 +18,7 @@ Found on:
 ${ obj.pages.join( ',' ) }
 
 Details: 
-${ obj.details.join( ',' ) }
+${ obj.details.join( '\n' ) }
 
 Help: 
 ${ getDocInformation( obj.severity, key ) }
