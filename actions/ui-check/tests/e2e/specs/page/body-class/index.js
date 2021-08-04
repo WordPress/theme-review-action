@@ -13,7 +13,6 @@ export default async ( url, bodyClass ) => {
 
 	return errorWithMessageOnFail(
 		`${ url } does not contain a body class`,
-		'page-should-contain-body-class',
 		() => {
 			expect( bodyClassName.split( ' ' ) ).toContain( bodyClass );
 		}

@@ -12,7 +12,6 @@ export default async ( url ) => {
 
 	return errorWithMessageOnFail(
 		`${ url } contains PHP errors: ${ removeLocalPathRefs( pageError ) }`,
-		'page-should-not-have-php-errors',
 		() => {
 			expect( pageError ).toBe( null );
 		}

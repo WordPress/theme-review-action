@@ -17,7 +17,6 @@ export default async ( url ) => {
 		`${ url } contains javascript errors. Found ${ removeLocalPathRefs(
 			jsError
 		) }`,
-		'browser-console-should-not-contain-errors',
 		() => {
 			expect( jsError ).toBeFalsy();
 		}

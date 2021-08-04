@@ -100,14 +100,9 @@ export default async () => {
 		return await test();
 	} catch ( ex ) {
 		if ( ex instanceof FailedTestException ) {
-			warnWithMessageOnFail(
-				ex.messages,
-				'should-have-appropriate-submenus',
-
-				() => {
-					expect( false ).toEqual( true );
-				}
-			);
+			warnWithMessageOnFail( ex.messages, () => {
+				expect( false ).toEqual( true );
+			} );
 		} else {
 			console.log( ex );
 		}

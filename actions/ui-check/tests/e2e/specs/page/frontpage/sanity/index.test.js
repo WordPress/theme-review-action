@@ -19,9 +19,10 @@ describe( 'Sanity: Blog Body Class Test', () => {
 	} );
 
 	it( 'Page should FAIL when response is empty', async () => {
-		await page.goto( `file:${ path.join( __dirname, 'html/empty.html' ) }` );
+		await page.goto(
+			`file:${ path.join( __dirname, 'html/empty.html' ) }`
+		);
 
 		expect( await test( '', 'frontpage' ) ).toBeFalsy();
 	} );
-
 } );

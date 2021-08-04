@@ -12,11 +12,9 @@ export default async ( url ) => {
 	const bodyClassName = await getElementPropertyAsync( body, 'className' );
 
 	return errorWithMessageOnFail(
-		`${url} does not contain the blog body class`,
-		'frontpage-should-show-correct-content',
+		`${ url } does not contain the blog body class`,
 		() => {
 			expect( bodyClassName.split( ' ' ) ).toContain( 'blog' );
-		},
+		}
 	);
-
 };
