@@ -12,9 +12,17 @@ const WARNING_DOCS_URL =
  * @param {string} message
  * @returns
  */
-const getTemplate = ( url, message ) => `URL: ${ url }
+const getTemplate = ( key, obj ) => `Test Name: ${ obj.title }
 
-${ message }
+Found on: 
+${ obj.pages.join( ',' ) }
+
+Details: 
+${ obj.details.join( ',' ) }
+
+Help: 
+${ getDocInformation( obj.severity, key ) }
+
 `;
 
 /**
@@ -27,17 +35,7 @@ ${ message }
 const getDocInformation = ( type, testId ) => {
 	let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
 
-	return `See: ${ docsURL }#${ testId }`;
-};
-
-const getLines = ( key, items ) => {
-	return items.map(
-		( i ) => `- ${ i.message } (${ getDocInformation( key, i.id ) })`
-	);
-};
-
-const buildTemplate = ( key, items ) => {
-	return getTemplate( key, getLines( key, items ).join( '\n' ) );
+	return `${ docsURL }#${ testId }`;
 };
 
 const printToLog = ( log, items ) => {
@@ -63,16 +61,22 @@ class MyCustomReporter {
 			const result = testResults[ i ];
 
 			if ( result.status === 'failed' ) {
-				//result.ancestorTitles -> the page id
-				if ( ! this.errors[ result.ancestorTitles ] ) {
-					this.errors[ result.ancestorTitles ] = {};
+				const id = result.title.replace( / /g, '-' ).toLowerCase();
 
-					if ( ! this.errors[ result.ancestorTitles ].errors ) {
-						this.errors[ result.ancestorTitles ].errors = [];
-					}
-					if ( ! this.errors[ result.ancestorTitles ].warnings ) {
-						this.errors[ result.ancestorTitles ].warnings = [];
-					}
+				//result.ancestorTitles -> the page id
+				if ( ! this.errors[ id ] ) {
+					this.errors[ id ] = {};
+					this.errors[ id ].title = result.title;
+					this.errors[ id ].pages = [];
+					this.errors[ id ].details = [];
+					this.errors[ id ].severity = '';
+
+					// if ( ! this.errors[ result.ancestorTitles ].errors ) {
+					// 	this.errors[ result.ancestorTitles ].errors = [];
+					// }
+					// if ( ! this.errors[ result.ancestorTitles ].warnings ) {
+					// 	this.errors[ result.ancestorTitles ].warnings = [];
+					// }
 				}
 
 				// Get the error type
@@ -81,14 +85,13 @@ class MyCustomReporter {
 					result.failureMessages[ 0 ]
 				);
 
-				// Get the error message
+				// // Get the error message
 				const regex = /{{{(.*)}}}/g;
 				const [ , match ] = regex.exec( result.failureMessages[ 0 ] );
 
-				this.errors[ result.ancestorTitles ][ errorTypeMatch ].push( {
-					id: result.title.replace( / /g, '-' ).toLowerCase(),
-					message: match.trim(),
-				} );
+				this.errors[ id ].pages.push( `"${ result.ancestorTitles }"` );
+				this.errors[ id ].severity = errorTypeMatch;
+				this.errors[ id ].details.push( match.trim() );
 			}
 		}
 	}
@@ -99,14 +102,10 @@ class MyCustomReporter {
 
 		// Collect the warnings and errors respectively
 		Object.keys( this.errors ).forEach( ( key ) => {
-			if ( this.errors[ key ].warnings.length ) {
-				warnings.push(
-					buildTemplate( key, this.errors[ key ].warnings )
-				);
-			}
-
-			if ( this.errors[ key ].errors.length ) {
-				errors.push( buildTemplate( key, this.errors[ key ].errors ) );
+			if ( this.errors[ key ].severity === 'warnings' ) {
+				warnings.push( getTemplate( key, this.errors[ key ] ) );
+			} else {
+				errors.push( getTemplate( key, this.errors[ key ] ) );
 			}
 		} );
 
