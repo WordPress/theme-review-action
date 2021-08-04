@@ -4,10 +4,21 @@
 import urls from './pages';
 import {
 	createURL,
-	cleanErrorMessage,
 	printMessage,
 	getEnvironmentVariable,
 } from '../../../utils';
+
+/**
+ * Removes some noise that exists in the testing framework error messages.
+ * @param {string} msg Error message thrown by testing framework.
+ * @returns {string}
+ */
+export const cleanErrorMessage = ( msg ) => {
+	return msg
+		.replace( 'expect(received).toPassAxeTests(expected)', '' )
+		.replace( 'Expected page to pass Axe accessibility tests.', '' )
+		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
+};
 
 describe.each( urls, () => {
 	const envVar = getEnvironmentVariable( process.env.TEST_ACCESSIBILITY );

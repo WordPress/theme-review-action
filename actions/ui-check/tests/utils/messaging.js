@@ -1,16 +1,4 @@
 /**
- * Removes some noise that exists in the testing framework error messages.
- * @param {string} msg Error message thrown by testing framework.
- * @returns {string}
- */
-export const cleanErrorMessage = ( msg ) => {
-	return msg
-		.replace( 'expect(received).toPassAxeTests(expected)', '' )
-		.replace( 'Expected page to pass Axe accessibility tests.', '' )
-		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
-};
-
-/**
  *
  * @param {string} type Message type. Ie: errors, warnings, info
  * @param {string|string[]} message Messages to display
