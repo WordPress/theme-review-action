@@ -70,13 +70,6 @@ class MyCustomReporter {
 					this.errors[ id ].pages = [];
 					this.errors[ id ].details = [];
 					this.errors[ id ].severity = '';
-
-					// if ( ! this.errors[ result.ancestorTitles ].errors ) {
-					// 	this.errors[ result.ancestorTitles ].errors = [];
-					// }
-					// if ( ! this.errors[ result.ancestorTitles ].warnings ) {
-					// 	this.errors[ result.ancestorTitles ].warnings = [];
-					// }
 				}
 
 				// Get the error type
