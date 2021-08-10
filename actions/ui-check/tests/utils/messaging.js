@@ -6,22 +6,27 @@
  * @returns {bool} Whether the test has passed(true) or not(false).
  */
 const expectWithMessage = ( type, message, testToRun ) => {
+	// Dev mode is considered the default jest environment
+	if ( process.env.DEV_MODE ) {
+		testToRun();
+		return;
+	}
+
+	// Custom handling of error messages
+	// This is interpreted by a custom reporter (../reporters)
 	try {
 		testToRun();
+
+		// We return true because the tests are also used for sanity checks
+		// which assume the test either pass or fail
 		return true;
 	} catch ( e ) {
-		const output = Array.isArray( message ) ? message : [ message ];
-
-		if ( ! process.env.DEV_MODE ) {
-			throw new Error( `[[[${ type }]]] {{{ ${ output } }}} ` );
-		} else if ( process.env.SANITY_MODE ) {
-			// No need to do anything
-			// We expect tests to fail and don't want that to appear as test failures.
-		} else {
-			throw new Error( e );
+		// Sanity tests only care about whether the test failed or not
+		if ( process.env.SANITY_MODE ) {
+			return false;
 		}
 
-		return false;
+		throw new Error( `[[[${ type }]]] {{{ ${ message } }}} ` );
 	}
 };
 

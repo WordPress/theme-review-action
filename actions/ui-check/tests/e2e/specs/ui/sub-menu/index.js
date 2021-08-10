@@ -104,7 +104,6 @@ export default async () => {
 				expect( false ).toEqual( true );
 			} );
 		} else {
-			console.log( ex );
 		}
 
 		return false;

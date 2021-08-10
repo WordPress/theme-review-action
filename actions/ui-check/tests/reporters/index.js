@@ -14,9 +14,6 @@ const WARNING_DOCS_URL =
  */
 const getTemplate = ( key, obj ) => `Test Name: ${ obj.title }
 
-Found on: 
-${ obj.pages.join( ',' ) }
-
 Details: 
 ${ obj.details.join( '\n' ) }
 
@@ -74,17 +71,26 @@ class MyCustomReporter {
 
 				// Get the error type
 				const errorTypeRegex = /\[\[\[(.*)]]]/g;
-				const [ , errorTypeMatch ] = errorTypeRegex.exec(
+				const typeMatches = errorTypeRegex.exec(
 					result.failureMessages[ 0 ]
 				);
 
-				// // Get the error message
-				const regex = /{{{(.*)}}}/g;
-				const [ , match ] = regex.exec( result.failureMessages[ 0 ] );
+				if ( ! typeMatches || ! typeMatches[ 1 ] ) {
+					return;
+				}
 
-				this.errors[ id ].pages.push( `"${ result.ancestorTitles }"` );
-				this.errors[ id ].severity = errorTypeMatch;
-				this.errors[ id ].details.push( match.trim() );
+				// // Get the error message
+				const regex = /{{{([\s\S]*?)}}}/g;
+				const matches = regex.exec( result.failureMessages[ 0 ] );
+
+				if ( matches && matches[ 1 ] ) {
+					this.errors[ id ].pages.push(
+						`"${ result.ancestorTitles }"`
+					);
+
+					this.errors[ id ].severity = typeMatches[ 1 ];
+					this.errors[ id ].details.push( matches[ 1 ].trim() );
+				}
 			}
 		}
 	}
@@ -109,6 +115,10 @@ class MyCustomReporter {
 		if ( errors.length ) {
 			printToLog( 'errors', errors );
 		}
+
+		console.log(
+			'\n\nCompleted test run. See logs for test result details.\n'
+		);
 	}
 }
 

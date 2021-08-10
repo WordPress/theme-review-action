@@ -11,7 +11,9 @@ export default async ( url ) => {
 	const pageError = await getPageError();
 
 	return errorWithMessageOnFail(
-		`${ url } contains PHP errors: ${ removeLocalPathRefs( pageError ) }`,
+		`Loading the page using ${ url } contains PHP errors: ${ removeLocalPathRefs(
+			pageError
+		) }`,
 		() => {
 			expect( pageError ).toBe( null );
 		}

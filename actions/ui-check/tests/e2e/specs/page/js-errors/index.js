@@ -14,7 +14,7 @@ page.on( 'pageerror', ( error ) => {
 
 export default async ( url ) => {
 	return errorWithMessageOnFail(
-		`${ url } contains javascript errors. Found ${ removeLocalPathRefs(
+		`Loading the page using ${ url } contains javascript errors. Found ${ removeLocalPathRefs(
 			jsError
 		) }`,
 		() => {

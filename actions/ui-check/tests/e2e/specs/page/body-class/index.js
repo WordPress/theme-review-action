@@ -12,7 +12,7 @@ export default async ( url, bodyClass ) => {
 	const bodyClassName = await getElementPropertyAsync( body, 'className' );
 
 	return errorWithMessageOnFail(
-		`${ url } does not contain a body class`,
+		`Unable to find body class when loading a page using ${ url }`,
 		() => {
 			expect( bodyClassName.split( ' ' ) ).toContain( bodyClass );
 		}

@@ -4,11 +4,15 @@
 import { errorWithMessageOnFail, getFileNameFromPath } from '../../../../utils';
 
 export default async ( url ) => {
-	const template = await page.$eval( '#template', ( el ) => el.value );
-	const filename = getFileNameFromPath( template );
+	let template, filename;
+
+	try {
+		template = await page.$eval( '#template', ( el ) => el.value );
+		filename = getFileNameFromPath( template );
+	} catch ( ex ) {}
 
 	return errorWithMessageOnFail(
-		`${ url } Frontpage template file must not be page.php`,
+		`Frontpage template file must not be page.php`,
 		() => {
 			expect( filename ).not.toBe( 'page.php' );
 		}

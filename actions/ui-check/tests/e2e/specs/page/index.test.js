@@ -28,7 +28,7 @@ let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
 
 const getUrlPathWithTemplate = async ( urlPath ) => {
 	const template = await page.$eval( '#template', ( el ) => el.value );
-	return `${ urlPath } (via: ${ getFileNameFromPath( template ) })`;
+	return getFileNameFromPath( template );
 };
 
 // Some basic tests that apply to every page
