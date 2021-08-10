@@ -15,7 +15,7 @@ const WARNING_DOCS_URL =
 const getTemplate = ( key, obj ) => `Test Name: ${ obj.title }
 
 Details: 
-${ obj.details.join( '\n' ) }
+${ Object.keys( obj.details ).join( '\n' ) }
 
 Help: 
 ${ getDocInformation( obj.severity, key ) }
@@ -65,7 +65,7 @@ class MyCustomReporter {
 					this.errors[ id ] = {};
 					this.errors[ id ].title = result.title;
 					this.errors[ id ].pages = [];
-					this.errors[ id ].details = [];
+					this.errors[ id ].details = {};
 					this.errors[ id ].severity = '';
 				}
 
@@ -89,7 +89,7 @@ class MyCustomReporter {
 					);
 
 					this.errors[ id ].severity = typeMatches[ 1 ];
-					this.errors[ id ].details.push( matches[ 1 ].trim() );
+					this.errors[ id ].details[ matches[ 1 ].trim() ] = true;
 				}
 			}
 		}
