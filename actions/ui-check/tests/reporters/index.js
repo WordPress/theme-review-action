@@ -15,7 +15,11 @@ const WARNING_DOCS_URL =
 const getTemplate = ( key, obj ) => `Test Name: ${ obj.title }
 
 Details: 
-${ Object.keys( obj.details ).join( '\n' ) }
+${
+	Object.keys( obj.details ).length > 0
+		? Object.keys( obj.details ).join( '\n' )
+		: 'None provided.'
+}
 
 Help: 
 ${ getDocInformation( obj.severity, key ) }
