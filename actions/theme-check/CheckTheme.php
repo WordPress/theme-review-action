@@ -22,7 +22,7 @@ class WPORG_CheckTheme {
 
 		// Run the checks.
 		$slug   = 'test-theme';
-		$theme  = new WP_Theme( $slug, __DIR__ );
+		$theme  = new WP_Theme( $slug, dirname( STYLESHEETPATH ) );
 		$result = run_themechecks_against_theme( $theme, $slug );
 
 		return $result;
