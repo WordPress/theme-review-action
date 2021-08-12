@@ -1,5 +1,16 @@
+/**
+ * External dependencies
+ */
 const fs = require( 'fs' );
 
+/**
+ * Internal dependencies
+ */
+const getResultObject = require( './utils' ).getResultObject;
+
+/**
+ * Modules constants
+ */
 const ERROR_DOCS_URL =
 	'https://github.com/WordPress/theme-review-action/blob/trunk/docs/ui-errors.md';
 const WARNING_DOCS_URL =
@@ -54,7 +65,7 @@ class MyCustomReporter {
 		this._globalConfig = globalConfig;
 		this._options = options;
 
-		this.errors = {};
+		this.errors = [];
 	}
 
 	onTestResult( test, { testResults } ) {
@@ -62,39 +73,7 @@ class MyCustomReporter {
 			const result = testResults[ i ];
 
 			if ( result.status === 'failed' ) {
-				const id = result.title.replace( / /g, '-' ).toLowerCase();
-
-				//result.ancestorTitles -> the page id
-				if ( ! this.errors[ id ] ) {
-					this.errors[ id ] = {};
-					this.errors[ id ].title = result.title;
-					this.errors[ id ].pages = [];
-					this.errors[ id ].details = {};
-					this.errors[ id ].severity = '';
-				}
-
-				// Get the error type
-				const errorTypeRegex = /\[\[\[(.*)]]]/g;
-				const typeMatches = errorTypeRegex.exec(
-					result.failureMessages[ 0 ]
-				);
-
-				if ( ! typeMatches || ! typeMatches[ 1 ] ) {
-					return;
-				}
-
-				// // Get the error message
-				const regex = /{{{([\s\S]*?)}}}/g;
-				const matches = regex.exec( result.failureMessages[ 0 ] );
-
-				if ( matches && matches[ 1 ] ) {
-					this.errors[ id ].pages.push(
-						`"${ result.ancestorTitles }"`
-					);
-
-					this.errors[ id ].severity = typeMatches[ 1 ];
-					this.errors[ id ].details[ matches[ 1 ].trim() ] = true;
-				}
+				this.errors = getResultObject( result );
 			}
 		}
 	}

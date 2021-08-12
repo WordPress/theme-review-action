@@ -84,6 +84,22 @@ class WPORG_CheckTheme {
 	}
 
 	/**
+	 * Output results in json format for scorecard.
+	 */
+	public function output_scorecard( $error_list ) {
+		$out = array();
+		$keys = array_keys( $error_list ); 
+		$entries = count( $error_list );  
+			
+		for( $i = 0; $i < $entries; ++$i ) { 
+			$out[ strtolower( $keys[ $i ] ) ] = 0;
+		}
+	
+		$fileName = './logs/theme-scorecard.json';
+		file_put_contents( $fileName, json_encode( $out ) );
+	}
+
+	/**
 	 * Determines if the start string matches
 	 */
 	public function starts_with( $haystack, $needle ) {
@@ -142,10 +158,12 @@ class WPORG_CheckTheme {
 
 		if( count( $error_list ) > 0) {
 			$this->output_to_log_file( 'errors', $error_list );
+			$this->output_scorecard( $error_list );
 		}
 
 		echo PHP_EOL;
 		echo PHP_EOL;
+
 
 		if( count( $warning_list ) > 0) {
 			$this->output_to_log_file( 'warnings', $warning_list );

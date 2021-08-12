@@ -19,7 +19,10 @@ let configs = {
 		// Exclude any sanity tests
 		'!**/e2e/**/sanity/**',
 	],
-	reporters: [ '<rootDir>/../reporters/index.js' ],
+	reporters: [
+		'<rootDir>/../reporters/index.js',
+		'<rootDir>/../reporters/scorecard.js',
+	],
 };
 
 if ( process.env.DEV_MODE ) {
