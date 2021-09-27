@@ -69,11 +69,9 @@ jobs:
 
 1. Run `git clone git@github.com:WordPress/theme-review-action.git && cd theme-review-action`.
 2. Run `npm install` to install dependencies.
-3. Run `npm run start`.
+3. Run `npm run start -- --pathToTheme=../my-theme`.
 
 The tests run on files within the `/test-theme` folder.
-
-You can pass a relative path to your theme like so: `npm run start --pathToTheme=../my-theme`.
 
 To see all the options run `npm run start -- --help`.
 
