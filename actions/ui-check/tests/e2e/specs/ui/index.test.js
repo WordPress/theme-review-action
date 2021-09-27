@@ -8,7 +8,7 @@ import subMenuTest from './sub-menu';
 import elementFocusTest from './element-focus';
 import tabbingTest from './tabbing';
 
-describe( 'Accessibility: UI', () => {
+describe( '/', () => {
 	beforeAll( async () => {
 		await goTo( '/' );
 	} );

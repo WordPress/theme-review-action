@@ -1,52 +1,3 @@
-const fs = require( 'fs' );
-import { ERROR_DOCS_URL, WARNING_DOCS_URL } from './index';
-
-/**
- * Removes some noise that exists in the testing framework error messages.
- * @param {string} msg Error message thrown by testing framework.
- * @returns {string}
- */
-export const cleanErrorMessage = ( msg ) => {
-	return msg
-		.replace( 'expect(received).toPassAxeTests(expected)', '' )
-		.replace( 'Expected page to pass Axe accessibility tests.', '' )
-		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
-};
-
-/**
- * Joins and appends lines to log file
- * @param {array} lines
- */
-const appendToLog = ( command, lines ) => {
-	const path = `../../logs/ui-check-${ command }.txt`;
-
-	fs.appendFileSync( path, [ '\n\n', ...lines ].join( '\n' ), {
-		encoding: 'utf8',
-	} );
-};
-
-/**
- * Prints a message
- * @param {string} command The name of the command that matches the `core` library messaging commands.
- * @param {string[]} lines The content to print.
- */
-export const printMessage = ( command, lines ) => {
-	appendToLog( command, lines );
-};
-
-/**
- * Returns a message that suggest documentation for help.
- *
- * @param {string} type Errors or Warnings
- * @param {*} testId The id of the test that matches the documentation
- * @returns {string}
- */
-const getDocInformation = ( type, testId ) => {
-	let docsURL = type === 'errors' ? ERROR_DOCS_URL : WARNING_DOCS_URL;
-
-	return `See: ${ docsURL }#${ testId }`;
-};
-
 /**
  *
  * @param {string} type Message type. Ie: errors, warnings, info
@@ -54,28 +5,28 @@ const getDocInformation = ( type, testId ) => {
  * @param {function} testToRun The test that will be executed
  * @returns {bool} Whether the test has passed(true) or not(false).
  */
-const expectWithMessage = ( type, message, testId, testToRun ) => {
+const expectWithMessage = ( type, message, testToRun ) => {
+	// Dev mode is considered the default jest environment
+	if ( process.env.DEV_MODE ) {
+		testToRun();
+		return;
+	}
+
+	// Custom handling of error messages
+	// This is interpreted by a custom reporter (../reporters)
 	try {
 		testToRun();
+
+		// We return true because the tests are also used for sanity checks
+		// which assume the test either pass or fail
 		return true;
 	} catch ( e ) {
-		const output = Array.isArray( message ) ? message : [ message ];
-
-		if ( testId ) {
-			// Append information about the error.
-			output.push( getDocInformation( type, testId ) );
+		// Sanity tests only care about whether the test failed or not
+		if ( process.env.SANITY_MODE ) {
+			return false;
 		}
 
-		if ( ! process.env.DEV_MODE ) {
-			printMessage( type, output );
-		} else if ( process.env.SANITY_MODE ) {
-			// No need to do anything
-			// We expect tests to fail and don't want that to appear as test failures.
-		} else {
-			throw new Error( e );
-		}
-
-		return false;
+		throw new Error( `[[[${ type }]]] {{{ ${ message } }}} ` );
 	}
 };
 
@@ -84,8 +35,8 @@ const expectWithMessage = ( type, message, testId, testToRun ) => {
  * @param {string|string[]} message Messages to output
  * @param {function} test Function to run
  */
-export const errorWithMessageOnFail = ( message, testId = false, test ) => {
-	return expectWithMessage( 'errors', message, testId, test );
+export const errorWithMessageOnFail = ( message, test ) => {
+	return expectWithMessage( 'errors', message, test );
 };
 
 /**
@@ -93,6 +44,6 @@ export const errorWithMessageOnFail = ( message, testId = false, test ) => {
  * @param {string|string[]} message Messages to output
  * @param {function} test Function to run
  */
-export const warnWithMessageOnFail = ( message, testId = false, test ) => {
-	return expectWithMessage( 'warnings', message, testId, test );
+export const warnWithMessageOnFail = ( message, test ) => {
+	return expectWithMessage( 'warnings', message, test );
 };

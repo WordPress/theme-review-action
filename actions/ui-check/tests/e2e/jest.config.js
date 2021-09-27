@@ -19,7 +19,12 @@ let configs = {
 		// Exclude any sanity tests
 		'!**/e2e/**/sanity/**',
 	],
+	reporters: [ '<rootDir>/../reporters/index.js' ],
 };
+
+if ( process.env.DEV_MODE ) {
+	configs.reporters = [ 'default' ];
+}
 
 // When run using NPX there are issues related to running in a `node_modules` folder.
 if (

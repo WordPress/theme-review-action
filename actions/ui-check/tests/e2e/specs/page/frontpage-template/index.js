@@ -1,22 +1,20 @@
 /**
  * Internal dependencies
  */
-import {
-	errorWithMessageOnFail,
-	getFileNameFromPath,
-} from '../../../../utils';
+import { errorWithMessageOnFail, getFileNameFromPath } from '../../../../utils';
 
 export default async ( url ) => {
+	let template, filename;
 
-	const template = await page.$eval( '#template', (el) => el.value);
-	const filename = getFileNameFromPath( template );
+	try {
+		template = await page.$eval( '#template', ( el ) => el.value );
+		filename = getFileNameFromPath( template );
+	} catch ( ex ) {}
 
 	return errorWithMessageOnFail(
-		`${url} Frontpage template file must not be page.php`,
-		'frontpage-should-show-correct-content',
+		`Frontpage template file must not be page.php`,
 		() => {
 			expect( filename ).not.toBe( 'page.php' );
-		},
+		}
 	);
-
 };
