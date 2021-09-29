@@ -10,4 +10,9 @@ module.exports = {
 		// Don't run sanity tests
 		'!**/unit/**/sanity/**',
 	],
+	reporters: [ '<rootDir>/../reporters/index.js' ],
 };
+
+if ( process.env.DEV_MODE ) {
+	configs.reporters = [ 'default' ];
+}

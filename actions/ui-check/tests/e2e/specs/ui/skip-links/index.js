@@ -56,13 +56,9 @@ export default async () => {
 		return await test();
 	} catch ( ex ) {
 		if ( ex instanceof FailedTestException ) {
-			return warnWithMessageOnFail(
-				ex.messages,
-				'should-have-skip-links',
-				() => {
-					expect( false ).toEqual( true );
-				}
-			);
+			return warnWithMessageOnFail( ex.messages, () => {
+				expect( false ).toEqual( true );
+			} );
 		} else {
 			console.log( ex );
 		}

@@ -92,14 +92,9 @@ export default async () => {
 				await makeGif( 1280, 800, SCREENSHOT_TABBING_TEST, 100 );
 			}
 
-			warnWithMessageOnFail(
-				ex.messages,
-				'should-have-logical-tabbing',
-
-				() => {
-					expect( false ).toEqual( true );
-				}
-			);
+			warnWithMessageOnFail( ex.messages, () => {
+				expect( false ).toEqual( true );
+			} );
 		} else {
 			console.log( ex );
 		}

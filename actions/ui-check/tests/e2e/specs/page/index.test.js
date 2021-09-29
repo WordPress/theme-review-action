@@ -6,7 +6,12 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { getFileNameFromPath, getTestUrls, goTo, getSiteInfo } from '../../../utils';
+import {
+	getFileNameFromPath,
+	getTestUrls,
+	goTo,
+	getSiteInfo,
+} from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -23,11 +28,11 @@ let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
 
 const getUrlPathWithTemplate = async ( urlPath ) => {
 	const template = await page.$eval( '#template', ( el ) => el.value );
-	return `${ urlPath } (via: ${ getFileNameFromPath( template ) })`;
+	return getFileNameFromPath( template );
 };
 
 // Some basic tests that apply to every page
-describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
+describe.each( urls )( '%s%s', ( url, queryString, bodyClass ) => {
 	let pageResponse, urlPath;
 
 	beforeAll( async () => {
@@ -39,7 +44,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		} catch ( ex ) {}
 	} );
 
-	it( 'Page should contain body class ' + bodyClass, async () => {
+	it( 'Page should contain body class', async () => {
 		// Make sure the page content appears to be appropriate for the URL.
 		await bodyClassTest( urlPath, bodyClass );
 	} );
@@ -68,13 +73,12 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
 		await unexpectedLinksTest( urlPath );
 	} );
-
 } );
 
 // Some basic tests that apply only to the frontpage
 let homeurl = [ [ '/', '', 'home' ] ];
 
-describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
+describe.each( homeurl )( '%s%s', ( url, queryString ) => {
 	let pageResponse, urlPath;
 
 	beforeAll( async () => {
@@ -93,25 +97,23 @@ describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
 	it( 'Frontpage template should not be page.php', async () => {
 		await frontpageTemplateTest( urlPath );
 	} );
-
 } );
 
 // Test if theme and author URI have a valid responses
 const siteInfo = getSiteInfo();
-let theme_urls = [...siteInfo.theme_urls];
+let theme_urls = [ ...siteInfo.theme_urls ];
 
-if ( theme_urls[0] ) {
-	describe.each( theme_urls )('Test URL %s', ( url ) => {
+if ( theme_urls[ 0 ] ) {
+	describe.each( theme_urls )( '%s', ( url ) => {
 		let pageResponse;
 
-		beforeAll(async () => {
+		beforeAll( async () => {
 			pageResponse = await page.goto( url );
-		});
+		} );
 
 		it( 'Page should return 200 status', async () => {
 			const status = await pageResponse.status();
 			await pageStatusTest( url, status );
-		});
-
-	});
+		} );
+	} );
 }

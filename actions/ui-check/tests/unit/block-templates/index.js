@@ -44,11 +44,7 @@ export default ( templates ) => {
 		}
 	}
 
-	return errorWithMessageOnFail(
-		failures,
-		'should-have-complete-templates',
-		() => {
-			expect( failures ).toHaveLength( 0 );
-		}
-	);
+	return errorWithMessageOnFail( failures, () => {
+		expect( failures ).toHaveLength( 0 );
+	} );
 };

@@ -62,7 +62,6 @@ export default async ( url ) => {
 		let hostname = removeWWW( href_url.hostname );
 		const result = errorWithMessageOnFail(
 			`"${ hostname }" found when viewing ${ url } is not an approved link.`,
-			'page-should-not-have-unexpected-links',
 			() => {
 				expect( allowed_hosts ).toContain( hostname );
 			}
