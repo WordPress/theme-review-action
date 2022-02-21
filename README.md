@@ -73,7 +73,7 @@ jobs:
 
 The tests run on files within the `/test-theme` folder.
 
-You can pass a relative path to your theme like so: `npm run start --pathToTheme=../my-theme`.
+You can pass a relative path to your theme like so: `npm run start -- --pathToTheme=../my-theme`.
 
 To see all the options run `npm run start -- --help`.
 
