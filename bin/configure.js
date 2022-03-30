@@ -79,20 +79,6 @@ const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
 };
 
 /**
- * Downloads a database export from github
- */
-const downloadTestData = async () => {
-	const url =
-		'https://raw.githubusercontent.com/wpaccessibility/a11y-theme-unit-test/master/a11y-theme-unit-test-data.xml';
-	await downloadAndSaveFile({
-		lib: require('https'),
-		url,
-		text: `Downloading test data xml from ${url}.`,
-		saveTo: 'config/a11y-theme-unit-test-data.xml',
-	});
-};
-
-/**
  * Downloads information about the theme
  */
 const downloadSiteData = async () => {
@@ -111,8 +97,6 @@ const downloadSiteData = async () => {
  * Downloads test data, install importer and imports the test data
  */
 const importTestData = async () => {
-	await downloadTestData();
-
 	await runCommand(
 		'Installing & Activating wordpress-importer.',
 		'plugin install wordpress-importer --activate'
