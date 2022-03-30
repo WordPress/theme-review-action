@@ -6,7 +6,12 @@ const fetch = require( 'node-fetch' );
 /**
  * Internal dependencies
  */
-import { getFileNameFromPath, getTestUrls, goTo, getSiteInfo } from '../../../utils';
+import {
+	getFileNameFromPath,
+	getTestUrls,
+	goTo,
+	getSiteInfo,
+} from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -45,7 +50,8 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 	} );
 
 	it( 'Page should not have PHP errors', async () => {
-		await phpErrorsTest( urlPath );
+		const text = await pageResponse.text();
+		await phpErrorsTest( urlPath, text );
 	} );
 
 	it( 'Page should have complete output', async () => {
@@ -68,7 +74,6 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
 		await unexpectedLinksTest( urlPath );
 	} );
-
 } );
 
 // Some basic tests that apply only to the frontpage
@@ -93,25 +98,23 @@ describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
 	it( 'Frontpage template should not be page.php', async () => {
 		await frontpageTemplateTest( urlPath );
 	} );
-
 } );
 
 // Test if theme and author URI have a valid responses
 const siteInfo = getSiteInfo();
-let theme_urls = [...siteInfo.theme_urls];
+let theme_urls = [ ...siteInfo.theme_urls ];
 
-if ( theme_urls[0] ) {
-	describe.each( theme_urls )('Test URL %s', ( url ) => {
+if ( theme_urls[ 0 ] ) {
+	describe.each( theme_urls )( 'Test URL %s', ( url ) => {
 		let pageResponse;
 
-		beforeAll(async () => {
+		beforeAll( async () => {
 			pageResponse = await page.goto( url );
-		});
+		} );
 
 		it( 'Page should return 200 status', async () => {
 			const status = await pageResponse.status();
 			await pageStatusTest( url, status );
-		});
-
-	});
+		} );
+	} );
 }

@@ -2,19 +2,19 @@
  * Internal dependencies
  */
 import {
-	errorWithMessageOnFail,
-	getPageError,
-	removeLocalPathRefs,
+    errorWithMessageOnFail,
+    getErrorFromPage,
+    removeLocalPathRefs,
 } from '../../../../utils';
 
-export default async ( url ) => {
-	const pageError = await getPageError();
+export default async(url, text) => {
+    const pageError = await getErrorFromPage(text);
 
-	return errorWithMessageOnFail(
-		`${ url } contains PHP errors: ${ removeLocalPathRefs( pageError ) }`,
-		'page-should-not-have-php-errors',
-		() => {
-			expect( pageError ).toBe( null );
-		}
-	);
+    return errorWithMessageOnFail(
+        `${ url } contains PHP errors: ${ removeLocalPathRefs( pageError ) }`,
+        'page-should-not-have-php-errors',
+        () => {
+            expect(pageError).toBe(null);
+        }
+    );
 };
