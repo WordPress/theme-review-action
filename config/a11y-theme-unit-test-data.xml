@@ -8904,36 +8904,6 @@ The custom HTML block
     <![CDATA[<!-- wp:paragraph -->
 <p>This post tests various embed blocks:</p>
 <!-- /wp:paragraph -->
-    
-<!-- wp:core-embed/twitter {"url":"https://twitter.com/WordPress/status/1057136472321613824","type":"rich","providerNameSlug":"twitter","align":"wide","className":""} -->
-<figure class="wp-block-embed-twitter alignwide wp-block-embed is-type-rich is-provider-twitter"><div class="wp-block-embed__wrapper">
-https://twitter.com/WordPress/status/1057136472321613824
-</div><figcaption>Twitter,&nbsp; wide width</figcaption></figure>
-<!-- /wp:core-embed/twitter -->
-
-<!-- wp:core-embed/youtube {"url":"https://youtu.be/ex8fMxXJDJw","type":"video","providerNameSlug":"youtube","className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
-<figure class="wp-block-embed-youtube wp-block-embed is-type-video is-provider-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-https://youtu.be/ex8fMxXJDJw
-</div><figcaption>YouTube<br></figcaption></figure>
-<!-- /wp:core-embed/youtube -->
-
-<!-- wp:core-embed/facebook {"url":"https://www.facebook.com/6427302910/posts/10156380423617911/","type":"rich","providerNameSlug":"facebook","className":""} -->
-<figure class="wp-block-embed-facebook wp-block-embed is-type-rich is-provider-facebook"><div class="wp-block-embed__wrapper">
-https://www.facebook.com/6427302910/posts/10156380423617911/
-</div></figure>
-<!-- /wp:core-embed/facebook -->
-
-<!-- wp:core-embed/instagram {"url":"https://www.instagram.com/p/BpmueLLgEn_/?utm_source=ig_share_sheet\u0026igshid=1hcxphic7p9e2","type":"rich","providerNameSlug":"instagram","className":""} -->
-<figure class="wp-block-embed-instagram wp-block-embed is-type-rich is-provider-instagram"><div class="wp-block-embed__wrapper">
-https://www.instagram.com/p/BpmueLLgEn_/?utm_source=ig_share_sheet&amp;igshid=1hcxphic7p9e2
-</div></figure>
-<!-- /wp:core-embed/instagram -->
-
-<!-- wp:core-embed/wordpress-tv {"url":"https://wordpress.tv/2018/10/14/kjell-reigstad-allan-cole-how-we-made-our-first-gutenberg-powered-theme/","type":"video","providerNameSlug":"","align":"full","className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
-<figure class="wp-block-embed-wordpress-tv alignfull wp-block-embed is-type-video wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-https://wordpress.tv/2018/10/14/kjell-reigstad-allan-cole-how-we-made-our-first-gutenberg-powered-theme/
-</div><figcaption>WordPress TV, full width<br></figcaption></figure>
-<!-- /wp:core-embed/wordpress-tv -->
 
 <!-- wp:paragraph -->
 <p></p>
