@@ -8,7 +8,7 @@ export default async ( url, status ) => {
 		`Expected to received a 200 status for ${ url }. Received ${ status }.`,
 		'page-should-return-200-status',
 		() => {
-			expect( status ).toBe( 200 );
+			expect( status ).toMatch( /^(200|304)$/ );
 		}
 	);
 };

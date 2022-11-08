@@ -60,7 +60,7 @@ describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
 		await completeOutputTest( urlPath, text );
 	} );
 
-	it( 'Page should return 200 status', async () => {
+	it( 'Page should return 200 or 304 status', async () => {
 		const status = await pageResponse.status();
 
 		await pageStatusTest( urlPath, status );
@@ -112,7 +112,7 @@ if ( theme_urls[ 0 ] ) {
 			pageResponse = await page.goto( url );
 		} );
 
-		it( 'Page should return 200 status', async () => {
+		it( 'Page should return 200 or 304 status', async () => {
 			const status = await pageResponse.status();
 			await pageStatusTest( url, status );
 		} );
