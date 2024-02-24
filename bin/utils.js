@@ -18,15 +18,22 @@ const getParentTheme = () => {
 	return false;
 };
 
-const isBlockBasedTheme = () => {
+const isBlockTheme = () => {
 	try {
 		fs.readFileSync(
-			`${THEME_PATH_ROOT}/block-templates/index.html`,
+			`${THEME_PATH_ROOT}/templates/index.html`,
 			READ_OPTIONS
 		);
-
 		return true;
-	} catch (e) {}
+	} catch (e) {
+		try {
+			fs.readFileSync(
+				`${THEME_PATH_ROOT}/block-templates/index.html`,
+				READ_OPTIONS
+			);
+			return true;
+		} catch (e) {}
+	}
 	return false;
 };
 
@@ -58,7 +65,7 @@ const isWindows = () => {
 const getThemeType = () => {
 	if (getParentTheme()) {
 		return 'child';
-	} else if (isBlockBasedTheme()) {
+	} else if (isBlockTheme()) {
 		return 'block';
 	} else {
 		return 'default';
@@ -100,7 +107,7 @@ const createLogs = (actionsPath, logPath, verbose) => {
 };
 
 module.exports = {
-	isBlockBasedTheme,
+	isBlockTheme,
 	getParentTheme,
 	isWindows,
 	fancyTimeFormat,
