@@ -7,7 +7,7 @@ const ACTIONS_PATH = `${process.env.GITHUB_ACTION_PATH}/actions`;
 
 const setConfiguration = (key, value) => {
 	console.log(`Setting output for ${key}.`);
-	console.log(`::set-output name=${key}::${value}`);
+	fs.appendFileSync( process.env.GITHUB_OUTPUT, `${key}=${value}\n` );
 };
 
 /**
