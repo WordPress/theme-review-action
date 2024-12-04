@@ -12,7 +12,7 @@ const isChildTheme = () => {
 	return process.env.WP_THEME_TYPE === 'child';
 };
 
-const isBlockBasedTheme = () => {
+const isBlockTheme = () => {
 	return process.env.WP_THEME_TYPE === 'block';
 };
 
@@ -50,14 +50,18 @@ const fileExists = (filePath) => {
 	let hasErrors = false;
 
 	// Child Themes don't require an index.php
-	if (!isChildTheme() && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
+	if (
+		!isChildTheme() &&
+		!isBlockTheme() &&
+		!fileExists(`${ROOT_PATH_THEME}/index.php`)
+	) {
 		appendToLog('The theme is required to have an index.php file.');
 		hasErrors = true;
 	}
 
 	// Block themes require theme.json
 	if (
-		isBlockBasedTheme() &&
+		isBlockTheme() &&
 		!fileExists(`${ROOT_PATH_THEME}/theme.json`)
 	) {
 		appendToLog(
