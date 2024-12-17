@@ -10,8 +10,8 @@ const getParentTheme = () => {
 		const templateRegex = /Template:(\s*[^\s]+)/gim; // Template: ${parentTheme}
 
 		// Load in style.css to check for parent
-        const themeStyle = fs.readFileSync(styleLocation, READ_OPTIONS);
-        const template = themeStyle.match(templateRegex);
+		const themeStyle = fs.readFileSync(styleLocation, READ_OPTIONS);
+		const template = themeStyle.match(templateRegex);
 		return template[0].toLowerCase().replace(/template:(\s*)/ig, '').trim();
 	} catch (ex) {}
 
@@ -19,15 +19,10 @@ const getParentTheme = () => {
 };
 
 const isBlockBasedTheme = () => {
-	try {
-		fs.readFileSync(
-			`${THEME_PATH_ROOT}/block-templates/index.html`,
-			READ_OPTIONS
-		);
-
-		return true;
-	} catch (e) {}
-	return false;
+	return (
+		fs.existsSync( `${THEME_PATH_ROOT}/templates/index.html` ) ||
+		fs.existsSync( `${THEME_PATH_ROOT}/block-templates/index.html` )
+	);
 };
 
 // Thanks: https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
