@@ -50,7 +50,7 @@ const fileExists = (filePath) => {
 	let hasErrors = false;
 
 	// Child Themes don't require an index.php
-	if (!isChildTheme() && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
+	if (!isChildTheme() && && !isBlockBasedTheme() && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
 		appendToLog('The theme is required to have an index.php file.');
 		hasErrors = true;
 	}
