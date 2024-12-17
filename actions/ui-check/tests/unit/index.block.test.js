@@ -19,6 +19,10 @@ const THEME_ROOT_FOLDER = '../../test-theme';
 const getFileContents = ( location ) => {
 	const arr = [];
 
+	if ( ! fs.existsSync( location ) ) {
+		return arr;
+	}
+
 	fs.readdirSync( location ).forEach( ( file ) => {
 		const contents = fs.readFileSync( `${ location }/${ file }`, {
 			encoding: 'utf8',
@@ -40,12 +44,11 @@ const getFileContents = ( location ) => {
  * Collects the template parts from theme
  */
 const getTemplates = () => {
-	const templateLocation = `${ THEME_ROOT_FOLDER }/block-templates`;
-	const templatePartLocation = `${ THEME_ROOT_FOLDER }/block-template-parts`;
-
 	return [
-		...getFileContents( templateLocation ),
-		...getFileContents( templatePartLocation ),
+		...getFileContents( `${ THEME_ROOT_FOLDER }/block-templates` ),
+		...getFileContents( `${ THEME_ROOT_FOLDER }/block-template-parts` ),
+		...getFileContents( `${ THEME_ROOT_FOLDER }/templates` ),
+		...getFileContents( `${ THEME_ROOT_FOLDER }/template-parts` ),
 	];
 };
 
