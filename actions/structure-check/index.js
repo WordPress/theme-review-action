@@ -28,23 +28,6 @@ const appendToLog = (input) => {
 	});
 };
 
-/**
- * Return false if the file doesn't exist or can't be read
- * @param {string} filePath
- */
-const fileExists = (filePath) => {
-	try {
-		fs.readFileSync(filePath, READ_OPTIONS);
-		return true;
-	} catch (e) {
-		if (e.code.toLowerCase() !== 'enoent') {
-			console.log(e);
-		}
-	}
-
-	return false;
-};
-
 (() => {
 	console.log('Running structure check.');
 	let hasErrors = false;
@@ -56,14 +39,14 @@ const fileExists = (filePath) => {
 	if (
 		isBlockBasedTheme() &&
 		(
-			fileExists(`${ROOT_PATH_THEME}/templates/index.html`) ||
-			fileExists(`${ROOT_PATH_THEME}/block-templates/index.html`)
+			fs.existsSync(`${ROOT_PATH_THEME}/templates/index.html`) ||
+			fs.existsSync(`${ROOT_PATH_THEME}/block-templates/index.html`)
 		)
 	) {
 		needsIndexPhp = false;
 	}
 	
-	if ( needsIndexPhp && !fileExists(`${ROOT_PATH_THEME}/index.php`)) {
+	if ( needsIndexPhp && !fs.existsSync(`${ROOT_PATH_THEME}/index.php`)) {
 		appendToLog('The theme is required to have an index.php file.');
 		hasErrors = true;
 	}
@@ -71,7 +54,7 @@ const fileExists = (filePath) => {
 	// Block themes require theme.json
 	if (
 		isBlockBasedTheme() &&
-		!fileExists(`${ROOT_PATH_THEME}/theme.json`)
+		!fs.existsSync(`${ROOT_PATH_THEME}/theme.json`)
 	) {
 		appendToLog(
 			'Block themes are quired to have a theme.json file.'
@@ -79,15 +62,15 @@ const fileExists = (filePath) => {
 		hasErrors = true;
 	}
 
-	if (!fileExists(`${ROOT_PATH_THEME}/style.css`)) {
+	if (!fs.existsSync(`${ROOT_PATH_THEME}/style.css`)) {
 		appendToLog('The theme is required to have a style.css file.');
 		hasErrors = true;
 	}
 
 	if (
-		!fileExists(`${ROOT_PATH_THEME}/screenshot.png`) &&
-		!fileExists(`${ROOT_PATH_THEME}/screenshot.jpg`) &&
-		!fileExists(`${ROOT_PATH_THEME}/screenshot.jpeg`)
+		!fs.existsSync(`${ROOT_PATH_THEME}/screenshot.png`) &&
+		!fs.existsSync(`${ROOT_PATH_THEME}/screenshot.jpg`) &&
+		!fs.existsSync(`${ROOT_PATH_THEME}/screenshot.jpeg`)
 	) {
 		appendToLog(
 			'The theme is required to have a screenshot.png or screenshot.jpg file.'
