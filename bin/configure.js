@@ -99,12 +99,12 @@ const downloadSiteData = async () => {
 const importTestData = async () => {
 	await runCommand(
 		'Installing & Activating wordpress-importer.',
-		'plugin install wordpress-importer --activate'
+		'wp plugin install wordpress-importer --activate'
 	);
 
 	await runCommand(
 		'Importing a11y data.',
-		'import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
+		'wp import config/a11y-theme-unit-test-data.xml --authors=create --quiet'
 	);
 };
 
@@ -112,13 +112,13 @@ const importTestData = async () => {
 	try {
 		await runCommand(
 			'Activating the test theme on main site.',
-			'theme activate test-theme',
+			'wp theme activate test-theme',
 			CLI_ARGUMENTS
 		);
 
 		await runCommand(
 			'Activating the test theme on test site.',
-			'theme activate test-theme'
+			'wp theme activate test-theme'
 		);
 
 		await importTestData();
