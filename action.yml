@@ -32,8 +32,11 @@ runs:
     - run: |
         cd ${{ github.action_path }} && npm install
         cd ${{ github.action_path }} && node bin/github.js
+        # The container reads these as a different user, and rsync preserves
+        # whatever modes the theme arrived with, so grant read explicitly.
+        cd ${{ github.action_path }} && chmod -R a+rX ./test-theme ./helpers ./config ./actions/theme-check
         # logs/ is the only path written from inside the container.
-        cd ${{ github.action_path }} && chmod -R a+rwX ./logs
+        cd ${{ github.action_path }} && mkdir -p ./logs && chmod -R a+rwX ./logs
       id: post
       shell: bash
 
