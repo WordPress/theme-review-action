@@ -31,5 +31,11 @@ const setLogPath = () => {
 	console.log('Setting configurations');
 	setUIOutputPath();
 	setLogPath();
-	Utils.createLogs(ACTIONS_PATH, LOG_PATH, true);
+
+	if (!Utils.createLogs(ACTIONS_PATH, LOG_PATH, true)) {
+		console.error(
+			`Could not create the log files in ${LOG_PATH}. The checks have nowhere to write their results.`
+		);
+		process.exit(1);
+	}
 })();
