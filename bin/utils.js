@@ -94,6 +94,40 @@ const getLogPaths = (logPath, folderName) => {
 };
 
 /**
+ * Empties the directory Theme Check writes into from inside the container.
+ *
+ * The directory is emptied rather than replaced, since it is a bind mount
+ * source and would lose the inode a running container is bound to. Entries go
+ * one at a time so a symlink planted from inside the container is removed
+ * rather than written through on the next run.
+ *
+ * @param {string} dirPath Path to the directory.
+ */
+const emptyContainerLogDir = (dirPath) => {
+	let stats = null;
+
+	try {
+		stats = fs.lstatSync(dirPath);
+	} catch (e) {
+		stats = null;
+	}
+
+	if (stats && !stats.isDirectory()) {
+		fs.rmSync(dirPath, { recursive: true, force: true });
+		stats = null;
+	}
+
+	if (!stats) {
+		fs.mkdirSync(dirPath);
+		return;
+	}
+
+	for (const entry of fs.readdirSync(dirPath)) {
+		fs.rmSync(path.join(dirPath, entry), { recursive: true, force: true });
+	}
+};
+
+/**
  * Create logs for all folders in /actions
  */
 const createLogs = (actionsPath, logPath, verbose) => {
@@ -111,7 +145,9 @@ const createLogs = (actionsPath, logPath, verbose) => {
 			const folderName = directories[i];
 			const { dir, errors, warnings } = getLogPaths(logPath, folderName);
 
-			if (!fs.existsSync(dir)) {
+			if (folderName === CONTAINER_WRITTEN_CHECK) {
+				emptyContainerLogDir(dir);
+			} else if (!fs.existsSync(dir)) {
 				fs.mkdirSync(dir);
 			}
 

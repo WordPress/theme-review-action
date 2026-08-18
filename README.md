@@ -77,4 +77,4 @@ You can pass a relative path to your theme like so: `npm run start -- --pathToTh
 
 To see all the options run `npm run start -- --help`.
 
-**Output Location**: `/logs` folder. Files are replaced on each test run.
+**Output Location**: `/logs` folder, with Theme Check's results in `/logs/theme-check`. The log files are emptied at the start of each test run.
