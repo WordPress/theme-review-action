@@ -61,6 +61,73 @@ const getThemeType = () => {
 };
 
 /**
+ * Theme Check runs inside the wp-env container and writes its results from
+ * there, so its logs get a subdirectory that can be mounted on its own. The
+ * other checks run on the host and stay at the top level, out of reach of
+ * anything running in the container.
+ *
+ * @type {string}
+ */
+const CONTAINER_WRITTEN_CHECK = 'theme-check';
+
+/**
+ * Returns the log file locations for one of the checks in /actions.
+ *
+ * @param {string} logPath    Path to the logs directory.
+ * @param {string} folderName Name of the check's folder in /actions.
+ * @returns {{dir: string, errors: string, warnings: string}}
+ */
+const getLogPaths = (logPath, folderName) => {
+	if (folderName === CONTAINER_WRITTEN_CHECK) {
+		return {
+			dir: `${logPath}/${folderName}`,
+			errors: `${logPath}/${folderName}/errors.txt`,
+			warnings: `${logPath}/${folderName}/warnings.txt`,
+		};
+	}
+
+	return {
+		dir: logPath,
+		errors: `${logPath}/${folderName}-errors.txt`,
+		warnings: `${logPath}/${folderName}-warnings.txt`,
+	};
+};
+
+/**
+ * Empties the directory Theme Check writes into from inside the container.
+ *
+ * The directory is emptied rather than replaced, since it is a bind mount
+ * source and would lose the inode a running container is bound to. Entries go
+ * one at a time so a symlink planted from inside the container is removed
+ * rather than written through on the next run.
+ *
+ * @param {string} dirPath Path to the directory.
+ */
+const emptyContainerLogDir = (dirPath) => {
+	let stats = null;
+
+	try {
+		stats = fs.lstatSync(dirPath);
+	} catch (e) {
+		stats = null;
+	}
+
+	if (stats && !stats.isDirectory()) {
+		fs.rmSync(dirPath, { recursive: true, force: true });
+		stats = null;
+	}
+
+	if (!stats) {
+		fs.mkdirSync(dirPath);
+		return;
+	}
+
+	for (const entry of fs.readdirSync(dirPath)) {
+		fs.rmSync(path.join(dirPath, entry), { recursive: true, force: true });
+	}
+};
+
+/**
  * Create logs for all folders in /actions
  */
 const createLogs = (actionsPath, logPath, verbose) => {
@@ -76,14 +143,19 @@ const createLogs = (actionsPath, logPath, verbose) => {
 
 		for (let i = 0; i < directories.length; i++) {
 			const folderName = directories[i];
-			const errorLogPath = `${logPath}/${folderName}-errors.txt`;
-			const warningLogPath = `${logPath}/${folderName}-warnings.txt`;
+			const { dir, errors, warnings } = getLogPaths(logPath, folderName);
 
-			fs.openSync(errorLogPath, 'w');
-			fs.openSync(warningLogPath, 'w');
+			if (folderName === CONTAINER_WRITTEN_CHECK) {
+				emptyContainerLogDir(dir);
+			} else if (!fs.existsSync(dir)) {
+				fs.mkdirSync(dir);
+			}
+
+			fs.openSync(errors, 'w');
+			fs.openSync(warnings, 'w');
 			if (verbose) {
-				console.log('Created log:', errorLogPath);
-				console.log('Created log:', warningLogPath);
+				console.log('Created log:', errors);
+				console.log('Created log:', warnings);
 			}
 		}
 
