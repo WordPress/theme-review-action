@@ -62,7 +62,7 @@ class WPORG_CheckTheme {
 	 * Appends an array of strings to the log file
 	 */
 	public function save_to_log( $type, $strings )  {
-		$fileName = './logs/theme-check-'. $type .'.txt';
+		$fileName = './logs/theme-check/'. $type .'.txt';
 		file_put_contents( $fileName, implode( "\n", $strings ), FILE_APPEND );
 	}
 

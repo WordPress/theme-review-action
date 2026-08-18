@@ -35,8 +35,8 @@ runs:
         # The container reads these as a different user, and rsync preserves
         # whatever modes the theme arrived with, so grant read explicitly.
         cd ${{ github.action_path }} && chmod -R a+rX ./test-theme ./helpers ./config ./actions/theme-check
-        # logs/ is the only path written from inside the container.
-        cd ${{ github.action_path }} && mkdir -p ./logs && chmod -R a+rwX ./logs
+        # logs/theme-check/ is the only path written from inside the container.
+        cd ${{ github.action_path }} && mkdir -p ./logs/theme-check && chmod -R a+rwX ./logs/theme-check
       id: post
       shell: bash
 

@@ -339,13 +339,13 @@ const printTestResults = () => {
 		printTestResultBlock(
 			errorFunction,
 			'\nTheme Check Errors:\n\n',
-			`${LOG_PATH}/theme-check-errors.txt`
+			`${LOG_PATH}/theme-check/errors.txt`
 		);
 
 		printTestResultBlock(
 			warningFunction,
 			'\nTheme Check Warnings:\n\n',
-			`${LOG_PATH}/theme-check-warnings.txt`
+			`${LOG_PATH}/theme-check/warnings.txt`
 		);
 
 		printTestResultBlock(
