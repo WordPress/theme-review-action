@@ -310,6 +310,12 @@ const verifyFilesAsync = async () => {
 
 const printTestResultBlock = (logFunction, text, logPath) => {
 	try {
+		// Container-written: a symlink here would resolve against the host.
+		if (!fs.lstatSync(logPath).isFile()) {
+			logFunction(`${text}Refusing to read ${logPath}, it is not a regular file.`);
+			return;
+		}
+
 		const contents = fs.readFileSync(logPath, UTF_8_ENCODING).trim();
 		if (contents.length > 0) {
 			logFunction(`${text}${contents}`);
@@ -398,7 +404,7 @@ async function run() {
 	info('\nSteps:');
 
 	if (!program.githubRun) {
-		fs.emptyDirSync(LOG_PATH);
+		// Don't empty logs/ first: theme-check/ is a bind mount source and must keep its inode.
 		createLogs(ACTIONS_PATH, LOG_PATH, false);
 	}
 
