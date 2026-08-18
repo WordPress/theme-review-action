@@ -32,7 +32,8 @@ runs:
     - run: |
         cd ${{ github.action_path }} && npm install
         cd ${{ github.action_path }} && node bin/github.js
-        cd ${{ github.action_path }} && chmod -R 767 ./
+        # logs/ is the only path written from inside the container.
+        cd ${{ github.action_path }} && chmod -R a+rwX ./logs
       id: post
       shell: bash
 

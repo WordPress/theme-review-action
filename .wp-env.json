@@ -11,7 +11,7 @@
 	"themes": ["./test-theme"],
 	"mappings": {
 		"config": "./config",
-		"actions": "./actions",
+		"actions/theme-check": "./actions/theme-check",
 		"test-theme": "./test-theme",
 		"helpers": "./helpers",
 		"logs": "./logs"
