@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const execa = require('execa');
 const ora = require('ora');
 const Log = require('./log');
@@ -51,7 +52,35 @@ const installMenu = async () => {
 	}
 };
 
-const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
+// Outside the .wp-env.json mappings: a theme can symlink those and redirect this write.
+const SITE_DATA_FILE = path.join(__dirname, '../site-data/siteinfo.json');
+
+/**
+ * Writes a file without following a symlink at the destination.
+ *
+ * @param {string} filePath Absolute path of the file to write.
+ * @param {string} contents Contents to write.
+ */
+const writeFileNoFollow = (filePath, contents) => {
+	fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+	// fs.writeFileSync() resolves the path; O_NOFOLLOW fails on a symlink instead of writing through it.
+	const fd = fs.openSync(
+		filePath,
+		fs.constants.O_WRONLY |
+			fs.constants.O_CREAT |
+			fs.constants.O_TRUNC |
+			fs.constants.O_NOFOLLOW
+	);
+
+	try {
+		fs.writeFileSync(fd, contents);
+	} finally {
+		fs.closeSync(fd);
+	}
+};
+
+const downloadAndSaveFile = ({ lib, url, text, saveTo, transform = (data) => data }) => {
 	return new Promise((resolve, reject) => {
 		const startTime = Date.now();
 		spinner = ora(text).start();
@@ -66,7 +95,7 @@ const downloadAndSaveFile = ({ lib, url, text, saveTo }) => {
 				rawData += chunk;
 			}).on('end', () => {
 				try {
-					fs.writeFileSync(saveTo, rawData);
+					writeFileNoFollow(saveTo, transform(rawData));
 					spinner.succeed(getTimeOutput(text, startTime));
 					resolve('done');
 				} catch (e) {
@@ -89,7 +118,9 @@ const downloadSiteData = async () => {
 		lib: require('http'),
 		url,
 		text: `Downloading site data from ${url}.`,
-		saveTo: 'config/siteinfo.json',
+		saveTo: SITE_DATA_FILE,
+		// The submitted theme serves this route, so re-serialize it rather than storing the raw body.
+		transform: (rawData) => JSON.stringify(JSON.parse(rawData)),
 	});
 };
 

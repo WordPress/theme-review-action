@@ -20,7 +20,7 @@ export const getSiteInfo = () => {
 	try {
 		siteInfo = {
 			...siteInfo,
-			...require( '../../../../config/siteinfo.json' ),
+			...require( '../../../../site-data/siteinfo.json' ),
 		};
 	} catch ( e ) {}
 
