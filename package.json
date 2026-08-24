@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "wp-env": "wp-env",
+    "postinstall": "npm ci --prefix ./actions/ui-check",
     "install:variables": "node bin/create-wp-env-override.js",
     "install:environment": "npm run install:variables && npm run wp-env start && node bin/configure.js",
     "uninstall": "npm run wp-env destroy",
