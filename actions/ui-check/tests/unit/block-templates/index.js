@@ -36,7 +36,7 @@ export default ( templates ) => {
 				! emptyInnerContentFeature( block.innerContent )
 			) {
 				failures.push(
-					`There's a problem with templates in: ${ templates[ i ].fileName }.`
+					`There's a problem with the markup in ${templates[i].fileName }. There are unclosed tags or multiline blocks that are missing closing tags. Blocks are self-containing; the opening tag and the closing tag must be in the same template.`
 				); // spacer
 
 				break;

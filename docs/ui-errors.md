@@ -88,13 +88,27 @@ This test expects to **not** find links that are not approved.
 
 Verify that the theme only includes links in the [hosts list](https://github.com/WordPress/theme-review-action/blob/trunk/actions/ui-check/tests/e2e/specs/page/unexpected-links/index.js).
 
-
 ## Block templates should be complete
 
-This tests parse block templates and block templates parts to make sure all tags have applicable closing tags and are properly formed.
+This test parses block templates and block template parts to make sure all tags have applicable closing tags and are properly formatted.
+
+Blocks are self-containing; the opening tag and the closing tag must be in the same template.
+Missing tags will cause block validation errors in the editors.
+
+Single line blocks are closed with `/-->`:
+`<!-- wp:site-title /-->`
+
+Multiline blocks are closed with `<!-- /wp:block name -->`:
+
+```html
+<!-- wp:paragraph -->
+<p>Proudly powered by <a href="https://wordpress.org/">WordPress</a>.</p>
+<!-- /wp:paragraph -->
+```
 
 ### Troubleshooting
 
 Open your template file:
+
 - Verify that all opening tags have closing tags (if applicable).
 - Verify that all tags have proper syntax.
