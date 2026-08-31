@@ -108,6 +108,72 @@ const downloadAndSaveFile = ({ lib, url, text, saveTo, transform = (data) => dat
 };
 
 /**
+ * Reports whether a value is safe to use as a URL path segment.
+ *
+ * @param {*} value Candidate path or query string.
+ * @return {boolean} True when the value is a string without traversal.
+ */
+const isSafePathSegment = (value) =>
+	typeof value === 'string' &&
+	!value.includes('..') &&
+	!value.includes('\\') &&
+	!value.includes('\0');
+
+/**
+ * Validates a single site_urls entry.
+ *
+ * @param {*} tuple Candidate site_urls entry.
+ * @return {boolean} True when the entry is a safe [ path, query, bodyClass ] tuple.
+ */
+const isSafeUrlTuple = (tuple) =>
+	Array.isArray(tuple) &&
+	isSafePathSegment(tuple[0]) &&
+	isSafePathSegment(tuple[1]) &&
+	(tuple[0] === '' || tuple[0].startsWith('/'));
+
+/**
+ * Reports whether a value is an http(s) URL.
+ *
+ * theme_urls are navigated to host-side, so limit them to http(s) and reject
+ * schemes such as file: and javascript:.
+ *
+ * @param {*} value Candidate URL.
+ * @return {boolean} True when the value parses as an http: or https: URL.
+ */
+const isSafeHttpUrl = (value) => {
+	if (typeof value !== 'string') {
+		return false;
+	}
+
+	try {
+		const { protocol } = new URL(value);
+		return protocol === 'http:' || protocol === 'https:';
+	} catch (e) {
+		return false;
+	}
+};
+
+/**
+ * Re-serializes untrusted theme site data, dropping unsafe URL entries.
+ *
+ * @param {string} rawData Raw JSON body returned by the helper route.
+ * @return {string} Validated, re-serialized JSON.
+ */
+const sanitizeSiteInfo = (rawData) => {
+	const data = JSON.parse(rawData);
+
+	if (Array.isArray(data.site_urls)) {
+		data.site_urls = data.site_urls.filter(isSafeUrlTuple);
+	}
+
+	if (Array.isArray(data.theme_urls)) {
+		data.theme_urls = data.theme_urls.filter(isSafeHttpUrl);
+	}
+
+	return JSON.stringify(data);
+};
+
+/**
  * Downloads information about the theme
  */
 const downloadSiteData = async () => {
@@ -119,8 +185,7 @@ const downloadSiteData = async () => {
 		url,
 		text: `Downloading site data from ${url}.`,
 		saveTo: SITE_DATA_FILE,
-		// The submitted theme serves this route, so re-serialize it rather than storing the raw body.
-		transform: (rawData) => JSON.stringify(JSON.parse(rawData)),
+		transform: sanitizeSiteInfo,
 	});
 };
 
