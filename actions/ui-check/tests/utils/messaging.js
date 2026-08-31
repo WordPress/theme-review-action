@@ -2,18 +2,6 @@ const fs = require( 'fs' );
 import { ERROR_DOCS_URL, WARNING_DOCS_URL } from './index';
 
 /**
- * Removes some noise that exists in the testing framework error messages.
- * @param {string} msg Error message thrown by testing framework.
- * @returns {string}
- */
-export const cleanErrorMessage = ( msg ) => {
-	return msg
-		.replace( 'expect(received).toPassAxeTests(expected)', '' )
-		.replace( 'Expected page to pass Axe accessibility tests.', '' )
-		.replace( /^\s*$(?:\r\n?|\n)/, '\n' );
-};
-
-/**
  * Joins and appends lines to log file
  * @param {array} lines
  */

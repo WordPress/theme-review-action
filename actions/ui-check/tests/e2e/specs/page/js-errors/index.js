@@ -1,18 +1,15 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import { errorWithMessageOnFail, removeLocalPathRefs } from '../../../../utils';
 
-let jsError;
-page.on( 'pageerror', ( error ) => {
-	// Replace too many extra spaces, replace new line characters
-	jsError = error
-		.toString()
+export default async ( url, pageErrors ) => {
+	const jsError = pageErrors
+		.join( ' ' )
 		.replace( / +(?= )/g, '' )
 		.replace( /\n/g, ' ' );
-} );
 
-export default async ( url ) => {
 	return errorWithMessageOnFail(
 		`${ url } contains javascript errors. Found ${ removeLocalPathRefs(
 			jsError

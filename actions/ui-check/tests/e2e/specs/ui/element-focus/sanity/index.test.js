@@ -6,17 +6,23 @@ import path from 'path';
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Element Focus', () => {
-	it( 'Page should PASS when links have a focus state that passes threshold', async () => {
+test.describe( 'Sanity: Element Focus', () => {
+	test( 'Page should PASS when links have a focus state that passes threshold', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-		expect( await test() ).toBeTruthy();
+		expect( await checkFn( page ) ).toBeTruthy();
 	} );
-	it( 'Page should FAIL when links have no :focus state', async () => {
+
+	test( 'Page should FAIL when links have no :focus state', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 } );

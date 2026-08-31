@@ -5,27 +5,25 @@
 	"main": "index.js",
 	"scripts": {
 		"format:js": "wp-scripts format-js",
-		"test:e2e:interactive": "PUPPETEER_HEADLESS=false wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"test:e2e": "wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"test:e2e:dev": "DEV_MODE=true wp-scripts test-e2e --config tests/e2e/jest.config.js",
-		"test:e2e:sanity": "SANITY_MODE=true DEV_MODE=true wp-scripts test-e2e --config tests/e2e/jest.sanity.js",
+		"test:e2e:interactive": "playwright test --headed",
+		"test:e2e": "playwright test",
+		"test:e2e:dev": "DEV_MODE=true playwright test",
+		"test:e2e:sanity": "SANITY_MODE=true DEV_MODE=true playwright test --config playwright.sanity.config.js",
 		"test:unit": "wp-scripts test-unit-js --config tests/unit/jest.config.js --passWithNoTests",
 		"test:unit:dev": "DEV_MODE=true wp-scripts test-unit-js --config tests/unit/jest.config.js",
-		"test:unit:sanity": "SANITY_MODE=true DEV_MODE=true wp-scripts test-e2e --config tests/unit/jest.sanity.js",
+		"test:unit:sanity": "SANITY_MODE=true DEV_MODE=true wp-scripts test-unit-js --config tests/unit/jest.sanity.js",
 		"start": "npm run test:unit && npm run test:e2e"
 	},
 	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",
 	"dependencies": {
-		"@actions/artifact": "^0.5.2",
-		"@wordpress/block-serialization-spec-parser": "^4.2.0",
-		"@wordpress/e2e-test-utils": "^5.4.1",
-		"@wordpress/jest-puppeteer-axe": "^3.1.0",
-		"@wordpress/scripts": "^17.1.0",
-		"get-pixels": "^3.3.2",
+		"@axe-core/playwright": "4.13.0",
+		"@playwright/test": "1.62.1",
+		"@wordpress/block-serialization-spec-parser": "5.54.0",
+		"@wordpress/scripts": "34.2.0",
+		"get-pixels": "^3.3.3",
 		"gif-encoder": "^0.7.2",
-		"node-fetch": "^2.6.1",
 		"pixelmatch": "^5.2.1",
-		"puppeteer": "^10.2.0"
+		"pngjs": "7.0.0"
 	}
 }

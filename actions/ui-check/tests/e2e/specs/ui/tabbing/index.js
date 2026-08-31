@@ -6,6 +6,7 @@ const fs = require( 'fs' );
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import {
 	warnWithMessageOnFail,
 	getTabbableElementsAsync,
@@ -21,18 +22,21 @@ const SCREENSHOT_TABBING_TEST = `${ SCREENSHOT_FOLDER_PATH }/tabbing-test`;
 
 /**
  * Loops through tabbable elements and test whether the active element in the dom matches our list.
+ *
+ * @param {import('@playwright/test').Page} page
  */
-const test = async () => {
-	// We turn off these elements because tabbing goes into the control and we don't want to test that
-	// `display:none` takes them out of the flow
+const runTest = async ( page ) => {
+	/*
+	 * Hide these so tabbing doesn't descend into their controls; display:none
+	 * also takes them out of the tab flow.
+	 */
 	await page.addStyleTag( {
 		content: 'audio, video, iframe { display: none !important; }',
 	} );
 
-	let tabElements = await getTabbableElementsAsync();
+	let tabElements = await getTabbableElementsAsync( page );
 
-	// Let's assume that any issues 50 elements deep are not very concerning
-	// It speeds up the tests
+	/* Issues past 50 elements deep aren't very concerning, and stopping there speeds up the test. */
 	tabElements = tabElements.slice( 0, 50 );
 
 	if ( isDebugMode() ) {
@@ -77,15 +81,15 @@ const test = async () => {
 		}
 
 		// If we don't wait at least 100ms, the test can get out of sync
-		await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+		await page.waitForTimeout( 100 );
 	}
 
 	return true;
 };
 
-export default async () => {
+export default async ( page ) => {
 	try {
-		return await test();
+		return await runTest( page );
 	} catch ( ex ) {
 		if ( ex instanceof FailedTestException ) {
 			if ( process.env.UI_DEBUG ) {
@@ -95,7 +99,6 @@ export default async () => {
 			warnWithMessageOnFail(
 				ex.messages,
 				'should-have-logical-tabbing',
-
 				() => {
 					expect( false ).toEqual( true );
 				}

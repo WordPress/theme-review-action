@@ -1,44 +1,51 @@
 /**
  * Internal dependencies
  */
+import { test } from '../../fixtures';
 import urls from './pages';
 import {
 	createURL,
-	cleanErrorMessage,
 	printMessage,
 	getEnvironmentVariable,
 } from '../../../utils';
+import { runAxe } from '../../../utils/axe';
 
-describe( 'Accessibility', () => {
-	const envVar = getEnvironmentVariable( process.env.TEST_ACCESSIBILITY );
-	const testAccessibility = envVar === 'true';
-	const accessibilityTest = testAccessibility ? 'wcag2a' : 'best-practice';
+const envVar = getEnvironmentVariable( process.env.TEST_ACCESSIBILITY );
+const testAccessibility = envVar === 'true';
+const accessibilityTest = testAccessibility ? 'wcag2a' : 'best-practice';
 
-	//const noticeType = testAccessibility ? 'errors' : 'warnings';
-	// Temporarily set everything as a warning.
-	const noticeType = 'warnings';
+// Everything is reported as a warning for now.
+const noticeType = 'warnings';
 
-	test.each( urls )(
-		`Should pass ${ accessibilityTest } Axe tests on %s`,
-		async ( name, path, query ) => {
+/**
+ * Formats axe violations into log lines.
+ *
+ * @param {Array} violations Axe violation objects.
+ * @return {string} One line per violation.
+ */
+const formatViolations = ( violations ) =>
+	violations
+		.map( ( v ) => `${ v.id }: ${ v.help } (${ v.nodes.length })` )
+		.join( '\n' );
+
+test.describe( 'Accessibility', () => {
+	for ( const [ name, path, query ] of urls ) {
+		test( `Should pass ${ accessibilityTest } Axe tests on ${ name }`, async ( {
+			page,
+		} ) => {
 			await page.goto( createURL( path, query ) );
 
-			try {
-				await expect( page ).toPassAxeTests( {
-					options: {
-						runOnly: {
-							type: 'tag',
-							values: [ accessibilityTest ],
-						},
-					},
-					exclude: [ [ '.entry-content' ] ],
-				} );
-			} catch ( e ) {
+			const { violations } = await runAxe( page, {
+				tags: [ accessibilityTest ],
+				exclude: [ '.entry-content' ],
+			} );
+
+			if ( violations.length ) {
 				printMessage( noticeType, [
 					`Running tests on ${ name } ${ path }${ query } using: \nhttps://github.com/wpaccessibility/a11y-theme-unit-test`,
-					cleanErrorMessage( e.message ),
+					formatViolations( violations ),
 				] );
 			}
-		}
-	);
+		} );
+	}
 } );

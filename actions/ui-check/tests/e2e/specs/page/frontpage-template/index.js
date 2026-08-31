@@ -1,9 +1,10 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import { errorWithMessageOnFail, getFileNameFromPath } from '../../../../utils';
 
-export default async ( url ) => {
+export default async ( page, url ) => {
 	const template = await page.$eval( '#template', ( el ) => el.value );
 	const filename = getFileNameFromPath( template );
 

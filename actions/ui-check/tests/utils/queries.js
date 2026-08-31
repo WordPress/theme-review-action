@@ -1,8 +1,9 @@
 /**
  * Retrieves list elements that are focusable by keyboard from the DOM
+ * @param {Page} page Playwright page.
  * @return {array} List of focusable element
  */
-const queryForFocusableElementsAsync = async () => {
+const queryForFocusableElementsAsync = async ( page ) => {
 	return await page.$$(
 		'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
 	);
@@ -10,12 +11,12 @@ const queryForFocusableElementsAsync = async () => {
 
 /**
  * Returns whether the element is visible
- * @param {Puppeteer|ElementHandle} element
+ * @param {Page} page Playwright page.
+ * @param {ElementHandle} element
  * @return {boolean} List of focusable element
  */
-export const elementIsVisibleAsync = async ( element ) => {
-	// If the bounding box is null,
-	// Caveat: This will not work for children on a hidden element
+export const elementIsVisibleAsync = async ( page, element ) => {
+	/* A null bounding box means not visible; this misses children of a hidden element. */
 	let isVisible = ( await element.boundingBox() ) !== null;
 	if ( ! isVisible ) {
 		return false;
@@ -48,7 +49,7 @@ export const elementIsVisibleAsync = async ( element ) => {
 	return ! hasHiddenParent;
 };
 
-export const elementIsInViewportAsync = async ( element ) => {
+export const elementIsInViewportAsync = async ( page, element ) => {
 	const position = await page.evaluate( ( el ) => {
 		return getComputedStyle( el ).left;
 	}, element );
@@ -58,11 +59,11 @@ export const elementIsInViewportAsync = async ( element ) => {
 
 /**
  * Return property for element
- * @param {Puppeteer|ElementHandle} element
+ * @param {ElementHandle} element
  * @param {string} property name of the html property
  */
 export const getElementPropertyAsync = async ( element, property ) => {
-	return await ( await element.getProperty( property ) ).jsonValue();
+	return element.evaluate( ( el, prop ) => el[ prop ], property );
 };
 
 /**
@@ -87,10 +88,11 @@ const getRandomList = ( arr, max ) => {
 
 /**
  * Retrieves list elements that are focusable by keyboard from the DOM excluding hidden & disabled elements.
- * @return {Puppeteer|ElementHandle[]} List of focusable element
+ * @param {Page} page Playwright page.
+ * @return {ElementHandle[]} List of focusable element
  */
-export const getFocusableElementsAsync = async () => {
-	let elements = await queryForFocusableElementsAsync();
+export const getFocusableElementsAsync = async ( page ) => {
+	let elements = await queryForFocusableElementsAsync( page );
 	const final = [];
 	const pathMap = {};
 
@@ -142,12 +144,11 @@ export const getFocusableElementsAsync = async () => {
 			continue;
 		}
 
-		if ( ! ( await elementIsVisibleAsync( elements[ i ] ) ) ) {
+		if ( ! ( await elementIsVisibleAsync( page, elements[ i ] ) ) ) {
 			continue;
 		}
 
-		// We track wether we already have a similar element
-		// We don't want to test the same elements since it takes times
+		/* Skip elements with a lazy XPath we've already kept, to avoid retesting near-duplicates. */
 		if ( ! pathMap[ elementProperties.lazyXPath ] ) {
 			final.push( elements[ i ] );
 		}
@@ -160,10 +161,11 @@ export const getFocusableElementsAsync = async () => {
 
 /**
  * Retrieves list elements that are tabbing by keyboard.
- * @return {Puppeteer|ElementHandle[]} List of tabbable element
+ * @param {Page} page Playwright page.
+ * @return {ElementHandle[]} List of tabbable element
  */
-export const getTabbableElementsAsync = async () => {
-	const elements = await queryForFocusableElementsAsync();
+export const getTabbableElementsAsync = async ( page ) => {
+	const elements = await queryForFocusableElementsAsync( page );
 	const final = [];
 
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -227,7 +229,7 @@ export const getTabbableElementsAsync = async () => {
 
 		// Only include hidden elements if they are most likely part of navigation
 		if (
-			! ( await elementIsVisibleAsync( elements[ i ] ) ) &&
+			! ( await elementIsVisibleAsync( page, elements[ i ] ) ) &&
 			! element.isLikelyNavItem
 		) {
 			continue;

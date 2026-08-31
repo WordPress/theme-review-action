@@ -6,18 +6,21 @@ import path from 'path';
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Tabbing', () => {
-	it( 'Page should PASS when tabbing is sequential', async () => {
+test.describe( 'Sanity: Tabbing', () => {
+	test( 'Page should PASS when tabbing is sequential', async ( { page } ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-		expect( await test() ).toBeTruthy();
+		expect( await checkFn( page ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when tabbing is not sequential', async () => {
+	test( 'Page should FAIL when tabbing is not sequential', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 } );

@@ -1,31 +1,31 @@
 /**
  * Internal dependencies
  */
-import { goTo } from '../../../utils';
+import { test } from '../../fixtures';
 
 import skipLinksTest from './skip-links';
 import subMenuTest from './sub-menu';
 import elementFocusTest from './element-focus';
 import tabbingTest from './tabbing';
 
-describe( 'Accessibility: UI', () => {
-	beforeAll( async () => {
+test.describe( 'Accessibility: UI', () => {
+	test( 'Should have skip links', async ( { page, goTo } ) => {
 		await goTo( '/' );
+		await skipLinksTest( page );
 	} );
 
-	it( 'Should have skip links', async () => {
-		await skipLinksTest();
+	test( 'Should have appropriate submenus', async ( { page, goTo } ) => {
+		await goTo( '/' );
+		await subMenuTest( page );
 	} );
 
-	it( 'Should have appropriate submenus', async () => {
-		await subMenuTest();
+	test( 'Should have element focus state', async ( { page, goTo } ) => {
+		await goTo( '/' );
+		await elementFocusTest( page );
 	} );
 
-	it( 'Should have element focus state', async () => {
-		await elementFocusTest();
-	} );
-
-	it( 'Should have logical tabbing', async () => {
-		await tabbingTest();
+	test( 'Should have logical tabbing', async ( { page, goTo } ) => {
+		await goTo( '/' );
+		await tabbingTest( page );
 	} );
 } );
