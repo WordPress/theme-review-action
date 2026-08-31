@@ -134,8 +134,8 @@ const isSafeUrlTuple = (tuple) =>
 /**
  * Reports whether a value is an http(s) URL.
  *
- * theme_urls and content_urls are navigated to and parsed host-side, so limit
- * them to http(s) and reject schemes such as file: and javascript:.
+ * theme_urls are navigated to host-side, so limit them to http(s) and reject
+ * schemes such as file: and javascript:.
  *
  * @param {*} value Candidate URL.
  * @return {boolean} True when the value parses as an http: or https: URL.
@@ -168,10 +168,6 @@ const sanitizeSiteInfo = (rawData) => {
 
 	if (Array.isArray(data.theme_urls)) {
 		data.theme_urls = data.theme_urls.filter(isSafeHttpUrl);
-	}
-
-	if (Array.isArray(data.content_urls)) {
-		data.content_urls = data.content_urls.filter(isSafeHttpUrl);
 	}
 
 	return JSON.stringify(data);
