@@ -1,6 +1,6 @@
 const { test: base, expect, chromium } = require('@playwright/test');
 const { createURL } = require('../utils/environment');
-const { htmlFileName, writeOutputHtml } = require('../utils/puppeteer');
+const { htmlFileName, writeOutputHtml } = require('../utils/output');
 
 /**
  * Test fixtures for the ui-check e2e suite.
