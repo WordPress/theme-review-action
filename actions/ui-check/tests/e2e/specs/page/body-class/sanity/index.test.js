@@ -1,28 +1,32 @@
+/**
+ * External dependencies
+ */
 import path from 'path';
 
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Body Class Test', () => {
-	it( 'Page should PASS when there is a body class', async () => {
+test.describe( 'Sanity: Body Class Test', () => {
+	test( 'Page should PASS when there is a body class', async ( { page } ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-		expect( await test( '', 'body-class' ) ).toBeTruthy();
+		expect( await checkFn( page, '', 'body-class' ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when there is no body class', async () => {
+	test( 'Page should FAIL when there is no body class', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
 
-		expect( await test( '', 'body-class' ) ).toBeFalsy();
+		expect( await checkFn( page, '', 'body-class' ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when response is empty', async () => {
-		await page.goto(
-			`file:${ path.join( __dirname, 'html/empty.html' ) }`
-		);
+	test( 'Page should FAIL when response is empty', async ( { page } ) => {
+		await page.goto( `file:${ path.join( __dirname, 'html/empty.html' ) }` );
 
-		expect( await test( '', 'body-class' ) ).toBeFalsy();
+		expect( await checkFn( page, '', 'body-class' ) ).toBeFalsy();
 	} );
 } );

@@ -1,12 +1,13 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import {
 	getElementPropertyAsync,
 	errorWithMessageOnFail,
 } from '../../../../utils';
 
-export default async ( url ) => {
+export default async ( page, url ) => {
 	// Make sure the page content appears to be appropriate for the URL.
 	const body = await page.$( 'body' );
 	const bodyClassName = await getElementPropertyAsync( body, 'className' );

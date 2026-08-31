@@ -1,26 +1,32 @@
+/**
+ * External dependencies
+ */
 import path from 'path';
 
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Complete Output', () => {
-	it( 'Page should PASS when there is a body class', async () => {
+test.describe( 'Sanity: Complete Output', () => {
+	test( 'Page should PASS when the html is complete', async ( { page } ) => {
 		const response = await page.goto(
 			`file:${ path.join( __dirname, 'html/pass.html' ) }`
 		);
 		const text = await response.text();
 
-		expect( await test( '/', text ) ).toBeTruthy();
+		expect( await checkFn( '/', text ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when the html is incomplete', async () => {
+	test( 'Page should FAIL when the html is incomplete', async ( {
+		page,
+	} ) => {
 		const response = await page.goto(
 			`file:${ path.join( __dirname, 'html/fail.html' ) }`
 		);
 		const text = await response.text();
 
-		expect( await test( '/', text ) ).toBeFalsy();
+		expect( await checkFn( '/', text ) ).toBeFalsy();
 	} );
 } );

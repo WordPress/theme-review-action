@@ -1,14 +1,17 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import { warnWithMessageOnFail, FailedTestException } from '../../../../utils';
 
 /**
  * Tests whether the theme has legitimate skip links
  *
  * See https://make.wordpress.org/themes/handbook/review/required/#skip-links
+ *
+ * @param {import('@playwright/test').Page} page
  */
-const test = async () => {
+const runTest = async ( page ) => {
 	await page.keyboard.press( 'Tab' );
 
 	const activeElement = await page.evaluate( () => {
@@ -51,9 +54,9 @@ const test = async () => {
 	return true;
 };
 
-export default async () => {
+export default async ( page ) => {
 	try {
-		return await test();
+		return await runTest( page );
 	} catch ( ex ) {
 		if ( ex instanceof FailedTestException ) {
 			return warnWithMessageOnFail(

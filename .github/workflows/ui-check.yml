@@ -12,11 +12,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+
     - name: Run sanity checks on ui tests
       run: |
         npm install
+        npx playwright install --with-deps chromium
         npm run test:e2e:sanity
         npm run test:unit:sanity
       working-directory: actions/ui-check

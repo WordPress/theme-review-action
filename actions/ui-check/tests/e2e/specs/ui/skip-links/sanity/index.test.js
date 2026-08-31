@@ -6,22 +6,25 @@ import path from 'path';
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Skip Links', () => {
-	it( 'Page should PASS when there is a skip link', async () => {
+test.describe( 'Sanity: Skip Links', () => {
+	test( 'Page should PASS when there is a skip link', async ( { page } ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-		expect( await test() ).toBeTruthy();
+		expect( await checkFn( page ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when there is no skip link', async () => {
+	test( 'Page should FAIL when there is no skip link', async ( { page } ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when there is no anchor matching skip link', async () => {
+	test( 'Page should FAIL when there is no anchor matching skip link', async ( {
+		page,
+	} ) => {
 		await page.goto(
 			`file:${ path.join(
 				__dirname,
@@ -29,22 +32,26 @@ describe( 'Sanity: Skip Links', () => {
 			) }`
 		);
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when the skip link is not an a tag', async () => {
+	test( 'Page should FAIL when the skip link is not an a tag', async ( {
+		page,
+	} ) => {
 		await page.goto(
 			`file:${ path.join( __dirname, 'html/fail-not-a-tag.html' ) }`
 		);
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when the skip link does not have an #', async () => {
+	test( 'Page should FAIL when the skip link does not have an #', async ( {
+		page,
+	} ) => {
 		await page.goto(
 			`file:${ path.join( __dirname, 'html/fail-no-hash.html' ) }`
 		);
 
-		expect( await test() ).toBeFalsy();
+		expect( await checkFn( page ) ).toBeFalsy();
 	} );
 } );

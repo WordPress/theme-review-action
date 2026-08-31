@@ -1,6 +1,7 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import { errorWithMessageOnFail, getSiteInfo } from '../../../../utils';
 
 const siteInfo = getSiteInfo();
@@ -9,7 +10,7 @@ const removeWWW = ( str ) => {
 	return str.replace( /^(www[.])/, '' );
 };
 
-export default async ( url ) => {
+export default async ( page, url ) => {
 	let passed = true;
 
 	const hrefs = await page.$$eval( 'a', ( anchors ) =>

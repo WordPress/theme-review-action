@@ -1,6 +1,7 @@
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import { errorWithMessageOnFail } from '../../../../utils';
 
 export default async ( url, responseText ) => {

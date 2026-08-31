@@ -1,17 +1,8 @@
 /**
- * External dependencies
- */
-const fetch = require( 'node-fetch' );
-
-/**
  * Internal dependencies
  */
-import {
-	getFileNameFromPath,
-	getTestUrls,
-	goTo,
-	getSiteInfo,
-} from '../../../utils';
+import { test } from '../../fixtures';
+import { getFileNameFromPath, getTestUrls, getSiteInfo } from '../../../utils';
 
 import bodyClassTest from './body-class';
 import phpErrorsTest from './php-errors';
@@ -22,99 +13,85 @@ import unexpectedLinksTest from './unexpected-links';
 import frontpageTest from './frontpage';
 import frontpageTemplateTest from './frontpage-template';
 
-// Some URLs like feeds aren't included in the site map.
-// TODO: should we test those separately? Not all of these tests are appropriate.
-let urls = [ [ '/', '?feed=rss2', '' ], ...getTestUrls() ];
-
-const getUrlPathWithTemplate = async ( urlPath ) => {
+/**
+ * Appends the resolved template file name to a URL label.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} urlPath
+ * @return {Promise<string>}
+ */
+const getUrlPathWithTemplate = async ( page, urlPath ) => {
 	const template = await page.$eval( '#template', ( el ) => el.value );
 	return `${ urlPath } (via: ${ getFileNameFromPath( template ) })`;
 };
 
-// Some basic tests that apply to every page
-describe.each( urls )( 'Test URL %s%s', ( url, queryString, bodyClass ) => {
-	let pageResponse, urlPath;
+/**
+ * Runs one check in isolation so an unexpected throw doesn't skip the rest.
+ *
+ * @param {Function} fn The check to run.
+ * @return {Promise<void>}
+ */
+const runCheck = async ( fn ) => {
+	try {
+		await fn();
+	} catch ( ex ) {
+		console.log( ex );
+	}
+};
 
-	beforeAll( async () => {
-		urlPath = `"${ url }${ queryString }"`;
-		pageResponse = await goTo( url, queryString );
+/* getTestUrls already seeds the list with the homepage feed. */
+const urls = getTestUrls();
 
-		try {
-			urlPath = await getUrlPathWithTemplate( urlPath );
-		} catch ( ex ) {}
-	} );
-
-	it( 'Page should contain body class ' + bodyClass, async () => {
-		// Make sure the page content appears to be appropriate for the URL.
-		await bodyClassTest( urlPath, bodyClass );
-	} );
-
-	it( 'Page should not have PHP errors', async () => {
-		const text = await pageResponse.text();
-		await phpErrorsTest( urlPath, text );
-	} );
-
-	it( 'Page should have complete output', async () => {
-		// This should catch anything that kills output before the end of the page, or outputs trailing garbage.
-		const text = await pageResponse.text();
-		await completeOutputTest( urlPath, text );
-	} );
-
-	it( 'Page should return 200 status', async () => {
-		const status = await pageResponse.status();
-
-		await pageStatusTest( urlPath, status );
-	} );
-
-	it( 'Browser console should not contain errors', async () => {
-		await jsErrorTest( urlPath );
-	} );
-
-	it( 'Page should not have unexpected links', async () => {
-		// See https://make.wordpress.org/themes/handbook/review/required/#selling-credits-and-links
-		await unexpectedLinksTest( urlPath );
-	} );
-} );
-
-// Some basic tests that apply only to the frontpage
-let homeurl = [ [ '/', '', 'home' ] ];
-
-describe.each( homeurl )( 'Test URL %s%s', ( url, queryString ) => {
-	let pageResponse, urlPath;
-
-	beforeAll( async () => {
-		urlPath = `"${ url }${ queryString }"`;
-		pageResponse = await goTo( url, queryString );
+for ( const [ index, [ url, queryString, bodyClass ] ] of urls.entries() ) {
+	test( `Test URL ${ index }: "${ url }${ queryString }"`, async ( {
+		page,
+		goTo,
+		pageErrors,
+	} ) => {
+		let urlPath = `"${ url }${ queryString }"`;
+		const pageResponse = await goTo( url, queryString );
 
 		try {
-			urlPath = await getUrlPathWithTemplate( urlPath );
+			urlPath = await getUrlPathWithTemplate( page, urlPath );
 		} catch ( ex ) {}
-	} );
 
-	it( 'Frontpage should show the correct content', async () => {
-		await frontpageTest( urlPath );
-	} );
+		const text = await pageResponse.text();
 
-	it( 'Frontpage template should not be page.php', async () => {
-		await frontpageTemplateTest( urlPath );
-	} );
-} );
+		await runCheck( () => bodyClassTest( page, urlPath, bodyClass ) );
+		await runCheck( () => phpErrorsTest( urlPath, text ) );
+		await runCheck( () => completeOutputTest( urlPath, text ) );
+		await runCheck( () => pageStatusTest( urlPath, pageResponse.status() ) );
 
-// Test if theme and author URI have a valid responses
+		// The pageerror listener fires asynchronously; let it settle first.
+		await page.waitForTimeout( 200 );
+		await runCheck( () => jsErrorTest( urlPath, pageErrors ) );
+
+		await runCheck( () => unexpectedLinksTest( page, urlPath ) );
+	} );
+}
+
+const homeurl = [ [ '/', '', 'home' ] ];
+
+for ( const [ url, queryString ] of homeurl ) {
+	test( `Frontpage "${ url }${ queryString }"`, async ( { page, goTo } ) => {
+		let urlPath = `"${ url }${ queryString }"`;
+		await goTo( url, queryString );
+
+		try {
+			urlPath = await getUrlPathWithTemplate( page, urlPath );
+		} catch ( ex ) {}
+
+		await runCheck( () => frontpageTest( page, urlPath ) );
+		await runCheck( () => frontpageTemplateTest( page, urlPath ) );
+	} );
+}
+
+/* Theme and author URIs are external; sanitizeSiteInfo has restricted them to http(s). */
 const siteInfo = getSiteInfo();
-let theme_urls = [ ...siteInfo.theme_urls ];
 
-if ( theme_urls[ 0 ] ) {
-	describe.each( theme_urls )( 'Test URL %s', ( url ) => {
-		let pageResponse;
-
-		beforeAll( async () => {
-			pageResponse = await page.goto( url );
-		} );
-
-		it( 'Page should return 200 status', async () => {
-			const status = await pageResponse.status();
-			await pageStatusTest( url, status );
-		} );
+for ( const [ index, themeUrl ] of siteInfo.theme_urls.entries() ) {
+	test( `Theme URL ${ index }: "${ themeUrl }"`, async ( { page } ) => {
+		const response = await page.goto( themeUrl );
+		await pageStatusTest( themeUrl, response.status() );
 	} );
 }

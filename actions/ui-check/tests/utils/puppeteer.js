@@ -1,11 +1,24 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 
-import { createURL } from './environment';
 import { OUTPUT_HTML_FOLDER_PATH } from './paths';
 
 const cleanQueryStringForFileSystem = ( queryString ) => {
 	return queryString.replace( '?', '-' );
+};
+
+/**
+ * Builds the output file name for a visited URL.
+ *
+ * @param {string} url         Visited path.
+ * @param {string} queryString Query string, if any.
+ * @return {string} File name (without extension) for the output directory.
+ */
+export const htmlFileName = ( url, queryString = '' ) => {
+	return (
+		url.replaceAll( '/', 'home' ) +
+		cleanQueryStringForFileSystem( queryString )
+	);
 };
 
 /**
@@ -17,7 +30,7 @@ const cleanQueryStringForFileSystem = ( queryString ) => {
  * @param {string} fileName File name derived from the visited URL.
  * @param {string} content  Page contents to write.
  */
-const writeOutputHtml = ( fileName, content ) => {
+export const writeOutputHtml = ( fileName, content ) => {
 	const outputDir = path.resolve( OUTPUT_HTML_FOLDER_PATH );
 	const destination = path.resolve( outputDir, `${ fileName }.html` );
 
@@ -41,23 +54,4 @@ const writeOutputHtml = ( fileName, content ) => {
 	} finally {
 		fs.closeSync( fd );
 	}
-};
-
-export const goTo = async ( url, queryString = '' ) => {
-	let response = await page.goto( createURL( url, queryString ), {
-		waitUntil: 'networkidle2',
-	} );
-	let content = await response.text();
-
-	try {
-		const fileName =
-			url.replaceAll( '/', 'home' ) +
-			cleanQueryStringForFileSystem( queryString );
-
-		writeOutputHtml( fileName, content );
-	} catch ( ex ) {
-		console.log( ex );
-	}
-
-	return response;
 };

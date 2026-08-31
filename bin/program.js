@@ -13,6 +13,7 @@ const {
 	getThemeType,
 	createLogs,
 } = require('./utils');
+const { startBrowserSandbox, stopBrowserSandbox } = require('./browser-sandbox');
 
 const UTF_8_ENCODING = { encoding: 'UTF-8' };
 const DEFAULT_TIMEOUT = 300 * 1000;
@@ -433,12 +434,25 @@ async function run() {
 	if (hasWorkingEnvironment) {
 		await runThemeCheckAsync(npmPrefix);
 
-		await runUICheckAsync(npmPrefix, {
-			TEST_ACCESSIBILITY: program.accessibleReady,
-			WP_ENV_TESTS_PORT: testPort,
-			WP_THEME_TYPE: getThemeType(),
-			UI_DEBUG: program.UIDebug,
-		});
+		// On the runner, render in an isolated container so untrusted theme code never runs a browser in the runner's namespace.
+		let browserEnv = {};
+		try {
+			if (program.githubRun) {
+				browserEnv = await startBrowserSandbox();
+			}
+
+			await runUICheckAsync(npmPrefix, {
+				...browserEnv,
+				TEST_ACCESSIBILITY: program.accessibleReady,
+				WP_ENV_TESTS_PORT: testPort,
+				WP_THEME_TYPE: getThemeType(),
+				UI_DEBUG: program.UIDebug,
+			});
+		} finally {
+			if (program.githubRun) {
+				await stopBrowserSandbox();
+			}
+		}
 	}
 
 	await runTearDownAsync(npmPrefix);

@@ -6,45 +6,55 @@ import path from 'path';
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: PHP Errors', () => {
-	it( 'Page should PASS when there is not php error present', async () => {
+test.describe( 'Sanity: PHP Errors', () => {
+	test( 'Page should PASS when there is no php error present', async ( {
+		page,
+	} ) => {
 		const url = 'html/pass.html';
 		const response = await page.goto(
 			`file:${ path.join( __dirname, url ) }`
 		);
-
 		const content = await response.text();
-		expect( await test( url, content ) ).toBeTruthy();
+
+		expect( await checkFn( url, content ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when there is a php error present', async () => {
+	test( 'Page should FAIL when there is a php error present', async ( {
+		page,
+	} ) => {
 		const url = 'html/fail.html';
 		const response = await page.goto(
 			`file:${ path.join( __dirname, url ) }`
 		);
-
 		const content = await response.text();
-		expect( await test( url, content ) ).toBeFalsy();
+
+		expect( await checkFn( url, content ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when there is a php present on multiple lines', async () => {
+	test( 'Page should FAIL when there is a php error on multiple lines', async ( {
+		page,
+	} ) => {
 		const url = 'html/fail-multiline.html';
 		const response = await page.goto(
 			`file:${ path.join( __dirname, url ) }`
 		);
-
 		const content = await response.text();
-		expect( await test( url, content ) ).toBeFalsy();
+
+		expect( await checkFn( url, content ) ).toBeFalsy();
 	} );
 
-	it( 'Page should FAIL when there is a php error present in an attribute', async () => {
+	test( 'Page should FAIL when there is a php error in an attribute', async ( {
+		page,
+	} ) => {
 		const url = 'html/fail-attribute.html';
 		const response = await page.goto(
 			`file:${ path.join( __dirname, url ) }`
 		);
 		const content = await response.text();
-		expect( await test( url, content ) ).toBeFalsy();
+
+		expect( await checkFn( url, content ) ).toBeFalsy();
 	} );
 } );

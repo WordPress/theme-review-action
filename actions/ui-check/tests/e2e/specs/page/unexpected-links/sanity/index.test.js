@@ -6,18 +6,23 @@ import path from 'path';
 /**
  * Internal dependencies
  */
-import test from '../index.js';
+import { test, expect } from '../../../../fixtures';
+import checkFn from '../index.js';
 
-describe( 'Sanity: Unexpected Links', () => {
-	it( 'Page should PASS when all links are approved.', async () => {
+test.describe( 'Sanity: Unexpected Links', () => {
+	test( 'Page should PASS when all links are approved', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/pass.html' ) }` );
 
-		expect( await test( '/', '' ) ).toBeTruthy();
+		expect( await checkFn( page, '/' ) ).toBeTruthy();
 	} );
 
-	it( 'Page should FAIL when links include unapproved hostnames.', async () => {
+	test( 'Page should FAIL when links include unapproved hostnames', async ( {
+		page,
+	} ) => {
 		await page.goto( `file:${ path.join( __dirname, 'html/fail.html' ) }` );
 
-		expect( await test( '/', '' ) ).toBeFalsy();
+		expect( await checkFn( page, '/' ) ).toBeFalsy();
 	} );
 } );

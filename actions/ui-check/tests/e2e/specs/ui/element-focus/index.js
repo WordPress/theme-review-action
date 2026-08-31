@@ -8,6 +8,7 @@ const pixelmatch = require( 'pixelmatch' );
 /**
  * Internal dependencies
  */
+import { expect } from '../../../fixtures';
 import {
 	warnWithMessageOnFail,
 	getFocusableElementsAsync,
@@ -23,10 +24,11 @@ const SCREENSHOT_FOCUS_TEST = `${ SCREENSHOT_FOLDER_PATH }/focus-test`;
 
 /**
  * Determines whether the element has an acceptable focus state
- * @param {Puppeteer|ElementHandle} element
+ * @param {import('@playwright/test').Page} page
+ * @param {ElementHandle} element
  * @returns {boolean}
  */
-const hasAcceptableFocusState = async ( element ) => {
+const hasAcceptableFocusState = async ( page, element ) => {
 	// Grab the element dimension
 	const dimensions = await element.boundingBox();
 
@@ -48,7 +50,7 @@ const hasAcceptableFocusState = async ( element ) => {
 	await element.focus();
 
 	// We give it a few ms in case there is an animation
-	await new Promise( ( resolve ) => setTimeout( resolve, 300 ) );
+	await page.waitForTimeout( 300 );
 
 	// Take a screenshot after focus
 	const afterSnap = await page.screenshot();
@@ -61,8 +63,10 @@ const hasAcceptableFocusState = async ( element ) => {
 	const { width, height } = beforeImg;
 	const diff = new PNG( { width, height } );
 
-	// Create a png with the diff overlayed on a transparent background
-	// The threshold controls how 'different' the new state should be. ( 0 Low/1 High )
+	/*
+	 * Overlay the diff on a transparent background. The threshold controls how
+	 * different the focused state must be (0 low / 1 high).
+	 */
 	pixelmatch( beforeImg.data, afterImg.data, diff.data, width, height, {
 		threshold: 0.1,
 		diffMask: true,
@@ -71,13 +75,13 @@ const hasAcceptableFocusState = async ( element ) => {
 	// Check to see that there is an acceptable level of change from before & after element focus
 	const passes = meetsChangeThreshold( getPercentOfOpaqueness( diff.data ) );
 
-	//Save the images if the element doesn't pass
+	// Save the images if the element doesn't pass
 	if ( ! passes ) {
 		if ( ! fs.existsSync( SCREENSHOT_FOCUS_TEST ) ) {
 			fs.mkdirSync( SCREENSHOT_FOCUS_TEST );
 		}
 
-		//Save an image of the element
+		// Save an image of the element
 		await element.screenshot( {
 			path: `${ SCREENSHOT_FOCUS_TEST }/element.png`,
 		} );
@@ -94,12 +98,14 @@ const hasAcceptableFocusState = async ( element ) => {
 
 /**
  * Loops through focusable elements and compares if focus state to its default state.
+ *
+ * @param {import('@playwright/test').Page} page
  */
-const test = async () => {
-	const elements = await getFocusableElementsAsync();
+const runTest = async ( page ) => {
+	const elements = await getFocusableElementsAsync( page );
 
 	for ( let i = 0; i < elements.length; i++ ) {
-		const passes = await hasAcceptableFocusState( elements[ i ] );
+		const passes = await hasAcceptableFocusState( page, elements[ i ] );
 
 		if ( ! passes ) {
 			const domElement = await getElementPropertyAsync(
@@ -119,9 +125,9 @@ const test = async () => {
 	return true;
 };
 
-export default async () => {
+export default async ( page ) => {
 	try {
-		return await test();
+		return await runTest( page );
 	} catch ( ex ) {
 		if ( ex instanceof FailedTestException ) {
 			warnWithMessageOnFail(
